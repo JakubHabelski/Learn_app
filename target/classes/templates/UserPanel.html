@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <title>Title</title>
+</head>
+<body >
+    <span th:text="${method}"></span>
+  <table class="table table-striped">
+      <tr>
+          <td>Twoj user id to:</td>
+          <td><span th:text="${user.UserID}"></span></td>
+      </tr>
+      <tr>
+          <td>twoj login</td>
+          <td><span th:text="${user.UserLogin}"></span></td>
+      </tr>
+      <tr>
+          <td>twoj pass</td>
+          <td> <span th:text="${user.UserPass}"></span></td>
+      </tr>
+      <tr>
+          <td><a th:href="@{/AddFlashCardSet/{userID}(userID=${user.userID})}">Create FlashCard Set</a></td>
+          </td>
+      </tr>
+  </table>
+  <table class="table table-striped">
+      <tr>
+          <td>Set Name</td>
+          <td>Set Descripiton</td>
+          <td></td>
+          <td></td>
+      </tr>
+    <tr th:each="flashCardSet : ${flashCardSets}" >
+        <td th:text="${flashCardSet.SetName}" ></td>
+        <td th:text="${flashCardSet.SetDescription}" ></td>
+        <td><a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" >Edit FlashCardSet</a></td>
+        <td><a href="#" th:href="@{/DeletFlashCardSet(SetID=${flashCardSet.SetID})}" >Delete FlashCardSet</a></td>
+    
+    </tr>
+  </table>
+</body>
+</html>

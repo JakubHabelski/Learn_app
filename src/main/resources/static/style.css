@@ -1,0 +1,27 @@
+body {
+    color: red;
+}
+#flashset{
+    border : 1px solid red;
+}
+#elo{
+color:red;
+type: hidden;
+}
+.css-input {
+    border-width: 0px;
+    background:transparent;
+    color: #000000;
+    border-style: hidden;
+    border-radius: 0px;
+    box-shadow: 0px 0px 0px rgba(66,66,66,.100);
+    text-shadow: 0px 0px 0px rgba(66,66,66,.100);
+}
+.css-input:focus {
+    outline:none;
+}
+#sidecards{
+    position: absolute;
+    left: 50%;
+    transform: translate( -50%);
+}

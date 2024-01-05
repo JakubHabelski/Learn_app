@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <title>Title</title>
+</head>
+<body>
+<table class="table table-striped">
+    <tr>
+        <th>Definition</th>
+        <th>Description</th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr th:each="card :${flashCard}">
+        <div th:id="${card.FlashCardId}">
+            <form th:action="@{/EditCard}" method="post">
+                <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
+                <input type="hidden" th:value="${card.SetID}" name="SetID">
+                <td><input th:value="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}" class="css-input" disabled></td>
+                <td>
+                    <input th:value="${card.Description}" name="Description"  th:id="'DescriptionInput_' + ${card.FlashCardId}" class="css-input" disabled>
+                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+                </td>
+            </form>
+        </div>
+        
+               
+        <td>
+            <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" class="btn btn-danger">
+                <i class="fa fa-trash-o fa-lg"></i> Delete
+            </a>
+        </td>
+       
+        <td>
+            <button class="btn btn-primary" th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))">Edit script</button>
+        </td>
+    </tr>
+</table>
+<form th:action="@{/AddCard}" method="post">
+    <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
+    <input name="Definition">
+    <input name="Description">
+    <input type="submit" value="Add Card">
+</form>
+
+        <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
+            <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
+            <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
+            <input type="submit" value="Return to userpanel">
+        </form>
+
+
+       
+        <div th:each="card : ${flashCard}" class="flashCard" style="display: none;">
+            <div th:text="${card.Definition}" th:id="'DefinitionInput_' + ${card.FlashCardId}" ></div>
+            <div th:text="${card.Description}" th:id="'DescriptionInput_' + ${card.FlashCardId}"></div>
+           
+        </div>
+        <button id="previous">previous</button>
+        <button id="next">next</button>
+        <div id="show_def"></div>
+       
+           
+<script>
+   function showEditField(cardId) {
+    var definitionInput = document.getElementById('DefinitionInput_' + cardId);
+    var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
+    let Confirm_button = document.getElementById('Confirm_' + cardId);
+    Confirm_button.style.display="block";
+    let Inputs=[definitionInput, descriptionInput];
+    Inputs.forEach(input => {
+        input.disabled= false;
+    });
+    
+    
+    
+}
+
+    // Select all div elements with the class 'flashCard'
+    var flashCardDivs = document.querySelectorAll('.flashCard');
+
+    // Convert the NodeList to an array (if needed)
+    var flashCardArray = Array.from(flashCardDivs);
+
+    // Now flashCardArray contains all the div elements with the class 'flashCard'
+    console.log(flashCardArray);
+
+    // Example: Accessing the first definition div in the array
+    var firstDefinitionDiv = flashCardArray[0].querySelector('[id^="DefinitionInput_"]');
+    console.log(firstDefinitionDiv.textContent);
+   // document.getElementById("show_def").innerHTML=firstDefinitionDiv.textContent;
+
+    
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let arr = /*[[${slidecard}]]*/ "";
+    let def1 = arr.definition;
+    console.log(def1);
+    for (let i = 0; i < arr.length; i++) {
+    let definition = arr[i].definition;
+    let description = arr[i].description;
+
+    // Tutaj możesz coś zrobić z definition i description, na przykład wyświetlić w konsoli
+    console.log("Definition:", definition);
+    console.log("Description:", description);
+   document.getElementById("show_def").innerHTML=definition;
+}
+</script>
+</body>
+</html>
