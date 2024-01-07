@@ -1,0 +1,8 @@
+2023-12-02 11:38:30.643815+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "INSERT INTO USER_DATA VALUES(1, 'JanKowal', 'Jankowal@wp.pl', 'Jan', '123',[*]'Kowal)"
+Syntax error in SQL statement "INSERT INTO USER_DATA VALUES(1, 'JanKowal', 'Jankowal@wp.pl', 'Jan', '123',[*]'Kowal)"; SQL statement:
+INSERT INTO USER_DATA VALUES(1, 'JanKowal', 'Jankowal@wp.pl', 'Jan', '123','Kowal) [42000-224]
+2023-12-02 11:39:07.303953+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "INSERT INTO USER_DATA VALUES(1, 'JanKowal', 'Jankowal@wp.pl', 'Jan', '123',[*]'Kowal)"
+Syntax error in SQL statement "INSERT INTO USER_DATA VALUES(1, 'JanKowal', 'Jankowal@wp.pl', 'Jan', '123',[*]'Kowal)"; SQL statement:
+INSERT INTO USER_DATA VALUES(1, 'JanKowal', 'Jankowal@wp.pl', 'Jan', '123','Kowal) [42000-224]

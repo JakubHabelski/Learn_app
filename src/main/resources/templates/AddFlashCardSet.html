@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/Add}"  th:object="${flashCards1}" method="post">
+
+    <table>
+        <input type="hidden" name="userID" th:field="${flashCardsSet1.UserID}">
+                                                    <!--nazwa_obiektu.poleuserid -->
+        <tr>
+            <td>Set Name:</td>
+            <td><input name="SetName"></td>
+        </tr>
+        <tr>
+            <td>Definition</td>
+            <td><input name="Definition" ></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><input name="Description" ></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Add"></td>
+        </tr>
+
+    </table>
+</form>
+
+</body>
+</html>
