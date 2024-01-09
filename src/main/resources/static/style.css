@@ -1,12 +1,20 @@
 body {
+<<<<<<< HEAD
     color: blue;
     overflow-x: hidden;
+=======
+    color: red;
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 }
 #flashset{
     border : 1px solid red;
 }
 #elo{
 color:red;
+<<<<<<< HEAD
+=======
+type: hidden;
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 }
 .css-input {
     border-width: 0px;
@@ -24,6 +32,7 @@ color:red;
     position: absolute;
     left: 50%;
     transform: translate( -50%);
+<<<<<<< HEAD
 }
 #show_card_container{
     height: 500px;
@@ -90,4 +99,6 @@ color:red;
     justify-content: center;
     
     
+=======
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 }

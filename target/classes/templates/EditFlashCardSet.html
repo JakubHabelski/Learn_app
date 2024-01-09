@@ -54,15 +54,21 @@
             <input type="submit" value="Return to userpanel">
         </form>
 
+<<<<<<< HEAD
         <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary">FlashCards</a>
         <a href="#" th:href="@{/QuizGame}" class="btn btn-primary">QuizGame</a>
 
 
+=======
+
+       
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
         <div th:each="card : ${flashCard}" class="flashCard" style="display: none;">
             <div th:text="${card.Definition}" th:id="'DefinitionInput_' + ${card.FlashCardId}" ></div>
             <div th:text="${card.Description}" th:id="'DescriptionInput_' + ${card.FlashCardId}"></div>
            
         </div>
+<<<<<<< HEAD
         <div id="show_card_container">
             <div id="show_card">
                 <button id="card_def" onclick="rotate_card()"></button>
@@ -84,6 +90,15 @@
 
 <script th:inline="javascript">
     function showEditField(cardId) {
+=======
+        <button id="previous">previous</button>
+        <button id="next">next</button>
+        <div id="show_def"></div>
+       
+           
+<script>
+   function showEditField(cardId) {
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
     var definitionInput = document.getElementById('DefinitionInput_' + cardId);
     var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
     let Confirm_button = document.getElementById('Confirm_' + cardId);
@@ -91,6 +106,7 @@
     let Inputs=[definitionInput, descriptionInput];
     Inputs.forEach(input => {
         input.disabled= false;
+<<<<<<< HEAD
     });        
 } 
     /*<![CDATA[*/
@@ -154,6 +170,44 @@
 
 }
   /*]]>*/
+=======
+    });
+    
+    
+    
+}
+
+    // Select all div elements with the class 'flashCard'
+    var flashCardDivs = document.querySelectorAll('.flashCard');
+
+    // Convert the NodeList to an array (if needed)
+    var flashCardArray = Array.from(flashCardDivs);
+
+    // Now flashCardArray contains all the div elements with the class 'flashCard'
+    console.log(flashCardArray);
+
+    // Example: Accessing the first definition div in the array
+    var firstDefinitionDiv = flashCardArray[0].querySelector('[id^="DefinitionInput_"]');
+    console.log(firstDefinitionDiv.textContent);
+   // document.getElementById("show_def").innerHTML=firstDefinitionDiv.textContent;
+
+    
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let arr = /*[[${slidecard}]]*/ "";
+    let def1 = arr.definition;
+    console.log(def1);
+    for (let i = 0; i < arr.length; i++) {
+    let definition = arr[i].definition;
+    let description = arr[i].description;
+
+    // Tutaj możesz coś zrobić z definition i description, na przykład wyświetlić w konsoli
+    console.log("Definition:", definition);
+    console.log("Description:", description);
+   document.getElementById("show_def").innerHTML=definition;
+}
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 </script>
 </body>
 </html>

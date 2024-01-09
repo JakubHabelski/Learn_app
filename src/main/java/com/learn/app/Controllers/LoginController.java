@@ -1,10 +1,20 @@
 package com.learn.app.Controllers;
 
+<<<<<<< HEAD
+=======
+import com.learn.app.Interfaces.AddFlashCardSetInterface;
+import com.learn.app.Classes.UserData;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.servlet.http.HttpSession;
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +26,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.HttpSession;
+=======
+import org.springframework.web.bind.annotation.*;
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 
 @Controller
 public class LoginController {

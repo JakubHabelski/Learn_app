@@ -1,6 +1,7 @@
 package com.learn.app.Controllers;
 
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,21 @@ import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 
 import jakarta.servlet.http.HttpSession;
+=======
+import com.learn.app.Classes.FlashCards;
+import com.learn.app.Interfaces.AddFlashCardInterface;
+import com.learn.app.Interfaces.AddFlashCardSetInterface;
+import com.learn.app.Classes.UserData;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+
+import org.hibernate.mapping.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 
 
 @Controller
@@ -42,7 +58,10 @@ public class EditSetController {
                                        FlashCards flashCards,
                                        HttpSession session) {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+<<<<<<< HEAD
         session.setAttribute("SetID", SetID);
+=======
+>>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());
