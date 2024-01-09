@@ -1,6 +1,8 @@
-package com.learn.app;
+package com.learn.app.Controllers;
 
 
+import com.learn.app.Classes.UserData;
+import com.learn.app.Interfaces.UserInterface;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +21,11 @@ public class RegisterController {
         return "RegisterForm";
     }
     @PostMapping("/PostRegister")
-    public String PostRegister(@RequestParam("UserName") String UserName,
-                               @RequestParam("UserSurname") String UserSurname,
-                               @RequestParam("UserLogin") String UserLogin,
-                               @RequestParam("UserPass") String UserPass,
-                               @RequestParam("UserMail") String UserMail
+    public String PostRegister(@RequestParam String UserName,
+                               @RequestParam String UserSurname,
+                               @RequestParam String UserLogin,
+                               @RequestParam String UserPass,
+                               @RequestParam String UserMail
                                 ) throws Exception{
 
         UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail);

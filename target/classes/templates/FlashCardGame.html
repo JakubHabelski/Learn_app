@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <title>Title</title>
+</head>
+<body>
+    <div th:each="card : ${flashCard}" class="flashCard" style="display: none;">
+            <div th:text="${card.Definition}" th:id="'DefinitionInput_' + ${card.FlashCardId}" ></div>
+            <div th:text="${card.Description}" th:id="'DescriptionInput_' + ${card.FlashCardId}"></div>
+           
+        </div>
+        <div th:each="card : ${flashCard}" class="flashCard" style="display: none;">
+            <div th:text="${card.Definition}" th:id="'DefinitionInput_' + ${card.FlashCardId}" ></div>
+            <div th:text="${card.Description}" th:id="'DescriptionInput_' + ${card.FlashCardId}"></div>
+           
+        </div>
+    <div id="show_card_container">
+        <div id="show_card">
+            <button id="card_def" onclick="rotate_card()"></button>
+            <button id="card_des" onclick="rotate_card()"></button>
+        </div>
+        <div id="buttons">
+            <button id="previous" onclick="change_card('previous')">previous</button>
+            <button id="next" onclick="change_card('next')">next</button>  
+            <button onclick="know_card(1)">I know</button> 
+            <button onclick="know_card(0)">I dont't know</button> 
+        </div><br>
+        <div id="know_dont_know">
+            <span id="know">0</span>
+            <span id="dont_know">0</span>
+        </div>
+    </div>
+    <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
+        <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
+        <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
+        <input type="submit" value="Return to userpanel">
+    </form>
+
+    <script th:inline="javascript">
+        function showEditField(cardId) {
+        var definitionInput = document.getElementById('DefinitionInput_' + cardId);
+        var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
+        let Confirm_button = document.getElementById('Confirm_' + cardId);
+        Confirm_button.style.display="block";
+        let Inputs=[definitionInput, descriptionInput];
+        Inputs.forEach(input => {
+            input.disabled= false;
+        });        
+    } 
+        /*<![CDATA[*/
+    
+        class card{
+            constructor(definition, description, flashCardId, Is_known){
+                this.definition=definition;
+                this.description=description;
+                this.flashCardId=flashCardId;
+                this.Is_known=Is_known;
+            }
+        }
+    
+        let arr = /*[[${slidecard}]]*/ "";
+    
+        let card_arr=[];
+        for(let i=0; i<arr.length; i++){
+            card_arr.push(new card(arr[i].definition, arr[i].description, arr[i].flashCardId, false));
+        }
+        console.log(card_arr);
+        let i=0;
+        let j=0;
+        let side=0;
+    
+        document.getElementById("card_def").innerHTML=arr[0].definition;
+        document.getElementById("card_des").innerHTML=arr[0].description;
+        function change_card(direction){
+            if(direction=="previous" && i>0){ i--};
+            if(direction=="next" && i<arr.length-1)    { i++};
+            document.getElementById("card_def").innerHTML=arr[i].definition;
+            document.getElementById("card_des").innerHTML=arr[i].description;
+            console.log(i);
+        }
+        function rotate_card() {
+        if (j % 2 == 0) {
+            document.getElementById("show_card").style.transform = "translateX(-50%) rotateY(180deg)";
+            side=1;
+        } else {
+            document.getElementById("show_card").style.transform = "translateX(-50%) rotateY(0deg)";
+            side=0;
+        }
+        j++;
+    }
+        function know_card(know) {
+        if (know == 1) {
+            document.getElementById("know").innerHTML = parseInt(document.getElementById("know").innerHTML) + 1;
+            card_arr[i].Is_known=true;
+        } else {
+            document.getElementById("dont_know").innerHTML = parseInt(document.getElementById("dont_know").innerHTML) + 1;
+        }
+        change_card("next");
+        if (side == 1) {
+            document.getElementById("show_card").style.transition="transform 0s";
+            rotate_card();
+            setTimeout(function () {
+                document.getElementById("show_card").style.transition="transform 0.8s";
+            }, 100);
+           
+        }
+       
+    
+    }
+      /*]]>*/
+    </script>   
+</body>
+</html>

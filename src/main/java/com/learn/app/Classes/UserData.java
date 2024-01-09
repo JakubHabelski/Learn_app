@@ -1,7 +1,7 @@
-package com.learn.app;
+package com.learn.app.Classes;
 
+//import com.learn.app.Classes.FlashCardSet;
 import jakarta.persistence.*;
-import net.bytebuddy.asm.Advice;
 
 import java.util.List;
 

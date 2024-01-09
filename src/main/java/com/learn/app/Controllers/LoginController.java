@@ -1,16 +1,21 @@
-package com.learn.app;
+package com.learn.app.Controllers;
 
-import com.learn.app.Interfaces.AddFlashCardSetInterface;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.learn.app.Classes.UserData;
+import com.learn.app.Interfaces.AddFlashCardSetInterface;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
@@ -21,6 +26,7 @@ public class LoginController {
     public LoginController(AddFlashCardSetInterface addFlashCardSetInterface) {
         this.addFlashCardSetInterface = addFlashCardSetInterface;
     }
+    
     @PersistenceContext
     @Autowired
     private EntityManager entityManager;
@@ -36,8 +42,8 @@ public class LoginController {
             return "LoginForm";
     }
     @PostMapping (value = "/userpanel" )
-    public String userpanel(@RequestParam("UserLogin") String UserLogin,
-                            @RequestParam("UserPass") String UserPass,
+    public String userpanel(@RequestParam String UserLogin,
+                            @RequestParam String UserPass,
                             Model model,
                             HttpSession session) {
 
@@ -47,21 +53,38 @@ public class LoginController {
         for (UserData userdata : query.getResultList()) {
             logger.warn(userdata.toString());
             if (userdata.getUserLogin().equals(UserLogin) && userdata.getUserPass().equals(UserPass)){
-             //   UserData user = new UserData(userdata.getUserID(),UserLogin, UserPass);
-             ;
+            
                 user.setUserID(userdata.getUserID());
                 user.setUserPass(UserPass);
                 user.setUserLogin(UserLogin);
-                model.addAttribute("user", user);
                 session.setAttribute("LoggedUser", user);
-
-                //List<FlashCardSet> flashCardSets = addFlashCardSetInterface.findAll();
-                model.addAttribute("flashCardSets", addFlashCardSetInterface.findAll());
-
-                return "UserPanel";
+                model.addAttribute("user", user);
+                model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
+                model.addAttribute("method", "Post");
+                // Redirect to "UserPanel"
+                return "redirect:/userpanel";
             }
         }
        return "PError";
     }
+    @GetMapping("/userpanel")
+    public String userPanel(Model model, HttpSession session) {
+        UserData loggedUser = (UserData) session.getAttribute("LoggedUser");
+
+        // Check if the user is logged in
+        if (loggedUser != null) {
+            // Add user information to the model
+            model.addAttribute("user", loggedUser);
+            model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(loggedUser.getUserID()));
+
+            // Add other attributes to the model as needed
+            model.addAttribute("method", "Get");
+            return "UserPanel";
+        } else {
+            // Redirect to login or handle not logged in scenario
+            return "redirect:/loginform";
+        }
+    }
+
 }
 

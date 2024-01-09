@@ -1,5 +1,6 @@
-package com.learn.app;
+package com.learn.app.Interfaces;
 
+import com.learn.app.Classes.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

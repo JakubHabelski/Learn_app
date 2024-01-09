@@ -1,8 +1,6 @@
-package com.learn.app;
+package com.learn.app.Classes;
 
 import jakarta.persistence.*;
-
-import java.math.BigInteger;
 
 
 @Entity

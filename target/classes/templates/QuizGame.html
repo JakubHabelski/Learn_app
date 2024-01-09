@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/quiz_style.css}" />
+    <title>Title</title>
+</head>
+<body>
+    <div id="container">
+        <div id="question">
+            <h3>Question:</h3>
+            <p id="questionText"></p>
+        </div>
+        <div id="answers">
+            <h4>Answers:</h4>
+            <button id="AnsA"></button>
+            <button id="AnsB"></button>
+            <button id="AnsC"></button>
+            <button id="AnsD"></button>
+        </div>
+    </div>
+    
+
+    
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let arr = /*[[${slidecard}]]*/ "";
+
+    class question{
+        constructor(question, AnsA, AnB, AnC, AnD, correct){
+            this.question=question;
+            this.AnsA=AnsA;
+            this.AnB=AnB;
+            this.AnC=AnC;
+            this.AnD=AnD;
+            this.correct=correct;
+        }        
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

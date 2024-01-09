@@ -1,9 +1,8 @@
-package com.learn.app;
+package com.learn.app.Classes;
 
 
 import jakarta.persistence.*;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Entity
@@ -20,8 +19,9 @@ public class FlashCardSet {
     @JoinColumn(name = "UserID", insertable=false, updatable=false)
     private UserData userData;
 
-    @OneToMany(mappedBy = "flashCardSet")
+    @OneToMany(mappedBy = "flashCardSet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FlashCards> flashCards;
+    
 
     public FlashCardSet() {
     }
