@@ -11,19 +11,18 @@
     <title>Title</title>
 </head>
 <body >
-    <span th:text="${method}"></span>
   <table class="table table-striped">
       <tr>
-          <td>Twoj user id to:</td>
+          <td>You user id:</td>
           <td><span th:text="${user.UserID}"></span></td>
       </tr>
       <tr>
-          <td>twoj login</td>
+          <td>Your login</td>
           <td><span th:text="${user.UserLogin}"></span></td>
       </tr>
       <tr>
-          <td>twoj pass</td>
-          <td> <span th:text="${user.UserPass}"></span></td>
+          <td>Your Name</td>
+          <td> <span th:text="${user.userName} + ' ' +  ${user.userSurname}"></span></td>
       </tr>
       <tr>
           <td><a th:href="@{/AddFlashCardSet/{userID}(userID=${user.userID})}">Create FlashCard Set</a></td>

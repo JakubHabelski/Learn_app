@@ -37,7 +37,7 @@
         </td>
        
         <td>
-            <button class="btn btn-primary" th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))">Edit script</button>
+            <button class="btn btn-primary" th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))">Edit</button>
         </td>
     </tr>
 </table>
@@ -54,51 +54,16 @@
             <input type="submit" value="Return to userpanel">
         </form>
 
-<<<<<<< HEAD
         <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary">FlashCards</a>
         <a href="#" th:href="@{/QuizGame}" class="btn btn-primary">QuizGame</a>
-
-
-=======
-
-       
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
-        <div th:each="card : ${flashCard}" class="flashCard" style="display: none;">
-            <div th:text="${card.Definition}" th:id="'DefinitionInput_' + ${card.FlashCardId}" ></div>
-            <div th:text="${card.Description}" th:id="'DescriptionInput_' + ${card.FlashCardId}"></div>
-           
-        </div>
-<<<<<<< HEAD
-        <div id="show_card_container">
-            <div id="show_card">
-                <button id="card_def" onclick="rotate_card()"></button>
-                <button id="card_des" onclick="rotate_card()"></button>
-            </div>
-            <div id="buttons">
-                <button id="previous" onclick="change_card('previous')">previous</button>
-                <button id="next" onclick="change_card('next')">next</button>  
-                <button onclick="know_card(1)">I know</button> 
-                <button onclick="know_card(0)">I dont't know</button> 
-            </div><br>
-            <div id="know_dont_know">
-                <span id="know">0</span>
-                <span id="dont_know">0</span>
-            </div>
-        </div>
+        <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary">MatchingGame</a>
+        
+      
            
            
 
 <script th:inline="javascript">
     function showEditField(cardId) {
-=======
-        <button id="previous">previous</button>
-        <button id="next">next</button>
-        <div id="show_def"></div>
-       
-           
-<script>
-   function showEditField(cardId) {
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
     var definitionInput = document.getElementById('DefinitionInput_' + cardId);
     var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
     let Confirm_button = document.getElementById('Confirm_' + cardId);
@@ -106,108 +71,12 @@
     let Inputs=[definitionInput, descriptionInput];
     Inputs.forEach(input => {
         input.disabled= false;
-<<<<<<< HEAD
     });        
 } 
     /*<![CDATA[*/
 
-    class card{
-        constructor(definition, description, flashCardId, Is_known){
-            this.definition=definition;
-            this.description=description;
-            this.flashCardId=flashCardId;
-            this.Is_known=Is_known;
-        }
-    }
-
-    let arr = /*[[${slidecard}]]*/ "";
-
-    let card_arr=[];
-    for(let i=0; i<arr.length; i++){
-        card_arr.push(new card(arr[i].definition, arr[i].description, arr[i].flashCardId, false));
-    }
-    console.log(card_arr);
-    let i=0;
-    let j=0;
-    let side=0;
-
-    document.getElementById("card_def").innerHTML=arr[0].definition;
-    document.getElementById("card_des").innerHTML=arr[0].description;
-    function change_card(direction){
-        if(direction=="previous" && i>0){ i--};
-        if(direction=="next" && i<arr.length-1)    { i++};
-        document.getElementById("card_def").innerHTML=arr[i].definition;
-        document.getElementById("card_des").innerHTML=arr[i].description;
-        console.log(i);
-    }
-    function rotate_card() {
-    if (j % 2 == 0) {
-        document.getElementById("show_card").style.transform = "translateX(-50%) rotateY(180deg)";
-        side=1;
-    } else {
-        document.getElementById("show_card").style.transform = "translateX(-50%) rotateY(0deg)";
-        side=0;
-    }
-    j++;
-}
-    function know_card(know) {
-    if (know == 1) {
-        document.getElementById("know").innerHTML = parseInt(document.getElementById("know").innerHTML) + 1;
-        card_arr[i].Is_known=true;
-    } else {
-        document.getElementById("dont_know").innerHTML = parseInt(document.getElementById("dont_know").innerHTML) + 1;
-    }
-    change_card("next");
-    if (side == 1) {
-        document.getElementById("show_card").style.transition="transform 0s";
-        rotate_card();
-        setTimeout(function () {
-            document.getElementById("show_card").style.transition="transform 0.8s";
-        }, 100);
-       
-    }
-   
-
-}
+ 
   /*]]>*/
-=======
-    });
-    
-    
-    
-}
-
-    // Select all div elements with the class 'flashCard'
-    var flashCardDivs = document.querySelectorAll('.flashCard');
-
-    // Convert the NodeList to an array (if needed)
-    var flashCardArray = Array.from(flashCardDivs);
-
-    // Now flashCardArray contains all the div elements with the class 'flashCard'
-    console.log(flashCardArray);
-
-    // Example: Accessing the first definition div in the array
-    var firstDefinitionDiv = flashCardArray[0].querySelector('[id^="DefinitionInput_"]');
-    console.log(firstDefinitionDiv.textContent);
-   // document.getElementById("show_def").innerHTML=firstDefinitionDiv.textContent;
-
-    
-</script>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    let arr = /*[[${slidecard}]]*/ "";
-    let def1 = arr.definition;
-    console.log(def1);
-    for (let i = 0; i < arr.length; i++) {
-    let definition = arr[i].definition;
-    let description = arr[i].description;
-
-    // Tutaj możesz coś zrobić z definition i description, na przykład wyświetlić w konsoli
-    console.log("Definition:", definition);
-    console.log("Description:", description);
-   document.getElementById("show_def").innerHTML=definition;
-}
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 </script>
 </body>
 </html>

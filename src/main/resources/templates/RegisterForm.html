@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/register_style.css}" />
+    <style>
+        
+    </style>
     <title>Title</title>
 </head>
 <body>
-    <form th:action="@{/PostRegister}" method="post" class="table table-striped">
-        UserName: <input  th:name="UserName"><br>
-        UserSurname: <input  th:name="UserSurname"><br>
-        UserLogin: <input  th:name="UserLogin"><br>
-        UserPass: <input  th:name="UserPass"><br>
-        UserMail: <input  th:name="UserMail"><br>
-        <input type="submit" value="Register">
+    <form th:action="@{/PostRegister}" method="post" class="form-group">
+        UserName: <input th:name="UserName" class="form-control" required><br>
+        UserSurname: <input th:name="UserSurname" class="form-control" required><br>
+        UserLogin: <input th:name="UserLogin" class="form-control" required><br>
+        UserPass: <input th:name="UserPass" class="form-control" type="password" required><br>
+        UserMail: <input th:name="UserMail" class="form-control" type="email" required><br>
+        <input type="submit" value="Register" class="btn btn-primary">
     </form>
 </body>
 </html>

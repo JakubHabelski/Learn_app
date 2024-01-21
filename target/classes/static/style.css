@@ -1,20 +1,12 @@
 body {
-<<<<<<< HEAD
     color: blue;
     overflow-x: hidden;
-=======
-    color: red;
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 }
 #flashset{
     border : 1px solid red;
 }
 #elo{
 color:red;
-<<<<<<< HEAD
-=======
-type: hidden;
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 }
 .css-input {
     border-width: 0px;
@@ -28,24 +20,25 @@ type: hidden;
 .css-input:focus {
     outline:none;
 }
-#sidecards{
-    position: absolute;
-    left: 50%;
-    transform: translate( -50%);
-<<<<<<< HEAD
-}
+
 #show_card_container{
-    height: 500px;
-    background-color: aqua;
-    display: grid;
+    position: absolute;    
+    background-color: transparent;
+    aspect-ratio: 1/1;
+    width: 500px;
+    perspective: 1000px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    
 }
 #show_card{
     
-    position: absolute;
-    left: 50%;
-    transform: translate( -100px);
-    padding-right: 200px;
-    text-align: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    
     transition: transform 0.8s;
     transform-style: preserve-3d;
     font-size: 3rem;
@@ -56,49 +49,60 @@ type: hidden;
     
   }
   #card_des{
-    background-color: blue;
+    background-color: rgb(255, 255, 0);
     transform: rotateY(180deg);
   }
 
 #card_def, #card_des{
+    display: flex;
     position: absolute;
-    
-    height: 200px;
-    width: 200px;
+    width: 100%;
+    height: 100%;
     transition: transform 0.8s;
-    -webkit-backface-visibility: hidden; /* Safari */
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-}
-#buttons{
-    
-    display: flex;
-    position: relative;
-    height: 25px;
-    top: 250px;
-    
-    justify-content: center;
-    align-items: center;
-    
-}
-#know_dont_know{
-    display: flex;
-    position: relative;
-   
-    left: 50%;
-    transform: translate( -50%);
-    justify-content: center;
-    align-items: center;
-}
-#know_dont_know >*{
-    display: inline-grid;
-    border: 1px solid black;
-    height: 100px;
-    width: 100px;
-    background-color: purple;
     align-content: center;
     justify-content: center;
-    
-    
-=======
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
+    text-align: center;
+    flex-wrap: wrap;
+}
+.form-group{
+    display: flex;
+    margin-bottom: 1rem;
+    margin-top: 1em;
+    justify-content: center;
+}
+#Return{
+    display: flex;
+    margin-bottom: 1rem;
+    margin-top: 1em;
+    justify-content: center;
+}
+#buttons {
+    padding: 1em 0px 1em 0px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    height: 5em;
+    gap: 1em;
+}
+#know_dont_know{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+
+}
+#know_dont_know >*{
+    display: flex;
+    height: 100px;
+    width: 100px;
+    background-color: rgb(68, 0, 255);
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 5px;
 }

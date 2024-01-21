@@ -9,38 +9,106 @@
     <title>Title</title>
 </head>
 <body>
-    <div id="container">
-        <div id="question">
-            <h3>Question:</h3>
-            <p id="questionText"></p>
-        </div>
-        <div id="answers">
-            <h4>Answers:</h4>
-            <button id="AnsA"></button>
-            <button id="AnsB"></button>
-            <button id="AnsC"></button>
-            <button id="AnsD"></button>
-        </div>
+    <div id="container">   
+        <p id="questionText">Question</p>        
+            <button class="btn-primary" id="AnsA" onclick="check_answer(this)">A</button>
+            <button class="btn-primary" id="AnsB" onclick="check_answer(this)">B</button>
+            <button class="btn-primary" id="AnsC" onclick="check_answer(this)">C</button>
+            <button class="btn-primary" id="AnsD" onclick="check_answer(this)">D</button>                      
+        <p id="score"></p>
+        <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group" id="Return">
+            <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
+            <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
+            <input type="submit" value="Return to userpanel">
+        </form>
+        <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-primary" 
+        style=" grid-row-start: 6;
+                grid-row-end: 6;
+                grid-column-start: 1;
+                grid-column-end: 3;
+                border-radius: 10px;">Reurn to  EditFlashCardSet</a>            
     </div>
     
-
     
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    let arr = /*[[${slidecard}]]*/ "";
-
+    let arr = /*[[${slidecard}]]*/ "";    
+   
     class question{
-        constructor(question, AnsA, AnB, AnC, AnD, correct){
+        constructor(question, cor_ans, ans2, ans3, ans4){
             this.question=question;
-            this.AnsA=AnsA;
-            this.AnB=AnB;
-            this.AnC=AnC;
-            this.AnD=AnD;
-            this.correct=correct;
-        }        
+            this.cor_ans=cor_ans;
+            this.ans2=ans2;
+            this.ans3=ans3;
+            this.ans4=ans4;
+        }
+    }       
+    
+    let questions =[]; //array of question objects
+    let answers =[];    //array of answers to randomize
+    let correct_answers =[];    //array of correct answers 
+    let random_index = 0;
+    let answers_fields =[]; //array of answers fields
+    let current_question = 0; //current question number
+    let score = 0; //score
+    for(let i=0; i<arr.length; i++){
+        questions.push(new question(arr[i].definition, arr[i].description, "", "", ""));      
     }
+          
+        
+        function show_questrion(current_question){
+            document.getElementById("score").innerHTML = "Score: " + score;
+            answers = [];
+            for(let j=0; j<arr.length; j++){
+            if(arr[j].description!=questions[current_question].cor_ans){
+                answers.push(arr[j].description);
+            }            
+        }
+            random_index = Math.floor(Math.random() * answers.length);
+        questions[current_question].ans2 = answers[random_index];
+        answers.splice(random_index, 1);
+        random_index = Math.floor(Math.random() * answers.length);
+        questions[current_question].ans3 = answers[random_index];
+        answers.splice(random_index, 1);
+        random_index = Math.floor(Math.random() * answers.length);
+        questions[current_question].ans4 = answers[random_index];
+        answers.splice(random_index, 1);
+        
+        answers_fields.push(questions[current_question].cor_ans);
+        answers_fields.push(questions[current_question].ans2);
+        answers_fields.push(questions[current_question].ans3);
+        answers_fields.push(questions[current_question].ans4);
+        console.log(answers_fields);
+        document.getElementById("questionText").innerHTML = questions[current_question].question;
+        random_index = Math.floor(Math.random() * answers_fields.length);
+        document.getElementById("AnsA").innerHTML = answers_fields[random_index];
+        answers_fields.splice(random_index, 1);
+        random_index = Math.floor(Math.random() * answers_fields.length);
+        document.getElementById("AnsB").innerHTML = answers_fields[random_index];
+        answers_fields.splice(random_index, 1);
+        random_index = Math.floor(Math.random() * answers_fields.length);
+        document.getElementById("AnsC").innerHTML = answers_fields[random_index];
+        answers_fields.splice(random_index, 1);
+        random_index = Math.floor(Math.random() * answers_fields.length);
+        document.getElementById("AnsD").innerHTML = answers_fields[random_index];
+        answers_fields.splice(random_index, 1);
+        answers_fields =[];
+        }
+        show_questrion(random_index);
 
+        function check_answer(button){
+            let buttonText = button.innerText;
+            if(buttonText == questions[current_question].cor_ans){
+                score++;
+            }
+            current_question++;
+            show_questrion(current_question);
+        }
+    
+    
+    
+    
     /*]]>*/
 </script>
 </body>

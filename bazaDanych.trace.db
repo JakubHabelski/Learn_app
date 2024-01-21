@@ -4053,3 +4053,6 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/Habel/D
 	... 59 more
 =======
 >>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
+2024-01-14 16:11:20.955034+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-224]

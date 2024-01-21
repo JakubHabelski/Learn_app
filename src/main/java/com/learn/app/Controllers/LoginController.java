@@ -1,20 +1,10 @@
 package com.learn.app.Controllers;
 
-<<<<<<< HEAD
-=======
-import com.learn.app.Interfaces.AddFlashCardSetInterface;
-import com.learn.app.Classes.UserData;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.servlet.http.HttpSession;
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,9 +16,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.HttpSession;
-=======
-import org.springframework.web.bind.annotation.*;
->>>>>>> 89bc3243f3169d1e1deed8f9bc1ca0c68fd01927
 
 @Controller
 public class LoginController {
@@ -70,10 +57,11 @@ public class LoginController {
                 user.setUserID(userdata.getUserID());
                 user.setUserPass(UserPass);
                 user.setUserLogin(UserLogin);
+                user.setUserName(userdata.getUserName());
+                user.setUserSurname(userdata.getUserSurname());
                 session.setAttribute("LoggedUser", user);
                 model.addAttribute("user", user);
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
-                model.addAttribute("method", "Post");
                 // Redirect to "UserPanel"
                 return "redirect:/userpanel";
             }
@@ -83,15 +71,9 @@ public class LoginController {
     @GetMapping("/userpanel")
     public String userPanel(Model model, HttpSession session) {
         UserData loggedUser = (UserData) session.getAttribute("LoggedUser");
-
-        // Check if the user is logged in
         if (loggedUser != null) {
-            // Add user information to the model
             model.addAttribute("user", loggedUser);
             model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(loggedUser.getUserID()));
-
-            // Add other attributes to the model as needed
-            model.addAttribute("method", "Get");
             return "UserPanel";
         } else {
             // Redirect to login or handle not logged in scenario
