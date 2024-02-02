@@ -99,7 +99,9 @@
 
         function check_answer(button){
             let buttonText = button.innerText;
-            if(buttonText == questions[current_question].cor_ans){
+            buttonText = buttonText.trim();
+            let correct_answer = questions[current_question].cor_ans.trim();
+            if(buttonText == correct_answer){
                 score++;
             }
             current_question++;

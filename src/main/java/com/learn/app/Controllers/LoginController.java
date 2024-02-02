@@ -48,7 +48,8 @@ public class LoginController {
                             HttpSession session) {
 
         TypedQuery<UserData> query =
-                entityManager.createQuery("SELECT u FROM UserData u", UserData.class);
+                entityManager.createQuery("SELECT u FROM UserData u", UserData.class);       
+        
 
         for (UserData userdata : query.getResultList()) {
             logger.warn(userdata.toString());
@@ -62,6 +63,7 @@ public class LoginController {
                 session.setAttribute("LoggedUser", user);
                 model.addAttribute("user", user);
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
+           //     model.addAttribute("test_image", responseEntity);
                 // Redirect to "UserPanel"
                 return "redirect:/userpanel";
             }
