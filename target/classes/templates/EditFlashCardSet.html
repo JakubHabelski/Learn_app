@@ -9,55 +9,60 @@
     <title>Title</title>
 </head>
 <body>
-<table class="table table-striped">
-    <tr>
-        <th>Definition</th>
-        <th>Description</th>
-        <th></th>
-        <th></th>
-    </tr>
-    <tr th:each="card :${flashCard}">
-        <div th:id="${card.FlashCardId}">
-            <form th:action="@{/EditCard}" method="post">
-                <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
-                <input type="hidden" th:value="${card.SetID}" name="SetID">
-                <td><input th:value="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}" class="css-input" disabled></td>
-                <td>
-                    <input th:value="${card.Description}" name="Description"  th:id="'DescriptionInput_' + ${card.FlashCardId}" class="css-input" disabled>
-                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
-                </td>
-            </form>
-        </div>
-        
-               
-        <td>
-            <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" class="btn btn-danger">
-                <i class="fa fa-trash-o fa-lg"></i> Delete
-            </a>
-        </td>
-       
-        <td>
-            <button class="btn btn-primary" th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))">Edit</button>
-        </td>
-    </tr>
-</table>
-<form th:action="@{/AddCard}" method="post">
-    <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
-    <input name="Definition">
-    <input name="Description">
-    <input type="submit" value="Add Card">
-</form>
 
-        <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
-            <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
-            <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
-            <input type="submit" value="Return to userpanel">
-        </form>
 
-        <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary">FlashCards</a>
-        <a href="#" th:href="@{/QuizGame}" class="btn btn-primary">QuizGame</a>
-        <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary">MatchingGame</a>
-        
+<main>
+    <table class="table table-striped">
+        <tr>
+            <th>Definition</th>
+            <th>Description</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="card :${flashCard}">
+            <div th:id="${card.FlashCardId}">
+                <form th:action="@{/EditCard}" method="post">
+                    <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
+                    <input type="hidden" th:value="${card.SetID}" name="SetID">
+                    <td><input th:value="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}" class="css-input" disabled></td>
+                    <td>
+                        <input th:value="${card.Description}" name="Description"  th:id="'DescriptionInput_' + ${card.FlashCardId}" class="css-input" disabled>
+                        <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+                    </td>
+                </form>
+            </div>
+
+
+            <td>
+                <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" class="btn btn-danger">
+                    <i class="fa fa-trash-o fa-lg"></i> Delete
+                </a>
+            </td>
+
+            <td>
+                <button class="btn btn-primary" th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))">Edit</button>
+            </td>
+        </tr>
+    </table>
+    <form th:action="@{/AddCard}" method="post">
+        <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
+        <input name="Definition">
+        <input name="Description">
+        <input type="submit" value="Add Card">
+    </form>
+
+    <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
+        <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
+        <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
+        <input type="submit" value="Return to userpanel">
+    </form>
+
+    <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary">FlashCards</a>
+    <a href="#" th:href="@{/QuizGame}" class="btn btn-primary">QuizGame</a>
+    <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary">MatchingGame</a>
+
+</main>
+
       
            
            

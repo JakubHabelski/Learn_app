@@ -10,25 +10,54 @@
 <body>
 <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post">
 
-    <table>
-        <tr>
-            <td>Set Name:</td>
-            <td><input name="SetName"></td>
-        </tr>
-        <tr>
-            <td>Description</td>
-            <td><input name="Description" ></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Add"></td>
-        </tr>
-
+    <table id="input_group">
+        <tbody id="tableBody">
+            <tr>
+                <td>Set Name:</td>
+                <td><input name="SetName"></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td><input name="Description" ></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Add"></td>
+            </tr>
+        </tbody>
     </table>
+    <button id="btn" type="button"> dodaj input</button>
 </form>
 <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
             <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
             <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
             <input type="submit" value="Return to userpanel">
         </form>
+
+<script>
+    let counter=1;
+    document.getElementById("btn").addEventListener('click', function (){
+        let tableBody = document.getElementById('tableBody');
+        let newRow = document.createElement('tr'); // Tworzenie nowego wiersza
+
+        // Tworzenie pierwszej komórki w nowym wierszu
+        let defCell = document.createElement('td');
+        defCell.textContent = 'Def:';
+        let defInput = document.createElement('input');
+        defInput.setAttribute('th:name', 'def' + counter);
+        defCell.appendChild(defInput);
+        newRow.appendChild(defCell);
+
+        // Tworzenie drugiej komórki w nowym wierszu
+        let desCell = document.createElement('td');
+        desCell.textContent = 'Des:';
+        let desInput = document.createElement('input');
+        desInput.setAttribute('th:name', 'des' + counter);
+        desCell.appendChild(desInput);
+        newRow.appendChild(desCell);
+        tableBody.appendChild(newRow); // Dodanie nowego wiersza do tabeli
+
+        counter++; // Inkrementacja licznika
+    })
+</script>
 </body>
 </html>

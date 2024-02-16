@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.learn.app.Classes.UserData;
@@ -26,7 +27,7 @@ public class LoginController {
     public LoginController(AddFlashCardSetInterface addFlashCardSetInterface) {
         this.addFlashCardSetInterface = addFlashCardSetInterface;
     }
-    
+
     @PersistenceContext
     @Autowired
     private EntityManager entityManager;
@@ -48,13 +49,13 @@ public class LoginController {
                             HttpSession session) {
 
         TypedQuery<UserData> query =
-                entityManager.createQuery("SELECT u FROM UserData u", UserData.class);       
-        
+                entityManager.createQuery("SELECT u FROM UserData u", UserData.class);
+
 
         for (UserData userdata : query.getResultList()) {
             logger.warn(userdata.toString());
             if (userdata.getUserLogin().equals(UserLogin) && userdata.getUserPass().equals(UserPass)){
-            
+
                 user.setUserID(userdata.getUserID());
                 user.setUserPass(UserPass);
                 user.setUserLogin(UserLogin);
@@ -66,6 +67,8 @@ public class LoginController {
            //     model.addAttribute("test_image", responseEntity);
                 // Redirect to "UserPanel"
                 return "redirect:/userpanel";
+            } else {
+
             }
         }
        return "PError";
@@ -81,6 +84,11 @@ public class LoginController {
             // Redirect to login or handle not logged in scenario
             return "redirect:/loginform";
         }
+    }
+    @RequestMapping("/Logout")
+    public String Logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/loginform";
     }
 
 }
