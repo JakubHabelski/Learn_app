@@ -9088,3 +9088,6 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/Habel/I
 2024-02-16 22:55:23.408243+01:00 jdbc[63]: exception
 org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
 The object is already closed [90007-224]
+2024-02-17 10:49:22.710539+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: Obiekt jest zamknięty
+The object is already closed [90007-224]

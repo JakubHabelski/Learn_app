@@ -20,6 +20,12 @@ public class UserData {
 
     @OneToMany(mappedBy = "userData")
     private List<FlashCardSet> flashCardSets;
+
+    @OneToOne(mappedBy = "userData")
+    private image Image;
+
+
+
     public UserData() {
     }
 

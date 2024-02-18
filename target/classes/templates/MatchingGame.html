@@ -8,7 +8,64 @@
         <title>Title</title>
     </head>
 <body>
-    
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <form id="userForm" action="#" th:action="@{/userpanel}" th:object="${user}" method="post">
+        <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
+        <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
+        <input id="submitButton" type="submit" value="Return to userpanel" class="navbar-brand" style="display: none">
+        <a id="customLink" class="navbar-brand" href="#" role="button">My Learn App</a>
+        <button class="navbar-toggler "  type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </form>
+
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Create new set
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post"  style="display: block">
+                        <label for="SetName">Set Name</label>
+                        <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">
+                        <label for="Description">Description</label>
+                        <input name="Description" id="Description" class="form-control" placeholder="Description" style="width: auto; margin-bottom: 0.5rem">
+                        <input type="submit" value="Add">
+                    </form>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span th:text="${user.userName}"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a th:href="@{/Logout}" class="dropdown-item">Logout</a>
+                    <div class="dropdown-divider"></div>
+                    <span th:text="${user.userSurname}" class="dropdown-item"></span>
+                    <a th:href="@{/AddFlashCardSet/{userID}(userID=${user.userID})}" class="dropdown-item">  Create new set</a>
+                </div>
+
+
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
+        </form>
+    </div>
+</nav>
+
     <div id="container">
         <button id="field1" onclick="select_2_fields(1)"></button>
         <button id="field2" onclick="select_2_fields(2)"></button>
@@ -40,7 +97,7 @@
         for(let i = 0; i < arr.length; i++){
             CardArr.push(new Card(arr[i].definition, arr[i].description));
         }
-        
+
         let temp_arr = CardArr;
         for(let i=0; i<6; i++){
             let random = Math.floor(Math.random() * temp_arr.length);
@@ -69,55 +126,56 @@
         function count_selected_fields(){
             let count = 0;
             let temp_arr = [];
-            for(let i=0; i<12; i++){
-                if(buttons[i].getAttribute("is_selected") === "selected"){
+            let containerButtons = document.querySelectorAll('#container button');
+            for(let i=0; i<containerButtons.length; i++){
+                if(containerButtons[i].getAttribute("is_selected") === "selected" ){
                     count++;
-                    temp_arr.push(buttons[i]);
+                    temp_arr.push(containerButtons[i]);
                 }
             }
-            
-            if(count == 2){
+
+            if(count === 2){
                 console.log(temp_arr[0].textContent," " ,temp_arr[1].textContent);
                 setTimeout(function(){
                     let success_count = false;
                     console.log("2 fields selected");
-                    for(let i=0; i<6; i++){                        
-                        if(temp_arr[0].textContent == Selected_Cards[i].def){                            
-                            if(temp_arr[1].textContent == Selected_Cards[i].des){
+                    for(let i=0; i<6; i++){
+                        if(temp_arr[0].textContent === Selected_Cards[i].def){
+                            if(temp_arr[1].textContent === Selected_Cards[i].des){
                                 success_count = true;
                                 console.log("match found");
-                            }                        
+                            }
                         }
-                        if(temp_arr[1].textContent == Selected_Cards[i].def){                            
-                            if(temp_arr[0].textContent == Selected_Cards[i].des){
+                        if(temp_arr[1].textContent === Selected_Cards[i].def){
+                            if(temp_arr[0].textContent === Selected_Cards[i].des){
                                 success_count = true;
                                 console.log("match found");
-                            }                        
+                            }
                         }
-                        
+
                     }
-                    if(success_count == true){
-                        for(let i=0; i<12; i++){
-                            if(buttons[i].getAttribute("is_selected") === "selected"){
-                                buttons[i].setAttribute("is_selected", "not_selected");
-                                buttons[i].style.visibility = "hidden";
-                            }                            
-                        } 
+                    if(success_count === true){
+                        for(let i=0; i<containerButtons.length; i++){
+                            if(containerButtons[i].getAttribute("is_selected") === "selected" ){
+                                containerButtons[i].setAttribute("is_selected", "not_selected");
+                                containerButtons[i].style.visibility = "hidden";
+                            }
+                        }
                     }else{
-                        for(let i=0; i<12; i++){
-                            buttons[i].setAttribute("is_selected", "not_selected");
-                            buttons[i].style.backgroundColor = "white";                            
-                        } 
-                    }                    
+                        for(let i=0; i<containerButtons.length; i++){
+                            containerButtons[i].setAttribute("is_selected", "not_selected");
+                            containerButtons[i].style.backgroundColor = "white";
+                        }
+                    }
                 }, 1000);
-                
+
             }
-            
         }
+
 
         function select_2_fields(field){
             buttons[field-1].setAttribute("is_selected", "selected");
-            if(buttons[field-1].getAttribute("is_selected") == "selected"){
+            if(buttons[field-1].getAttribute("is_selected") === "selected"){
                 buttons[field-1].style.backgroundColor = "red";
                 console.log(buttons[field-1].textContent); 
                 console.log(buttons[field-1].getAttribute("is_selected"));
@@ -126,6 +184,10 @@
         }
         
         /*]]>*/
+        document.getElementById("customLink").addEventListener("click", function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            document.getElementById("userForm").submit(); // Submit the form
+        });
     </script>
 </body>
 </html>
