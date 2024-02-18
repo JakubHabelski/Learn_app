@@ -49,6 +49,9 @@ public class EditSetController {
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());
+        System.out.println("-----------Dane usera---------");
+        System.out.println(user);
+        System.out.println("------------------------------");
         flashCards.setSetID(SetID);
         model.addAttribute("user", user);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));

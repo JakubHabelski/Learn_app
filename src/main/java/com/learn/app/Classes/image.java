@@ -1,9 +1,7 @@
 package com.learn.app.Classes;
 
 import jakarta.annotation.Generated;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class image {
@@ -13,6 +11,10 @@ public class image {
     private String path;
     
     private Long userID;
+
+    @OneToOne
+    @JoinColumn(name="userID" , insertable=false, updatable=false)
+    private UserData userData;
 
     public Long getUserID() {
         return userID;
