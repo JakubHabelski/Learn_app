@@ -1,22 +1,21 @@
 package com.learn.app.Controllers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import com.learn.app.Classes.image;
+import com.learn.app.Interfaces.upload_Image_Interface;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.learn.app.Classes.image;
-import com.learn.app.Interfaces.upload_Image_Interface;
+import java.io.*;
+import java.net.URLConnection;
+import java.nio.file.Files;
 
 
 
@@ -49,16 +48,27 @@ public class Upload_image {
             InputStream inputStream = file.getInputStream();
             IOUtils.copy(inputStream, outputStream);
             image_obj.setPath(formFile.getPath());
-            
+
            // upload_Image_Interface.save(image_obj);
             outputStream.close();
             inputStream.close();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
           //  return "Coś poszło  źle" + e.getMessage();
         }
         return image_obj;
+    }
+    @GetMapping("photo/{name}")
+    public ResponseEntity showImage(@PathVariable String name) throws IOException {
+        File file = new File("src/main/resources/static/uploads/" + name);
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(URLConnection.guessContentTypeFromName(name)))
+                .body(Files.readAllBytes(file.toPath()));
     }
     
     

@@ -35,6 +35,8 @@ public class FlashCardSetController {
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());
+        user.setUserName(LoggedUser.getUserName());
+        user.setUserSurname(LoggedUser.getUserSurname());
         model.addAttribute("user" , user);
 
         return("AddFlashCardSet");

@@ -38,13 +38,15 @@ public class RegisterController {
 
         UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail);                                 
         userInterface.save(user);
-        
+        //saving user image file to da
         Upload_image upload_image = new Upload_image();
         image uploadedImage = upload_image.upload_image(file);
         String path = uploadedImage.getPath();
        // image image_obj = new image();
         uploadedImage.setUserID(user.getUserID());
         uploadedImage.setPath(path);
+        uploadedImage.setFlashCardId(null);
+        System.out.println(uploadedImage.getPath());
         upload_Image_Interface.save(uploadedImage);
         return "redirect:/loginform";
     }

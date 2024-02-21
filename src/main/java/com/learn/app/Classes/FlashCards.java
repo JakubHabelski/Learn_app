@@ -13,9 +13,15 @@ public class FlashCards {
     private String Definition;
     private String Description;
 
+    private String path;
+
     @ManyToOne
     @JoinColumn(name = "SetID", insertable=false, updatable=false)
     private FlashCardSet flashCardSet;
+
+    @OneToOne(mappedBy = "flashCard", cascade = CascadeType.ALL)
+    private image image;
+
 
     public FlashCards(Long flashCardId, Long setID, String definition, String description) {
         FlashCardId = flashCardId;
@@ -23,6 +29,7 @@ public class FlashCards {
         Definition = definition;
         Description = description;
     }
+
 
     public FlashCards() {
     }
@@ -57,6 +64,14 @@ public class FlashCards {
 
     public void setDescription(String description) {
         Description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
 

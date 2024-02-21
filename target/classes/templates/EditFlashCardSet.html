@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/EditFlashCardSet_style.css}" />
+    <script src="https://kit.fontawesome.com/50d738d854.js" crossorigin="anonymous"></script>
+
     <title>Title</title>
 </head>
 <body>
@@ -67,56 +69,101 @@
     </div>
 </nav>
 
-<main style>
-    <table class="table table-striped">
-        <tr >
-            <th >Definition</th>
-            <th >Description</th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr th:each="card :${flashCard}"  >
-            <div th:id="${card.FlashCardId}">
-                <form th:action="@{/EditCard}" method="post">
+    <th:block th:each="image : ${imagePaths}">
+            <img th:src="${image}" alt="Obraz fiszki" style="display: none" id="source_image"/>
+    </th:block>
+
+
+
+
+<main>
+        <aside>
+            <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
+            <a href="#" th:href="@{/QuizGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
+            <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
+        </aside>
+        <section >
+
+            <div class="input_def_des_box" th:each="card :${flashCard}" >
+                <p style="float: left; margin: 0; margin-left: 10px;" th:text="${card.FlashCardId}"></p>
+                <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
+                    <i class="fa-solid fa-x" ></i>
+
+                </a>
+                <button th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))" style="background: none; border: none; float: right">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <!--------------------------------------------------------------------------------------->
+                <!--Edit exist card---------------------------------------------------------------------->
+                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data">
                     <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
                     <input type="hidden" th:value="${card.SetID}" name="SetID">
-                    <td><input th:value="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}" class="css-input" disabled></td>
-                    <td>
-                        <input th:value="${card.Description}" name="Description"  th:id="'DescriptionInput_' + ${card.FlashCardId}" class="css-input" disabled>
-                        <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
-                    </td>
+                <div class="input_def_box">
+                    <textarea class="input_def"  th:text="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}"  disabled></textarea>
+
+                    <div style="font-size: 16px">Pojęcie</div>
+                </div>
+                <div class="input_des_box">
+                    <textarea class="input_def"  th:text="${card.Description}" name="Description" th:id="'DescriptionInput_' + ${card.FlashCardId}"  disabled></textarea>
+                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+                    <div style="font-size: 16px">Defnicja</div>
+                </div>
                 </form>
+                <div>
+                    <label for="file-upload" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
+                        <i class="fas fa-upload"></i> Obraz
+                    </label>
+                    <input id="file-upload" type="file" class="input_image" th:name="file">
+                </div>
+                <span th:text="${card.path}"></span>
+                <!-- Element docelowy -->
+                <img id="targetImage" alt="Obraz" style="max-height: 100px;">
+
+
             </div>
+            <!--------------------------------------------------------------------------------------->
+            <!--Input a new card--------------------------------------------------------------------->
+            <div class="input_def_des_box">
+                <p style="float: left; margin: 0; margin-left: 10px;" >Create new card</p>
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
+                    <div class="input_def_box">
+                        <textarea class="input_def" name="Definition"></textarea>
+
+                        <div style="font-size: 16px">Pojęcie</div>
+                    </div>
+                    <div>
+                        <label for="file-upload2" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
+                            <i class="fas fa-upload"></i> Obraz
+                        </label>
+                        <input id="file-upload2" type="file" class="input_image" th:name="file" >
+                    </div>
+                    <div class="input_des_box">
+                        <textarea class="input_def"   name="Description" ></textarea>
+                        <input type="submit" value="Add Card">
+                        <div style="font-size: 16px">Defnicja</div>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+        <article>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga laborum doloribus labore in consectetur, autem praesentium ipsum animi exercitationem sed eaque distinctio itaque sunt rem at. Pariatur expedita deleniti modi.</p>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga laborum doloribus labore in consectetur, autem praesentium ipsum animi exercitationem sed eaque distinctio itaque sunt rem at. Pariatur expedita deleniti modi.</p>
+        </article>
+    </main>
 
 
-            <td>
-                <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" class="btn btn-danger">
-                    <i class="fa fa-trash-o fa-lg"></i> Delete
-                </a>
-            </td>
-
-            <td>
-                <button class="btn btn-primary" th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))">Edit</button>
-            </td>
-        </tr>
-    </table>
-    <form th:action="@{/AddCard}" method="post">
-        <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
-        <input name="Definition">
-        <input name="Description">
-        <input type="submit" value="Add Card">
-    </form>
 
 
 
-    <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary">FlashCards</a>
-    <a href="#" th:href="@{/QuizGame}" class="btn btn-primary">QuizGame</a>
-    <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary">MatchingGame</a>
 
-</main>
 
-      
-           
+
+
            
 
 <script th:inline="javascript">
@@ -128,16 +175,45 @@
     let Inputs=[definitionInput, descriptionInput];
     Inputs.forEach(input => {
         input.disabled= false;
-    });        
+    });
 }
 
     document.getElementById("customLink").addEventListener("click", function(e) {
         e.preventDefault(); // Prevent default link behavior
         document.getElementById("userForm").submit(); // Submit the form
     });
+    function autoResize(textareaId) {
+        var textarea = document.getElementById(textareaId);
+        //     textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
     /*<![CDATA[*/
 
- 
+    let arr = /*[[${slidecard}]]*/ "";
+    console.log(arr);
+
+
+    //----------------------------------------------------------
+    var images = document.querySelectorAll('img[id^="targetImage"]');
+
+    // Pętla iterująca po wszystkich elementach img
+    images.forEach(function(image, index) {
+        // Nadajemy nowe id dla każdego obrazka z autoinkrementacją
+        image.setAttribute('id', 'targetImage' + index);
+    });
+    //----------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', function() {
+        var hiddenImages = document.querySelectorAll('img[id^="source_image"]');
+        hiddenImages.forEach(function(hiddenImage, index) {
+            var targetImageId = 'targetImage' + index; // Tworzymy nowe ID z autoinkrementacją
+            var targetImage = document.getElementById(targetImageId);
+            targetImage.src = hiddenImage.src;
+            targetImage.alt = 'Obraz fiszki';
+            targetImage.style.display = 'inline'; // Pokaż docelowy obrazek po ustawieniu src
+        });
+    });
+
+    //----------------------------------------------------------
   /*]]>*/
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

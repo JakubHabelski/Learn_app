@@ -17,6 +17,9 @@ public interface AddFlashCardInterface extends JpaRepository<FlashCards, Long> {
     @Query("DELETE FROM FlashCards f WHERE f.SetID = :SetID")
     void deleteCardBySetID(@Param("SetID") Long setID);
 
+    @Query("SELECT f.Definition, f.Description, i.path FROM FlashCards f JOIN image i ON f.FlashCardId = i.FlashCardId")
+    List<Object[]> findDefinitionDescriptionAndImagePath();
+
 }
 
 

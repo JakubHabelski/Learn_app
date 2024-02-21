@@ -1,6 +1,5 @@
 package com.learn.app.Classes;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,10 +10,15 @@ public class image {
     private String path;
     
     private Long userID;
+    private Long FlashCardId;
 
     @OneToOne
     @JoinColumn(name="userID" , insertable=false, updatable=false)
     private UserData userData;
+
+    @OneToOne
+    @JoinColumn(name = "flashCardId", insertable=false, updatable=false)
+    private FlashCards flashCard;
 
     public Long getUserID() {
         return userID;
@@ -24,10 +28,22 @@ public class image {
     }
     public image() {
     }
-    public image(String path, Long userID) {
+
+    public Long getFlashCardId() {
+        return FlashCardId;
+    }
+
+    public void setFlashCardId(Long flashCardId) {
+        FlashCardId = flashCardId;
+    }
+
+    public image(String path, Long userID, Long FlashCardId) {
         this.path = path;
         this.userID = userID;
+        this.FlashCardId = FlashCardId;
     }
+
+
     public Long getId() {
         return id;
     }
