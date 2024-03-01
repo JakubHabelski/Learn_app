@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/FlashCardGameStyle.css}" />
     <title>Title</title>
 </head>
 <body>
@@ -114,11 +114,12 @@
         /*<![CDATA[*/
     
         class card{
-            constructor(definition, description, flashCardId, Is_known){
+            constructor(definition, description, flashCardId, Is_known, Is_viewed){
                 this.definition=definition;
                 this.description=description;
                 this.flashCardId=flashCardId;
                 this.Is_known=Is_known;
+                this.Is_viewed=Is_viewed;
             }
         }
     

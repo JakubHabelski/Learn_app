@@ -1,5 +1,11 @@
 package com.learn.app.Controllers;
 
+import com.learn.app.Classes.UserData;
+import com.learn.app.Interfaces.AddFlashCardSetInterface;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.learn.app.Classes.UserData;
-import com.learn.app.Interfaces.AddFlashCardSetInterface;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
@@ -33,7 +31,7 @@ public class LoginController {
     private EntityManager entityManager;
     UserData user = new UserData();
 
-
+    boolean userfound=true;
 
     @GetMapping(value = "/loginform" )
     public String loginform(Model model) {
@@ -66,12 +64,15 @@ public class LoginController {
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
            //     model.addAttribute("test_image", responseEntity);
                 // Redirect to "UserPanel"
+                userfound = true;
                 return "redirect:/userpanel";
-            } else {
-
             }
         }
-       return "PError";
+            userfound= false;
+
+            model.addAttribute("alert", "Invalid Login or Password");
+            return "redirect:/loginform";
+
     }
     @GetMapping("/userpanel")
     public String userPanel(Model model, HttpSession session) {
