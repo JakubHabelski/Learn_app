@@ -1,20 +1,17 @@
 package com.learn.app.Controllers;
 
-import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
-
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 
 @Controller
@@ -42,8 +39,7 @@ public class FlashCardGames {
         user.setUserID(LoggedUser.getUserID());
         ArrayList slidecard = new ArrayList<FlashCards>();
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
-        model.addAttribute("slidecard", slidecard);                                    
-                                           
+        model.addAttribute("slidecard", slidecard);
         return "FlashCardGame";
     }    
     @GetMapping("/QuizGame")
@@ -52,14 +48,17 @@ public class FlashCardGames {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         FlashCards flashCard = new FlashCards();
         Long SetID = (Long) session.getAttribute("SetID");
-        model.addAttribute("user", user);
-        model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
+
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());
+        user.setUserName(LoggedUser.getUserName());
+        user.setUserSurname(LoggedUser.getUserSurname());
         ArrayList slidecard = new ArrayList<FlashCards>();
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
-        model.addAttribute("slidecard", slidecard);                        
+        model.addAttribute("slidecard", slidecard);
+        model.addAttribute("user", user);
+        model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
         return "QuizGame";
     }
 
@@ -86,6 +85,22 @@ public class FlashCardGames {
         Long SetID = (Long) session.getAttribute("SetID");
         return "redirect:/EditFlashCardSet/" + SetID;       
     }
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void test(HttpSession session,
+                     @RequestParam ("flashCardId") Long flashCardId,
+                     @RequestParam ("learned") boolean learned
+                     ) {
+       FlashCards flashCard = addFlashCardInterface.customFindByID(Long.valueOf(flashCardId));
+      //  flashCard.setDefinition(flashCard.getDefinition());
 
+        Long SetID = (Long) session.getAttribute("SetID");
+        Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
+        Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
+        double progres = (double) count_learned /count_set_size;
+        flashCard.setLearned(learned);
+        addFlashCardInterface.save(flashCard);
+
+    }
     
 }

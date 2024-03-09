@@ -15,6 +15,10 @@ public class FlashCardSet {
     private String SetName;
     private String SetDescription;
 
+    @Column(columnDefinition = "double default 0.0")
+    private double Progression;
+
+
     @ManyToOne
     @JoinColumn(name = "UserID", insertable=false, updatable=false)
     private UserData userData;
@@ -27,10 +31,11 @@ public class FlashCardSet {
     public FlashCardSet() {
     }
 
-    public FlashCardSet(Long userID, String setName, String setDescription) {
+    public FlashCardSet(Long userID, String setName, String setDescription, double progression) {
         UserID = userID;
         SetName = setName;
         SetDescription = setDescription;
+        Progression = progression;
     }
 
     public Long getSetID() {
@@ -79,5 +84,13 @@ public class FlashCardSet {
 
     public void setFlashCards(List<FlashCards> flashCards) {
         this.flashCards = flashCards;
+    }
+
+    public double getProgression() {
+        return Progression;
+    }
+
+    public void setProgression(double progression) {
+        Progression = progression;
     }
 }

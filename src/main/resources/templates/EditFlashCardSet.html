@@ -151,9 +151,13 @@
             </div>
         </section>
         <article>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga laborum doloribus labore in consectetur, autem praesentium ipsum animi exercitationem sed eaque distinctio itaque sunt rem at. Pariatur expedita deleniti modi.</p>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga laborum doloribus labore in consectetur, autem praesentium ipsum animi exercitationem sed eaque distinctio itaque sunt rem at. Pariatur expedita deleniti modi.</p>
-        </article>
+            You know these cards:
+            <div th:each="leared :${learncard}">
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <p th:text="${leared.Definition}"></p>
+                <p th:text="${leared.Description}"></p>
+            </div>
+         </article>
     </main>
 
 

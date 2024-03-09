@@ -83,6 +83,10 @@ public class EditSetController {
                 imagePaths.add("");
             }
         }
+        ArrayList learncard = new ArrayList<FlashCards>();
+        learncard.addAll(addFlashCardInterface.find_learnedFlashCards(SetID, true)); // pokazywanie tylko nauczonych fiszek
+        System.out.println(learncard) ;
+        model.addAttribute("learncard", learncard);
 
 
         model.addAttribute("imagePaths", imagePaths);
@@ -109,6 +113,7 @@ public class EditSetController {
         flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
+       // flashCard.setLearned(false);
         addFlashCardInterface.save(flashCard);
         System.out.println("-----------SetID---------");
         System.out.println(flashCard.getFlashCardId());

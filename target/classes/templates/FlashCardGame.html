@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/FlashCardGameStyle.css}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Title</title>
 </head>
 <body>
@@ -30,10 +31,10 @@
                 <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Create new set
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
                     <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post"  style="display: block">
                         <label for="SetName">Set Name</label>
                         <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">
@@ -83,9 +84,13 @@
         </div>
         <div id="buttons">
             <button id="previous" onclick="change_card('previous')">previous</button>
-            <button id="next" onclick="change_card('next')">next</button>  
-            <button onclick="know_card(1)">I know</button> 
-            <button onclick="know_card(0)">I dont't know</button> 
+            <button id="next" onclick="change_card('next')">next</button>
+            <form id="knowForm" action="/test" method="get">
+                <input type="hidden" name="flashCardId" id="flashCardId" value="">
+                <input type="hidden" name="learned" id="learned" value="">
+            <button onclick="know_card(1)" type="submit">I know</button>
+            <button onclick="know_card(0)" type="submit">I dont't know</button>
+            </form>
         </div>
         <div id="know_dont_know">
             <span id="know">0</span>
@@ -98,7 +103,10 @@
         </form>
         <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-primary" id="Return">Return to  EditFlashCardSet</a> 
     </div>
-       
+    <form action="/test" method="get">
+        <button type="submit" class="btn btn-primary">Test</button>
+    </form>
+
 
     <script th:inline="javascript">
         function showEditField(cardId) {
@@ -114,19 +122,21 @@
         /*<![CDATA[*/
     
         class card{
-            constructor(definition, description, flashCardId, Is_known){
+            constructor(definition, description, flashCardId, Is_known, Is_viewed){
                 this.definition=definition;
                 this.description=description;
                 this.flashCardId=flashCardId;
                 this.Is_known=Is_known;
+                this.Is_viewed=Is_viewed;
             }
         }
     
         let arr = /*[[${slidecard}]]*/ "";
-    
+
+        let test= "test";
         let card_arr=[];
         for(let i=0; i<arr.length; i++){
-            card_arr.push(new card(arr[i].definition, arr[i].description, arr[i].flashCardId, false));
+            card_arr.push(new card(arr[i].definition, arr[i].description, arr[i].flashCardId, arr[i].Learned));
         }
         console.log(card_arr);
         let i=0;
@@ -175,7 +185,21 @@
             e.preventDefault(); // Prevent default link behavior
             document.getElementById("userForm").submit(); // Submit the form
         });
-      /*]]>*/
+
+
+        function know_card(know) {
+            // Ustawienie wartości dla pól formularza
+            document.getElementById("flashCardId").value = card_arr[i].flashCardId;
+            document.getElementById("learned").value = know == 1 ? "true" : "false";
+
+            // Wysłanie formularza
+            document.getElementById("knowForm").submit();
+        }
+
+
+
+
+        /*]]>*/
     </script>   
 </body>
 </html>

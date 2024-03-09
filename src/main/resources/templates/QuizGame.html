@@ -30,10 +30,10 @@
                 <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Create new set
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
                     <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post"  style="display: block">
                         <label for="SetName">Set Name</label>
                         <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">

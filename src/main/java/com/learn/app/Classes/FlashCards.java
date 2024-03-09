@@ -14,6 +14,8 @@ public class FlashCards {
     private String Description;
 
     private String path;
+    @Column(columnDefinition = "boolean default false") // Ustawienie domyślnej wartości na false
+    private boolean Learned;
 
     @ManyToOne
     @JoinColumn(name = "SetID", insertable=false, updatable=false)
@@ -23,11 +25,12 @@ public class FlashCards {
     private image image;
 
 
-    public FlashCards(Long flashCardId, Long setID, String definition, String description) {
+    public FlashCards(Long flashCardId, Long setID, String definition, String description, boolean learned) {
         FlashCardId = flashCardId;
         SetID = setID;
         Definition = definition;
         Description = description;
+        Learned = learned;
     }
 
 
@@ -72,6 +75,14 @@ public class FlashCards {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public boolean getLearned() {
+        return Learned;
+    }
+
+    public void setLearned(boolean learned) {
+        Learned = learned;
     }
 }
 

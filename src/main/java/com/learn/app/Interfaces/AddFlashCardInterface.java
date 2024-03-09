@@ -20,6 +20,12 @@ public interface AddFlashCardInterface extends JpaRepository<FlashCards, Long> {
     @Query("SELECT f.Definition, f.Description, i.path FROM FlashCards f JOIN image i ON f.FlashCardId = i.FlashCardId")
     List<Object[]> findDefinitionDescriptionAndImagePath();
 
+    @Query("SELECT f FROM FlashCards f WHERE f.FlashCardId = :flashCardId")
+    FlashCards customFindByID(@Param("flashCardId") Long flashCardId);
+
+    @Query("SELECT f FROM FlashCards f WHERE f.SetID = :setID AND f.Learned = :learned")
+    List<FlashCards> find_learnedFlashCards(@Param("setID") Long setID, @Param("learned") boolean learned);
+
 }
 
 

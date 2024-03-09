@@ -22,10 +22,10 @@ color:red;
 }
 
 #show_card_container{
-    position: absolute;    
+    position: absolute;
     background-color: transparent;
-    aspect-ratio: 1/1;
-    width: 500px;
+    aspect-ratio: 16 / 9;
+    width: 800px;
     perspective: 1000px;
     left: 50%;
     top: 50%;

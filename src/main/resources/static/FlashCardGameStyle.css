@@ -10,12 +10,16 @@
 .css-input:focus {
     outline:none;
 }
+body {
+    background-color: #e1e2e6;
+    margin: 0;
+}
 
 #show_card_container{
     position: absolute;
     background-color: transparent;
-    aspect-ratio: 1/1;
-    width: 500px;
+    aspect-ratio: 16 / 9;
+    width: 800px;
     perspective: 1000px;
     left: 50%;
     top: 50%;
@@ -35,12 +39,21 @@
 }
 
 #card_def{
-    background-color: red;
-
-}
-#card_des{
-    background-color: rgb(255, 255, 0);
-    transform: rotateY(180deg);
+    background-color: #fde5ee;
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+    border-radius: 25px;
+    padding: 25px;
+    overflow: auto; /* Dodane */
+    /* margin: 25px; */
+  }
+  #card_des{
+      background-color: #fde5ee;
+      transform: rotateY(180deg);
+      box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+      border-radius: 25px;
+      padding: 25px;
+      overflow: auto; /* Dodane */
+      /* margin: 25px; */
 }
 
 #card_def, #card_des{
@@ -95,4 +108,17 @@
     align-items: center;
     border: 2px solid black;
     border-radius: 5px;
+}
+* {
+    box-sizing: border-box;
+}
+
+@media (max-width: 991px){
+    #show_card_container{
+        width: 600px
+    }
+    body{
+        margin: 0;
+        padding: 0;
+    }
 }

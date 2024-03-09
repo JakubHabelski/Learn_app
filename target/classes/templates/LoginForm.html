@@ -9,7 +9,7 @@
     <title>Title</title>
 </head>
 <body>
-    
+
     <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
         <input th:name="UserLogin" th:field="*{UserLogin}" class="form-control" placeholder="Username" required>
         <input th:name="UserPass" th:field="*{UserPass}" class="form-control" placeholder="Password" type="password" required>

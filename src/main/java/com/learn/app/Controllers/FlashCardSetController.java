@@ -52,6 +52,7 @@ public class FlashCardSetController {
         flashCardSet1.setSetName(SetName);
         flashCardSet1.setSetDescription(Description);
         flashCardSet1.setUserID(LoggedUser.getUserID());
+
         addFlashCardSetInterface.save(flashCardSet1);
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
