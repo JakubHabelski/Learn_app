@@ -1,5 +1,6 @@
 package com.learn.app.Controllers;
 
+import com.learn.app.Classes.FlashCardSet;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Interfaces.AddFlashCardInterface;
@@ -91,14 +92,17 @@ public class FlashCardGames {
                      @RequestParam ("flashCardId") Long flashCardId,
                      @RequestParam ("learned") boolean learned
                      ) {
+        Long SetID = (Long) session.getAttribute("SetID");
        FlashCards flashCard = addFlashCardInterface.customFindByID(Long.valueOf(flashCardId));
       //  flashCard.setDefinition(flashCard.getDefinition());
+        FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
 
-        Long SetID = (Long) session.getAttribute("SetID");
         Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
         Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
         double progres = (double) count_learned /count_set_size;
+        flashCardSet.setProgression(progres);
         flashCard.setLearned(learned);
+        addFlashCardSetInterface.save(flashCardSet);
         addFlashCardInterface.save(flashCard);
 
     }

@@ -11,5 +11,7 @@ public interface AddFlashCardSetInterface extends JpaRepository<FlashCardSet,Lon
     @Query("SELECT fs FROM FlashCardSet fs WHERE fs.UserID = :userID")
     List<FlashCardSet> findByUserID(@Param("userID") Long userID);
 
+    @Query("SELECT fs FROM FlashCardSet fs WHERE fs.SetID= :SetID")
+    FlashCardSet findBySetID(@Param("SetID") Long setID);
 
 }

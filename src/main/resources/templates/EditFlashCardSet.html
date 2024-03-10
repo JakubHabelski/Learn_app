@@ -151,6 +151,12 @@
             </div>
         </section>
         <article>
+            <p>Your set learning progress is:</p>
+            <p th:text="${flashcard_set_progress}"></p>
+            <p>Count learned:</p>
+            <p th:text="${count_learned}"></p>
+            <p>set_size:</p>
+            <p th:text="${set_size}"></p>
             You know these cards:
             <div th:each="leared :${learncard}">
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>

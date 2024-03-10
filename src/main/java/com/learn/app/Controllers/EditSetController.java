@@ -1,6 +1,7 @@
 package com.learn.app.Controllers;
 
 
+import com.learn.app.Classes.FlashCardSet;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Classes.image;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -49,6 +51,7 @@ public class EditSetController {
                                        HttpSession session) {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         Upload_image upload_image = new Upload_image();
+        FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
         session.setAttribute("SetID", SetID);
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
@@ -57,8 +60,15 @@ public class EditSetController {
         user.setUserSurname(LoggedUser.getUserSurname());
         flashCards.setSetID(SetID);
         model.addAttribute("user", user);
-
-
+        Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
+        Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
+        double progres = (double) count_learned /count_set_size;
+        flashCardSet.setProgression(progres);
+        flashCardSet.setLastvisit(LocalDate.now());
+        addFlashCardSetInterface.save(flashCardSet);
+        model.addAttribute("flashcard_set_progress", flashCardSet.getProgression());
+        model.addAttribute("count_learned", Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count()));
+        model.addAttribute("set_size", Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count()));
         // Tablica z obiektami FlashCards - "slidecard" - przekazuje do widoku EditFlashCardSet i kolejno do Quiz, FLaashCardGame
         ArrayList slidecard = new ArrayList<FlashCards>();
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));

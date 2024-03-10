@@ -3,6 +3,8 @@ package com.learn.app.Classes;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,6 +20,8 @@ public class FlashCardSet {
     @Column(columnDefinition = "double default 0.0")
     private double Progression;
 
+    @Temporal(TemporalType.DATE)
+    private Date lastvisit;
 
     @ManyToOne
     @JoinColumn(name = "UserID", insertable=false, updatable=false)
@@ -92,5 +96,13 @@ public class FlashCardSet {
 
     public void setProgression(double progression) {
         Progression = progression;
+    }
+
+    public Date getLastvisit() {
+        return lastvisit;
+    }
+
+    public void setLastvisit(LocalDate lastVisit) {
+        this.lastvisit = java.sql.Date.valueOf(lastVisit);
     }
 }
