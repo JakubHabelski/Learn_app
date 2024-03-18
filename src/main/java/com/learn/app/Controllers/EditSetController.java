@@ -209,7 +209,7 @@ public class EditSetController {
             flashCard.setRep_Num(0);
             flashCard.setEF(2.5F);
             flashCard.setTime_out(0);
-
+            flashCard.setLast_user_grade((byte) 0);
             addFlashCardInterface.save(flashCard);
         }
         return "redirect:/EditFlashCardSet/" + SetID;
