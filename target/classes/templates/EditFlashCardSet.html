@@ -120,7 +120,8 @@
                 <span th:text="${card.path}"></span>
                 <!-- Element docelowy -->
                 <img id="targetImage" alt="Obraz" style="max-height: 100px;">
-
+                <p th:text="'Time out: '+ ${card.time_out}"></p>
+                <p th:text="'next_rep: '+ ${card.next_rep}"></p>
 
             </div>
             <!--------------------------------------------------------------------------------------->
@@ -151,6 +152,10 @@
             </div>
         </section>
         <article>
+            <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
+
+            <p>You last vist:</p>
+            <p th:text="${flashcard_set_lastvisit}"></p>
             <p>Your set learning progress is:</p>
             <p th:text="${flashcard_set_progress}"></p>
             <p>Count learned:</p>

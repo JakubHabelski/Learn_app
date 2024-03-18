@@ -66,7 +66,8 @@ public class EditSetController {
         flashCardSet.setProgression(progres);
         flashCardSet.setLastvisit(LocalDate.now());
         addFlashCardSetInterface.save(flashCardSet);
-        model.addAttribute("flashcard_set_progress", flashCardSet.getProgression());
+        model.addAttribute("flashcard_set_progress", Math.round(flashCardSet.getProgression()*100));
+        model.addAttribute("flashcard_set_lastvisit", flashCardSet.getLastvisit());
         model.addAttribute("count_learned", Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count()));
         model.addAttribute("set_size", Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count()));
         // Tablica z obiektami FlashCards - "slidecard" - przekazuje do widoku EditFlashCardSet i kolejno do Quiz, FLaashCardGame
@@ -149,6 +150,10 @@ public class EditSetController {
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
         flashCard.setPath(fileName);
+        flashCard.setTime_out(0);
+        flashCard.setRep_Num(0);
+        flashCard.setEF(2.5F);
+        flashCard.setNext_rep(LocalDate.now());
         addFlashCardInterface.save(flashCard);
         upload_Image_Interface.save(uploadedImage);
 
@@ -192,7 +197,23 @@ public class EditSetController {
        
         return "redirect:/userpanel";
     }
+    @RequestMapping("/reset_progress")
+    public String reset_progress(HttpSession session){
+        Long SetID = (Long) session.getAttribute("SetID");
+        ArrayList slidecard = new ArrayList<FlashCards>();
+        slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
+        for (int i = 0; i < slidecard.size(); i++) {
+            FlashCards flashCard = (FlashCards) slidecard.get(i);
+            flashCard.setLearned(false);
+            flashCard.setNext_rep(LocalDate.now());
+            flashCard.setRep_Num(0);
+            flashCard.setEF(2.5F);
+            flashCard.setTime_out(0);
 
+            addFlashCardInterface.save(flashCard);
+        }
+        return "redirect:/EditFlashCardSet/" + SetID;
+    }
 
 
 }

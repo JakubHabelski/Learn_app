@@ -90,7 +90,19 @@
                 <input type="hidden" name="learned" id="learned" value="">
             <button onclick="know_card(1)" type="submit">I know</button>
             <button onclick="know_card(0)" type="submit">I dont't know</button>
+
             </form>
+            <form id="knowForm2" action="/test2" method="get">
+                <input type="hidden" name="flashCardId" id="flashCardId2" value="">
+                <input type="hidden" name="learned" id="learned2" value="">
+                <input type="hidden" name="grade" id="grade2" value=""> <!-- Dodane pole oceny -->
+                <button onclick="user_grade(1)" type="submit">1</button>
+                <button onclick="user_grade(2)" type="submit">2</button>
+                <button onclick="user_grade(3)" type="submit">3</button>
+                <button onclick="user_grade(4)" type="submit">4</button>
+                <button onclick="user_grade(5)" type="submit">5</button>
+            </form>
+
         </div>
         <div id="know_dont_know">
             <span id="know">0</span>
@@ -101,11 +113,10 @@
             <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
             <input type="submit" value="Return to userpanel">
         </form>
-        <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-primary" id="Return">Return to  EditFlashCardSet</a> 
+        <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-primary" id="Return">Return to  EditFlashCardSet</a>
+        <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary" >Return to  FlashCardGame</a>
     </div>
-    <form action="/test" method="get">
-        <button type="submit" class="btn btn-primary">Test</button>
-    </form>
+
 
 
     <script th:inline="javascript">
@@ -194,6 +205,15 @@
 
             // Wysłanie formularza
             document.getElementById("knowForm").submit();
+        }
+        function user_grade(grade) {
+            // Ustawienie wartości dla pól formularza
+            document.getElementById("flashCardId2").value = card_arr[i].flashCardId;
+            document.getElementById("learned2").value = "true";
+            document.getElementById("grade2").value = grade; // Ustawienie wartości oceny
+
+            // Wysłanie formularza
+            document.getElementById("knowForm2").submit();
         }
 
 

@@ -12,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 
 @Controller
@@ -40,6 +43,17 @@ public class FlashCardGames {
         user.setUserID(LoggedUser.getUserID());
         ArrayList slidecard = new ArrayList<FlashCards>();
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
+       // slidecard.addAll(addFlashCardInterface.customFindBySetIDAndTimeOut(SetID, 1));
+        Date currentDate = java.sql.Date.valueOf(LocalDate.now());
+        Iterator<FlashCards> iterator = slidecard.iterator();
+        while (iterator.hasNext()) {
+            flashCard = iterator.next();
+            if ((flashCard.getLast_user_grade() == 4 && flashCard.getNext_rep().after(currentDate)) || (flashCard.getLast_user_grade() == 5 && flashCard.getNext_rep().after(currentDate))) {
+                iterator.remove();
+            }
+        }
+
+
         model.addAttribute("slidecard", slidecard);
         return "FlashCardGame";
     }    
@@ -97,6 +111,13 @@ public class FlashCardGames {
       //  flashCard.setDefinition(flashCard.getDefinition());
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
 
+        //supermemo-----------------------------------
+
+
+
+
+        //------------------------------------------------------
+
         Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
         Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
         double progres = (double) count_learned /count_set_size;
@@ -106,5 +127,44 @@ public class FlashCardGames {
         addFlashCardInterface.save(flashCard);
 
     }
-    
+    @RequestMapping(value = "/test2", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void test2(HttpSession session,
+                     @RequestParam ("flashCardId") Long flashCardId,
+                     @RequestParam ("grade") byte grade
+    ) {
+        Long SetID = (Long) session.getAttribute("SetID");
+        FlashCards flashCard = addFlashCardInterface.customFindByID(Long.valueOf(flashCardId));
+        //  flashCard.setDefinition(flashCard.getDefinition());
+        FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
+        byte Q = grade;
+        Float EF = (float) flashCard.getEF();
+        Integer I = flashCard.getTime_out();
+        Integer rep_Num = flashCard.getRep_Num();
+
+        if(Q >=3){
+            if(rep_Num ==0){
+                I=1;
+            } else if(rep_Num ==1){
+                I=6;
+            } else {
+                I = (int) Math.round(I*EF);
+            }
+            rep_Num++;
+        } else{
+            rep_Num = 0;
+            I=1;
+        }
+        EF = (float) (EF + (0.1 - (5-Q)*(0.08+(5-Q)*0.02)));
+        if (EF < 1.3F){
+            EF = 1.3F;
+        }
+        flashCard.setEF(EF);
+        flashCard.setTime_out(I);
+        flashCard.setRep_Num(rep_Num);
+        flashCard.setNext_rep(LocalDate.now().plusDays(I));
+        flashCard.setLast_user_grade(Q);
+        addFlashCardInterface.save(flashCard);
+
+    }
 }

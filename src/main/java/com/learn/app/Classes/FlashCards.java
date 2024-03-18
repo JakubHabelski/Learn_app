@@ -2,6 +2,9 @@ package com.learn.app.Classes;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 
 @Entity
 @Table(name="FlashCards")
@@ -17,13 +20,23 @@ public class FlashCards {
     @Column(columnDefinition = "boolean default false") // Ustawienie domyślnej wartości na false
     private boolean Learned;
 
+
     @ManyToOne
     @JoinColumn(name = "SetID", insertable=false, updatable=false)
     private FlashCardSet flashCardSet;
 
     @OneToOne(mappedBy = "flashCard", cascade = CascadeType.ALL)
     private image image;
+    @Column(columnDefinition = "int default 0" )
+    private Integer rep_Num; // Repetition number
+    private Date next_rep; // Next repetition
 
+    @Column(columnDefinition = "int default 0")
+    private Integer time_out; // Interval between repetitions
+    @Column(columnDefinition = "float default 2.5")
+    private float EF; // Easiness factor
+    @Column(columnDefinition = "tinyint default 0")
+    private byte last_user_grade;
 
     public FlashCards(Long flashCardId, Long setID, String definition, String description, boolean learned) {
         FlashCardId = flashCardId;
@@ -31,6 +44,8 @@ public class FlashCards {
         Definition = definition;
         Description = description;
         Learned = learned;
+
+
     }
 
 
@@ -83,6 +98,46 @@ public class FlashCards {
 
     public void setLearned(boolean learned) {
         Learned = learned;
+    }
+
+    public Integer getRep_Num() {
+        return rep_Num;
+    }
+
+    public void setRep_Num(Integer rep_Num) {
+        this.rep_Num = rep_Num;
+    }
+
+    public Integer getTime_out() {
+        return time_out;
+    }
+
+    public void setTime_out(Integer time_out) {
+        this.time_out = time_out;
+    }
+
+    public float getEF() {
+        return EF;
+    }
+
+    public void setEF(float EF) {
+        this.EF = EF;
+    }
+
+    public Date getNext_rep() {
+        return next_rep;
+    }
+
+    public void setNext_rep(LocalDate next_rep) {
+        this.next_rep = java.sql.Date.valueOf(next_rep);
+    }
+
+    public byte getLast_user_grade() {
+        return last_user_grade;
+    }
+
+    public void setLast_user_grade(byte q) {
+        this.last_user_grade = q;
     }
 }
 

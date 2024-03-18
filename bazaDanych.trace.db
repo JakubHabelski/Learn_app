@@ -10291,3 +10291,43 @@ select i1_0.id,i1_0.flash_card_id,fc1_0.flash_card_id,fc1_0.definition,fc1_0.des
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-03-16 10:46:11.109072+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; oczekiwano "identifier"
+Syntax error in SQL statement "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; expected "identifier"; SQL statement:
+
+    alter table if exists flash_cards 
+       add column interval integer [42001-224]
+2024-03-16 10:49:12.463992+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer not null"; oczekiwano "identifier"
+Syntax error in SQL statement "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer not null"; expected "identifier"; SQL statement:
+
+    alter table if exists flash_cards 
+       add column interval integer not null [42001-224]
+2024-03-16 10:49:31.395139+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; oczekiwano "identifier"
+Syntax error in SQL statement "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; expected "identifier"; SQL statement:
+
+    alter table if exists flash_cards 
+       add column interval integer [42001-224]
+2024-03-16 10:50:33.366116+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; oczekiwano "identifier"
+Syntax error in SQL statement "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; expected "identifier"; SQL statement:
+
+    alter table if exists flash_cards 
+       add column interval integer [42001-224]
+2024-03-16 10:51:02.762250+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; oczekiwano "identifier"
+Syntax error in SQL statement "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; expected "identifier"; SQL statement:
+
+    alter table if exists flash_cards 
+       add column interval integer [42001-224]
+2024-03-16 10:51:18.834499+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; oczekiwano "identifier"
+Syntax error in SQL statement "\000d\000a    alter table if exists flash_cards \000d\000a       add column [*]interval integer"; expected "identifier"; SQL statement:
+
+    alter table if exists flash_cards 
+       add column interval integer [42001-224]
+2024-03-16 12:07:47.481266+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "Update FLASH_CARDS set EF =2.5[*]FLASH_CARDS"
+Syntax error in SQL statement "Update FLASH_CARDS set EF =2.5[*]FLASH_CARDS"; SQL statement:
+Update FLASH_CARDS set EF =2.5FLASH_CARDS [42000-224]

@@ -13,6 +13,9 @@ import java.util.List;
 public interface AddFlashCardInterface extends JpaRepository<FlashCards, Long> {
     @Query("SELECT f FROM FlashCards f WHERE f.SetID = :setID")
     List<FlashCards> customFindBySetID(@Param("setID") Long setID);
+
+    @Query("SELECT f FROM FlashCards f WHERE f.SetID = :setID AND f.time_out < :time")
+    List<FlashCards> customFindBySetIDAndTimeOut(@Param("setID") Long setID, @Param("time") Integer time);
     @Modifying
     @Query("DELETE FROM FlashCards f WHERE f.SetID = :SetID")
     void deleteCardBySetID(@Param("SetID") Long setID);
