@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
@@ -30,18 +31,19 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .formLogin(form -> form
-
+                        .loginPage("/loginform")
                         .loginProcessingUrl("/userpanel")
+                        .defaultSuccessUrl("/userpanel", true)
                         .usernameParameter("UserLogin")
                         .passwordParameter("UserPass")
-                        .defaultSuccessUrl("/userpanel")
-                        .permitAll());
-    }
+                        .permitAll()
+                )
+                .build();
 
+    }
 }
