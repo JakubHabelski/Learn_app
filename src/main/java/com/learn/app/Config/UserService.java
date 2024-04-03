@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -27,6 +28,10 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found"+ username);
         }
-        return new org.springframework.security.core.userdetails.User(user.getUserLogin(), passwordEncoder().encode(user.getUserPass()), new ArrayList<>());
+
+        List<Long> authorities = new ArrayList<>();
+        authorities.add(user.getUserID());
+        return new org.springframework.security.core.userdetails.User(user.getUserLogin(), passwordEncoder().encode(user.getUserPass()),  new ArrayList<>());
+       // return new CustomUserDetails(user);
     }
 }

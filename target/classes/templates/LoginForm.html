@@ -9,14 +9,14 @@
     <title>Title</title>
 </head>
 <body>
-
-    <form action="#" th:action="@{/userpanel}" th:object="${user}" method="post" class="form-group">
-        <input th:name="UserLogin" th:field="*{UserLogin}" class="form-control" placeholder="Username" required>
-        <input th:name="UserPass" th:field="*{UserPass}" class="form-control" placeholder="Password" type="password" required>
+<form action="#" th:action="@{/login}" method="post" class="form-group">
+        <input name="UserLogin"  class="form-control" placeholder="Username" required>
+        <input name="UserPass" class="form-control" placeholder="Password" type="password" required>
         <input type="submit" value="Login" class="btn btn-primary">
         <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
     </form>
     <div id="alertPlaceholder"></div>
+
 </body>
 <script th:inline="javascript">
 

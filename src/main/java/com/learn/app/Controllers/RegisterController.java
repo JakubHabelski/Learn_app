@@ -6,6 +6,7 @@ import com.learn.app.Classes.image;
 import com.learn.app.Interfaces.UserInterface;
 import com.learn.app.Interfaces.upload_Image_Interface;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,12 @@ public class RegisterController {
     private final UserInterface userInterface;
     private final upload_Image_Interface upload_Image_Interface;
 
-    public RegisterController(UserInterface userInterface, upload_Image_Interface upload_Image_Interface) {
+    private final PasswordEncoder passwordEncoder;
+
+    public RegisterController(UserInterface userInterface, upload_Image_Interface upload_Image_Interface, PasswordEncoder passwordEncoder) {
         this.userInterface = userInterface;
         this.upload_Image_Interface = upload_Image_Interface;
+        this.passwordEncoder = passwordEncoder;
     }
     @GetMapping("/GetRegister")
     public String GetRegister(){
@@ -36,7 +40,8 @@ public class RegisterController {
                                @RequestPart(name = "file") MultipartFile file
                                 ) throws Exception{
 
-        UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail);                                 
+        UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail);
+       // user.setUserPass(passwordEncoder.encode(UserPass));
         userInterface.save(user);
         //saving user image file to da
         Upload_image upload_image = new Upload_image();

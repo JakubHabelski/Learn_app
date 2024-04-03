@@ -1,14 +1,18 @@
 package com.learn.app.Controllers;
 
 import com.learn.app.Classes.UserData;
+import com.learn.app.Config.UserService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
+import com.learn.app.Interfaces.UserInterface;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,75 +26,119 @@ public class LoginController {
 
     @Autowired
     private final AddFlashCardSetInterface addFlashCardSetInterface;
-    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface) {
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserInterface userInterface; // Dodaj adnotację @Autowired
+
+    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder) {
         this.addFlashCardSetInterface = addFlashCardSetInterface;
+        this.passwordEncoder = passwordEncoder;
     }
+
+    // Reszta Twojego kodu...
+
 
     @PersistenceContext
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private UserService userService;
     UserData user = new UserData();
 
-    boolean userfound=true;
+    boolean userfound = true;
 
-    @GetMapping(value = "/loginform" )
+    @GetMapping(value = "/loginform")
     public String loginform(Model model) {
-             user.setUserLogin("");
-             user.setUserPass("");
-            model.addAttribute("user", user);
-            return "LoginForm";
+        user.setUserLogin("");
+        user.setUserPass("");
+        model.addAttribute("user", user);
+        System.out.println("Login Form");
+
+        return "LoginForm";
     }
-    @PostMapping (value = "/userpanel" )
-    public String userpanel(@RequestParam String UserLogin,
-                            @RequestParam String UserPass,
+    // LoginController.java
+    @PostMapping(value = "/login")
+    public String loginform(@RequestParam("UserLogin") String UserLogin,
+                            @RequestParam("UserPass") String UserPass,
                             Model model,
                             HttpSession session) {
+        System.out.println("Login Form Post");
 
-        TypedQuery<UserData> query =
-                entityManager.createQuery("SELECT u FROM UserData u", UserData.class);
+        // Znajdź użytkownika w bazie danych
+        UserData user = userInterface.findByUserLogin(UserLogin);
+        if (user != null && passwordEncoder.matches(UserPass, user.getUserPass())) {
+            // Jeśli użytkownik istnieje i hasło jest poprawne, dodaj go do sesji
+            session.setAttribute("user", user);
+        } else {
+            // Jeśli użytkownik nie istnieje lub hasło jest niepoprawne, wyświetl komunikat o błędzie
+            model.addAttribute("loginError", "Invalid username or password");
+            return "LoginForm";
+        }
+
+    return "redirect:/userpanel";
+}
 
 
-        for (UserData userdata : query.getResultList()) {
-            logger.warn(userdata.toString());
-            if (userdata.getUserLogin().equals(UserLogin) && userdata.getUserPass().equals(UserPass)){
 
-                user.setUserID(userdata.getUserID());
-                user.setUserPass(UserPass);
-                user.setUserLogin(UserLogin);
-                user.setUserName(userdata.getUserName());
-                user.setUserSurname(userdata.getUserSurname());
+     @GetMapping(value = "/userpanel")
+    public String userpanel(Model model, Authentication authentication, HttpSession session){
+        System.out.println("User Panel");
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+
+            // Znajdź użytkownika w bazie danych
+            UserData user = userInterface.findByUserLogin(username);
+            if (user != null) {
+                System.out.println("-------------------------------------------");
+                System.out.println(user.getUserLogin() +" "+ user.getUserPass());
+                System.out.println("-------------------------------------------");
                 session.setAttribute("LoggedUser", user);
                 model.addAttribute("user", user);
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
-           //     model.addAttribute("test_image", responseEntity);
-                // Redirect to "UserPanel"
-                userfound = true;
-                return "redirect:/userpanel";
+                return "UserPanel";
             }
         }
-            userfound= false;
 
-            model.addAttribute("alert", "Invalid Login or Password");
-            return "redirect:/loginform";
+        System.out.println("dupa");
 
+        // Redirect to login or handle not logged in scenario
+        return "redirect:/loginform";
     }
-    @GetMapping("/userpanel")
-    public String userPanel(Model model, HttpSession session) {
-        UserData loggedUser = (UserData) session.getAttribute("LoggedUser");
-        if (loggedUser != null) {
-            model.addAttribute("user", loggedUser);
-            model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(loggedUser.getUserID()));
-            return "UserPanel";
-        } else {
-            // Redirect to login or handle not logged in scenario
-            return "redirect:/loginform";
-        }
-    }
+
+
+
     @RequestMapping("/Logout")
-    public String Logout(HttpSession session){
+    public String Logout(HttpSession session) {
         session.invalidate();
         return "redirect:/loginform";
     }
 
-}
 
+
+
+    @RequestMapping("/")
+
+    public String Home(HttpSession httpSession, Model model, @Param("UserLogin") String UserLogin, @Param("UserPass") String UserPass) {
+
+        UserData user = (UserData) httpSession.getAttribute("user");
+        System.out.println(UserLogin + UserPass);
+        /*
+        if (user != null) {
+            return user.getUserLogin();
+        } else {
+            // Handle the case where there is no user in the session
+            return "No user in session";
+        }
+
+         */
+        if(user != null){
+            return "redirect:/userpanel";
+        }else{
+            return "redirect:/loginform";
+        }
+
+    }
+}
