@@ -38,9 +38,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
-                .csrf().disable()
+                .csrf().ignoringRequestMatchers("/h2-console/**", "/adminH2/**").disable()
+                .headers(
+                        headers -> headers
+                                .frameOptions(frameOptions -> frameOptions.disable())
+                )
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/loginform", "/login_logic" , "/GetRegister", "/login" , "/adminH2/**").permitAll()
+                        .requestMatchers("/loginform", "/login_logic" , "/GetRegister", "/login" , "/adminH2/**", "/static/**", "/login_style.css", "/h2-console/**" ,"/stylesheet.css", "/console/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/loginform")

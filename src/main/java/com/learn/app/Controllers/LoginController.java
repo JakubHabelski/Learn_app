@@ -85,7 +85,7 @@ public class LoginController {
      @GetMapping(value = "/userpanel")
     public String userpanel(Model model, Authentication authentication, HttpSession session){
         System.out.println("User Panel");
-
+        UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
 
@@ -100,9 +100,14 @@ public class LoginController {
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
                 return "UserPanel";
             }
+        } else if (LoggedUser != null) {
+            model.addAttribute("user", LoggedUser);
+            model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
+            return "UserPanel";
+
         }
 
-        System.out.println("dupa");
+         System.out.println("dupa");
 
         // Redirect to login or handle not logged in scenario
         return "redirect:/loginform";

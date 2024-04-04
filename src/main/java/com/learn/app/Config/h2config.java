@@ -1,16 +1,16 @@
 package com.learn.app.Config;
 
-import org.h2.tools.Server;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.sql.SQLException;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class h2config {
+@Order(1)
+public class h2config implements WebMvcConfigurer {
 
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server h2Server() throws SQLException{
-        return Server.createTcpServer("-tcp");
+    @Override
+    public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/h2-console/**").addResourceLocations("classpath:/h2-console/");
     }
+
 }

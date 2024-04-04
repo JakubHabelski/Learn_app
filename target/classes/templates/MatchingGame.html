@@ -9,15 +9,10 @@
     </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <form id="userForm" action="#" th:action="@{/userpanel}" th:object="${user}" method="post">
-        <input th:name="UserLogin" th:field="*{UserLogin}" th:value="${user.UserLogin}" type="hidden">
-        <input th:name="UserPass" th:field="*{UserPass}" th:value="${user.UserPass}" type="hidden">
-        <input id="submitButton" type="submit" value="Return to userpanel" class="navbar-brand" style="display: none">
-        <a id="customLink" class="navbar-brand" href="#" role="button">My Learn App</a>
-        <button class="navbar-toggler "  type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </form>
+    <a class="navbar-brand" th:href="@{/userpanel}">My Learn App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -65,7 +60,7 @@
         </form>
     </div>
 </nav>
-
+<a th:href="@{/userpanel}" class="dropdown-item">userpanel</a>
     <div id="container">
         <button id="field1" onclick="select_2_fields(1)"></button>
         <button id="field2" onclick="select_2_fields(2)"></button>
@@ -87,7 +82,7 @@
         let CardArr = [];
         let Selected_Cards = [];
         let used_fields = [];
-        let buttons = document.getElementsByTagName("button");
+        let buttons = document.querySelectorAll('#container button');
         class Card{
             constructor(def, des){
                 this.def = def;
@@ -189,5 +184,9 @@
             document.getElementById("userForm").submit(); // Submit the form
         });
     </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>
