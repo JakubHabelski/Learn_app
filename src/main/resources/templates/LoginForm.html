@@ -9,6 +9,7 @@
     <title>Title</title>
 </head>
 <body>
+<span th:text="${login_error}" class="alert alert-danger"></span>
 <form action="#" th:action="@{/login}" method="post" class="form-group">
         <input name="UserLogin"  class="form-control" placeholder="Username" required>
         <input name="UserPass" class="form-control" placeholder="Password" type="password" required>

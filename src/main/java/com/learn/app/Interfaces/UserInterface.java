@@ -12,4 +12,6 @@ public interface UserInterface extends JpaRepository<UserData, Long> {
     UserData findByUserLogin(@Param("userLogin") String userLogin);
     @Query("SELECT U FROM UserData U WHERE U.UserID = :UserID")
     UserData findByUserID(@Param("UserID") Long UserID);
+    @Query("SELECT U FROM UserData U WHERE U.UserToken = :UserToken")
+    UserData findByUserToken(@Param("UserToken") String UserToken);
 }

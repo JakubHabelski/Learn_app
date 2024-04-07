@@ -1,6 +1,7 @@
 package com.learn.app.Classes;
 
 //import com.learn.app.Classes.FlashCardSet;
+
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,6 +18,10 @@ public class UserData {
     private String UserLogin;
     private String UserPass;
     private String UserMail;
+    private String UserToken;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean UserActive ;
+
 
     @OneToMany(mappedBy = "userData")
     private List<FlashCardSet> flashCardSets;
@@ -55,6 +60,16 @@ public class UserData {
     public UserData(String userLogin, String userPass) {
         UserLogin = userLogin;
         UserPass = userPass;
+    }
+
+    public UserData( String userName, String userSurname, String userLogin, String userPass, String userMail, String userToken, Boolean userActive) {
+        UserName = userName;
+        UserSurname = userSurname;
+        UserLogin = userLogin;
+        UserPass = userPass;
+        UserMail = userMail;
+        UserToken = userToken;
+        UserActive = userActive;
     }
 
     @Override
@@ -115,5 +130,21 @@ public class UserData {
 
     public void setUserMail(String userMail) {
         UserMail = userMail;
+    }
+
+    public String getUserToken() {
+        return UserToken;
+    }
+
+    public void setUserToken(String userToken) {
+        UserToken = userToken;
+    }
+
+    public Boolean getUserActive() {
+        return UserActive;
+    }
+
+    public void setUserActive(Boolean userActive) {
+        UserActive = userActive;
     }
 }
