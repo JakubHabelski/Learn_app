@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 .frameOptions(frameOptions -> frameOptions.disable())
                 )
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/loginform", "/login_logic" , "/GetRegister", "/login" , "/adminH2/**", "/static/**", "/login_style.css", "/h2-console/**" ,"/stylesheet.css", "/console/**").permitAll()
+                        .requestMatchers("/loginform","/PostRegister", "/login_logic" , "/GetRegister", "/login" , "/adminH2/**", "/static/**", "/login_style.css", "/h2-console/**" ,"/stylesheet.css", "/console/**", "/" , "/register_success/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/loginform")

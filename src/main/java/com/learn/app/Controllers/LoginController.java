@@ -1,6 +1,7 @@
 package com.learn.app.Controllers;
 
 import com.learn.app.Classes.UserData;
+import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Config.UserService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Interfaces.UserInterface;
@@ -10,15 +11,12 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
@@ -30,10 +28,13 @@ public class LoginController {
 
     @Autowired
     private UserInterface userInterface; // Dodaj adnotację @Autowired
+    @Autowired
+    private MyMailSenderService myMailSenderService;
 
-    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder) {
+    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder, MyMailSenderService myMailSenderService) {
         this.addFlashCardSetInterface = addFlashCardSetInterface;
         this.passwordEncoder = passwordEncoder;
+        this.myMailSenderService = myMailSenderService;
     }
 
     // Reszta Twojego kodu...
@@ -45,6 +46,8 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
+
+
     UserData user = new UserData();
 
     boolean userfound = true;
@@ -59,26 +62,6 @@ public class LoginController {
         return "LoginForm";
     }
     // LoginController.java
-    @PostMapping(value = "/login")
-    public String loginform(@RequestParam("UserLogin") String UserLogin,
-                            @RequestParam("UserPass") String UserPass,
-                            Model model,
-                            HttpSession session) {
-        System.out.println("Login Form Post");
-
-        // Znajdź użytkownika w bazie danych
-        UserData user = userInterface.findByUserLogin(UserLogin);
-        if (user != null && passwordEncoder.matches(UserPass, user.getUserPass())) {
-            // Jeśli użytkownik istnieje i hasło jest poprawne, dodaj go do sesji
-            session.setAttribute("user", user);
-        } else {
-            // Jeśli użytkownik nie istnieje lub hasło jest niepoprawne, wyświetl komunikat o błędzie
-            model.addAttribute("loginError", "Invalid username or password");
-            return "LoginForm";
-        }
-
-    return "redirect:/userpanel";
-}
 
 
 
@@ -92,6 +75,9 @@ public class LoginController {
             // Znajdź użytkownika w bazie danych
             UserData user = userInterface.findByUserLogin(username);
             if (user != null) {
+                if( user.getUserActive()==false){
+                    return "redirect:/loginform";
+                }
                 System.out.println("-------------------------------------------");
                 System.out.println(user.getUserLogin() +" "+ user.getUserPass());
                 System.out.println("-------------------------------------------");
@@ -124,26 +110,5 @@ public class LoginController {
 
 
 
-    @RequestMapping("/")
 
-    public String Home(HttpSession httpSession, Model model, @Param("UserLogin") String UserLogin, @Param("UserPass") String UserPass) {
-
-        UserData user = (UserData) httpSession.getAttribute("user");
-        System.out.println(UserLogin + UserPass);
-        /*
-        if (user != null) {
-            return user.getUserLogin();
-        } else {
-            // Handle the case where there is no user in the session
-            return "No user in session";
-        }
-
-         */
-        if(user != null){
-            return "redirect:/userpanel";
-        }else{
-            return "redirect:/loginform";
-        }
-
-    }
 }
