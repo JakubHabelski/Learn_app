@@ -10,6 +10,7 @@ import com.learn.app.Interfaces.upload_Image_Interface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,10 +42,15 @@ public class RegisterController {
                                @RequestParam String UserLogin,
                                @RequestParam String UserPass,
                                @RequestParam String UserMail,
-                               @RequestPart(name = "file") MultipartFile file
+                               @RequestPart(name = "file") MultipartFile file,
+                               Model model
                                 ) throws Exception{
         UUID uuid = UUID.randomUUID();
         String UserToken = uuid.toString();
+        if(userInterface.findByUserLogin(UserLogin) != null){
+            model.addAttribute("login_error", "login_error");
+            return "redirect:/GetRegister";
+        }
         UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail, UserToken, false);
        // user.setUserPass(passwordEncoder.encode(UserPass));
         userInterface.save(user);

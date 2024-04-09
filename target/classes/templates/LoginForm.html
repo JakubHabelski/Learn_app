@@ -9,17 +9,25 @@
     <title>Title</title>
 </head>
 <body>
-<span th:text="${login_error}" class="alert alert-danger"></span>
 <form action="#" th:action="@{/login}" method="post" class="form-group">
-        <input name="UserLogin"  class="form-control" placeholder="Username" required>
+    <span id="error" th:if="${login_error == 'login_error'}" class="form-control" style="margin-bottom: 16px; background-color: cornsilk">Wrong login or password</span>
+
+    <input name="UserLogin"  class="form-control" placeholder="Username" required>
         <input name="UserPass" class="form-control" placeholder="Password" type="password" required>
         <input type="submit" value="Login" class="btn btn-primary">
         <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
     </form>
     <div id="alertPlaceholder"></div>
-
 </body>
 <script th:inline="javascript">
-
+window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    } else {
+        document.getElementById("error").style.display = "none";
+       // alert('Strona została odświeżona');
+    }
+}
 </script>
 </html>

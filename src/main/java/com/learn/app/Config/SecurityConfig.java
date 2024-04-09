@@ -44,12 +44,12 @@ public class SecurityConfig {
                                 .frameOptions(frameOptions -> frameOptions.disable())
                 )
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/loginform","/PostRegister", "/login_logic" , "/GetRegister", "/login" , "/adminH2/**", "/static/**", "/login_style.css", "/h2-console/**" ,"/stylesheet.css", "/console/**", "/" , "/register_success/**").permitAll()
+                        .requestMatchers("/loginform","/PostRegister", "/login_logic" , "/GetRegister", "/login" , "/adminH2/**", "/static/**", "/login_style.css", "/h2-console/**" ,"/stylesheet.css", "/console/**", "/" ,"/register_style.css" , "/register_success/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/loginform")
                         .loginProcessingUrl("/login")
-                        .failureUrl("/loginform?error=true")
+                        .failureUrl("/loginform_error")
                         .usernameParameter("UserLogin")
                         .passwordParameter("UserPass")
                         .defaultSuccessUrl("/userpanel", true)

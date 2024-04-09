@@ -52,17 +52,30 @@ public class LoginController {
 
     boolean userfound = true;
 
+
     @GetMapping(value = "/loginform")
-    public String loginform(Model model) {
+    public String loginform(Model model, HttpSession session) {
         user.setUserLogin("");
         user.setUserPass("");
         model.addAttribute("user", user);
         System.out.println("Login Form");
+        if(session.getAttribute("login_error")== "login_error"){
+            model.addAttribute("login_error", "login_error");
+
+        }
 
         return "LoginForm";
     }
     // LoginController.java
-
+    @GetMapping("/loginform_error")
+    public String loginformError(Model model, HttpSession session) {
+        user.setUserLogin("");
+        user.setUserPass("");
+        model.addAttribute("user", user);
+        System.out.println("Login Form Error");
+        session.setAttribute("login_error", "login_error");
+        return "redirect:/loginform";
+    }
 
 
      @GetMapping(value = "/userpanel")
