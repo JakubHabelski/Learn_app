@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 public interface upload_Image_Interface extends JpaRepository<image, Long>{
     @Query("SELECT i.path FROM image i WHERE i.FlashCardId = :FlashCardId")
     String findPathByFlashCardId(@Param("FlashCardId") Long FlashCardId);
-
+    @Query("SELECT i.path FROM image i WHERE i.userID = :userID")
+    String findPathByUserID(@Param("userID") Long userID);
 
 
 }

@@ -5,18 +5,24 @@ import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Config.UserService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Interfaces.UserInterface;
+import com.learn.app.Interfaces.upload_Image_Interface;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+import java.util.Base64;
 
 @Controller
 public class LoginController {
@@ -25,17 +31,20 @@ public class LoginController {
     @Autowired
     private final AddFlashCardSetInterface addFlashCardSetInterface;
     private final PasswordEncoder passwordEncoder;
+    private final upload_Image_Interface Upload_Image_Interface;
 
     @Autowired
     private UserInterface userInterface; // Dodaj adnotację @Autowired
     @Autowired
     private MyMailSenderService myMailSenderService;
 
-    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder, MyMailSenderService myMailSenderService) {
+    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder, MyMailSenderService myMailSenderService, upload_Image_Interface Upload_Image_Interface) {
         this.addFlashCardSetInterface = addFlashCardSetInterface;
         this.passwordEncoder = passwordEncoder;
         this.myMailSenderService = myMailSenderService;
+        this.Upload_Image_Interface = Upload_Image_Interface;
     }
+
 
     // Reszta Twojego kodu...
 
@@ -112,14 +121,44 @@ public class LoginController {
         return "redirect:/loginform";
     }
 
+    @RequestMapping("/chuj")
+    @ResponseBody
+    public String userService() {
+        UserData user = userInterface.findByUserLogin("Kuba");
+        String surowe = user.getUserPass();
+        String niesurowe = passwordEncoder.encode(user.getUserPass());
 
+        String dupa = passwordEncoder.encode("dupa");
+        return  passwordEncoder.encode("1234");
+    }
 
     @RequestMapping("/Logout")
     public String Logout(HttpSession session) {
         session.invalidate();
         return "redirect:/loginform";
     }
+    @GetMapping("/UserProfile")
+    public String UserProfile(Model model, HttpSession session){
+        UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
 
+
+        Upload_image upload_image = new Upload_image();
+        try{
+            ResponseEntity<byte[]> imageResponse = upload_image.showImage("elomelo.jpg");
+            String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
+            String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
+            model.addAttribute("image", imageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(LoggedUser != null){
+            model.addAttribute("user", LoggedUser);
+            return "UserProfile";
+        }
+
+
+        return "redirect:/loginform";
+    }
 
 
 

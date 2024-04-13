@@ -52,7 +52,7 @@ public class RegisterController {
             return "redirect:/GetRegister";
         }
         UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail, UserToken, false);
-       // user.setUserPass(passwordEncoder.encode(UserPass));
+        user.setUserPass(passwordEncoder.encode(UserPass));
         userInterface.save(user);
         myMailSenderService.sendEmail(UserMail, "Potwierdzenie rejestracji", "http://localhost:8080/register_success/" + UserToken);
         //saving user image file to da
@@ -75,7 +75,7 @@ public class RegisterController {
         userInterface.save(user);
         return user;
     }
-    @RequestMapping("/")
+    @RequestMapping("/jkj")
     @ResponseBody
     public UserData home(){
         System.out.println("-------------------------------------------------");

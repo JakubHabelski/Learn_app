@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
 
         List<Long> authorities = new ArrayList<>();
         authorities.add(user.getUserID());
-        return new org.springframework.security.core.userdetails.User(user.getUserLogin(), passwordEncoder().encode(user.getUserPass()),  new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(user.getUserLogin(), user.getUserPass(),  new ArrayList<>());
        // return new CustomUserDetails(user);
     }
 }

@@ -8,58 +8,8 @@
     <title>Title</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" th:href="@{/userpanel}">My Learn App</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<div th:insert="~{/fragments/navbar}"></div>
 
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Create new set
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post"  style="display: block">
-                        <label for="SetName">Set Name</label>
-                        <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">
-                        <label for="Description">Description</label>
-                        <input name="Description" id="Description" class="form-control" placeholder="Description" style="width: auto; margin-bottom: 0.5rem">
-                        <input type="submit" value="Add">
-                    </form>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span th:text="${user.userName}"></span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a th:href="@{/Logout}" class="dropdown-item">Logout</a>
-                    <div class="dropdown-divider"></div>
-                    <span th:text="${user.userSurname}" class="dropdown-item"></span>
-                    <a th:href="@{/AddFlashCardSet/{userID}(userID=${user.userID})}" class="dropdown-item">  Create new set</a>
-                </div>
-
-
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
-</nav>
 
 <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post">
 
