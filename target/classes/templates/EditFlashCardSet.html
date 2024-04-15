@@ -14,8 +14,8 @@
 <div th:insert="~{/fragments/navbar}"></div>
 
 
-    <th:block th:each="image : ${imagePaths}">
-            <img th:src="${image}" alt="Obraz fiszki" style="display: none" id="source_image"/>
+    <th:block th:each="image, stat : ${imagePaths}">
+        <img th:src="${image}" alt="Obraz fiszki" style="display: none" th:id="'source_image' + ${stat.index}"/>
     </th:block>
 
 
@@ -30,7 +30,6 @@
         <section >
 
             <div class="input_def_des_box" th:each="card :${flashCard}" >
-                <p style="float: left; margin: 0; margin-left: 10px;" th:text="${card.FlashCardId}"></p>
                 <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
                     <i class="fa-solid fa-x" ></i>
 
@@ -62,9 +61,8 @@
                     </label>
                     <input id="file-upload" type="file" class="input_image" th:name="file">
                 </div>
-                <span th:text="${card.path}"></span>
                 <!-- Element docelowy -->
-                <img id="targetImage" alt="Obraz" style="max-height: 100px;">
+                <img th:id="targetImage" alt="Obraz" style="max-height: 100px;">
                 <p th:text="'Time out: '+ ${card.time_out}"></p>
                 <p th:text="'next_rep: '+ ${card.next_rep}"></p>
 
@@ -138,10 +136,7 @@
     });
 }
 
-    document.getElementById("customLink").addEventListener("click", function(e) {
-        e.preventDefault(); // Prevent default link behavior
-        document.getElementById("userForm").submit(); // Submit the form
-    });
+  
     function autoResize(textareaId) {
         var textarea = document.getElementById(textareaId);
         //     textarea.style.height = 'auto';
@@ -153,25 +148,26 @@
     console.log(arr);
 
 
-    //----------------------------------------------------------
-    var images = document.querySelectorAll('img[id^="targetImage"]');
+    //----------------------------------------------------------    
+    
+   
+        let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
+        console.log(hiddenImages);
+        let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');        
+        for(let i=0; i<hiddenImages.length; i++){
 
-    // Pętla iterująca po wszystkich elementach img
-    images.forEach(function(image, index) {
-        // Nadajemy nowe id dla każdego obrazka z autoinkrementacją
-        image.setAttribute('id', 'targetImage' + index);
-    });
-    //----------------------------------------------------------
-    document.addEventListener('DOMContentLoaded', function() {
-        var hiddenImages = document.querySelectorAll('img[id^="source_image"]');
-        hiddenImages.forEach(function(hiddenImage, index) {
-            var targetImageId = 'targetImage' + index; // Tworzymy nowe ID z autoinkrementacją
-            var targetImage = document.getElementById(targetImageId);
-            targetImage.src = hiddenImage.src;
-            targetImage.alt = 'Obraz fiszki';
-            targetImage.style.display = 'inline'; // Pokaż docelowy obrazek po ustawieniu src
-        });
-    });
+                console.log("srcL: "+i+" "+hiddenImages[i].src );
+
+            if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
+                targetImageArr[i].src = hiddenImages[i].src;
+                targetImageArr[i].alt = 'Obraz fiszki';
+                targetImageArr[i].style.display = 'inline';
+            }else{
+
+                targetImageArr[i].style.display = 'none';
+            }
+
+        }
 
     //----------------------------------------------------------
   /*]]>*/

@@ -151,12 +151,17 @@
     //----------------------------------------------------------    
     
    
-        var hiddenImages = document.querySelectorAll('img[id^="source_image"]');
+        let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
+        console.log(hiddenImages);
         let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');        
         for(let i=0; i<hiddenImages.length; i++){
-            targetImageArr[i].src = hiddenImages[i].src;
-            targetImageArr[i].alt = 'Obraz fiszki';
-            targetImageArr[i].style.display = 'inline';
+            if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
+                targetImageArr[i].src = hiddenImages[i].src;
+                targetImageArr[i].alt = 'Obraz fiszki';
+                targetImageArr[i].style.display = 'inline';
+            }else{
+                targetImageArr[i].style.display = 'none';
+            }
         }
 
     //----------------------------------------------------------
