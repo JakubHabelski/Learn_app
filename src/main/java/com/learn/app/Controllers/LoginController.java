@@ -137,28 +137,7 @@ public class LoginController {
         session.invalidate();
         return "redirect:/loginform";
     }
-    @GetMapping("/UserProfile")
-    public String UserProfile(Model model, HttpSession session){
-        UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
 
-
-        Upload_image upload_image = new Upload_image();
-        try{
-            ResponseEntity<byte[]> imageResponse = upload_image.showImage("elomelo.jpg");
-            String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
-            String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
-            model.addAttribute("image", imageUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(LoggedUser != null){
-            model.addAttribute("user", LoggedUser);
-            return "UserProfile";
-        }
-
-
-        return "redirect:/loginform";
-    }
 
 
 

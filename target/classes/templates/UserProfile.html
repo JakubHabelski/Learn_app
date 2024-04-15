@@ -14,22 +14,31 @@
 
 
 <div th:insert="~{/fragments/navbar}"></div>
-<div id="container">
-    <div th:text="${user.userName}"></div>
-    <div th:text="${user.userSurname}"></div>
-    <div th:text="${user.UserMail}"></div>
-
-    <img th:src="${image}" alt="Obraz fiszki" />
-    <img src="src\main\resources\static\uploads\elomelo.jpg"  alt="user image"/>
-</div>
+<form method="post" th:action="@{/EditUserProfile}" id="container" enctype="multipart/form-data">
+    <input id="username" th:value="${user.userName}" name="userName" disabled/>
+        <button type="button" th:onclick="edit('username')">Edit</button>
+    <input id="userSurname" th:value="${user.userSurname}" name="userSurname" disabled/>
+        <button type="button" th:onclick="edit('userSurname')">Edit</button>
+    <input id="UserMail" th:value="${user.UserMail}" name="UserMail" disabled/>
+        <button type="button" th:onclick="edit('UserMail')">Edit</button>
+    <input type="image" th:src="${image}" alt="Obraz fiszki"  height="100px" width="100px"/>
+    <input type="file" th:src="${image}" alt="Obraz fiszki" name="image" height="100px" width="100px"/>
+    <input id="confirm" type="submit" value="Confirm" style="display: none">
+</form>
 
 
 
 <script>
-    document.getElementById("customLink").addEventListener("click", function(e) {
-        e.preventDefault(); // Prevent default link behavior
-        document.getElementById("userForm").submit(); // Submit the form
-    });
+    function edit(id) {
+        var input = document.getElementById(id);
+        let confirm  = document.getElementById("confirm");
+        confirm.style.display = "block";
+        if (input.disabled) {
+            input.disabled = false;
+        } else {
+            input.disabled = true;
+        }
+    }
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
