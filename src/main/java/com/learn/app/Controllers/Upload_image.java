@@ -38,7 +38,7 @@ public class Upload_image {
     @PostMapping(value = "/upload_image_post")
     public image upload_image(@RequestPart(name = "file") MultipartFile file) {
         image image_obj = new image();
-        final  String UploadPath= "src/main/resources/static/uploads/";
+        final  String UploadPath= "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator;
         File uploadDirectory = new File(UploadPath);
         uploadDirectory.mkdirs();
 
@@ -61,7 +61,7 @@ public class Upload_image {
     }
     @GetMapping("photo/{name}")
     public ResponseEntity showImage(@PathVariable String name) throws IOException {
-        File file = new File("src/main/resources/static/uploads/" + name);
+        File file = new File("src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator + name);
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
         }
