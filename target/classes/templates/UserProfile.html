@@ -13,35 +13,81 @@
 <body>
 
 
-<div th:insert="~{/fragments/navbar}"></div>
-<form method="post" th:action="@{/EditUserProfile}" id="container" enctype="multipart/form-data">
-    <input id="username" th:value="${user.userName}" name="userName" disabled/>
-        <button type="button" th:onclick="edit('username')">Edit</button>
-    <input id="userSurname" th:value="${user.userSurname}" name="userSurname" disabled/>
-        <button type="button" th:onclick="edit('userSurname')">Edit</button>
-    <input id="UserMail" th:value="${user.UserMail}" name="UserMail" disabled/>
-        <button type="button" th:onclick="edit('UserMail')">Edit</button>
-    <input type="image" th:src="${image}" alt="Obraz fiszki"  height="100px" width="100px"/>
-    <input type="file" th:src="${image}" alt="Obraz fiszki" name="image" height="100px" width="100px"/>
-    <input id="confirm" type="submit" value="Confirm" style="display: none">
+    <div th:insert="~{/fragments/navbar}"></div>
+    <form method="post" th:action="@{/EditUserProfile}" id="container" enctype="multipart/form-data">
+<div class="user-profile">
+   <img th:src="${image}" alt="Obraz fiszki" />
+    <table>
+        <tr>
+            <td><strong>First Name:</strong></td>
+            <td><input id="username" th:value="${user.userName}" name="userName" disabled/></td>
+            <td><button type="button" th:onclick="edit('username')">Edit</button></td>
+        </tr>
+        <tr>
+            <td><strong>Last Name:</strong></td>
+            <td><input id="userSurname" th:value="${user.userSurname}" name="userSurname" disabled/></td>
+            <td><button type="button" th:onclick="edit('userSurname')">Edit</button></td>
+        </tr>
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td><input id="UserMail" th:value="${user.UserMail}" name="UserMail" disabled/></td>
+            <td><button type="button" th:onclick="edit('UserMail')">Edit</button></td>
+        </tr>
+        <tr>
+            <td><strong>Profile picture</strong></td>
+            <td>
+                
+                <label for="file-upload" class="custom-file-upload">
+                    Upload Image
+                </label>
+                <input id="file-upload" type="file" name="image" style="display: none;" />
+            </td>
+            <td>
+                <button type="submit">Save</button>
+            </td>
+        </tr>
+    </table>
+</div>
 </form>
-
-
 
 <script>
     function edit(id) {
         var input = document.getElementById(id);
-        let confirm  = document.getElementById("confirm");
-        confirm.style.display = "block";
+        let confirm = document.getElementById("confirm");
         if (input.disabled) {
             input.disabled = false;
         } else {
             input.disabled = true;
         }
     }
-</script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+        $(function() {
+        $(".form-control").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/search",
+                    type: "GET",
+                    data: {
+                        term: request.term
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            }
+        });
+    });
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

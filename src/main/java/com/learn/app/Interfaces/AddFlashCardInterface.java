@@ -29,6 +29,8 @@ public interface AddFlashCardInterface extends JpaRepository<FlashCards, Long> {
     @Query("SELECT f FROM FlashCards f WHERE f.SetID = :setID AND f.Learned = :learned")
     List<FlashCards> find_learnedFlashCards(@Param("setID") Long setID, @Param("learned") boolean learned);
 
+    @Query("select f from FlashCards f where f.Definition like %:term% or f.Description like %:term%")
+    List<FlashCards> getSearchSuggestions(String term);
 }
 
 

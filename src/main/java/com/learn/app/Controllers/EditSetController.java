@@ -85,7 +85,6 @@ public class EditSetController {
                     ResponseEntity<byte[]> imageResponse = upload_image.showImage(flashCard.getPath());
                     String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
                     String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
-                    System.out.println(imageUrl);
                     imagePaths.add(imageUrl);
                 } catch (IOException e) {
                     e.printStackTrace();
