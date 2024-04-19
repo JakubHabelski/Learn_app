@@ -4,25 +4,27 @@ package com.learn.app.Controllers;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Interfaces.AddFlashCardInterface;
+import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Controller
 public class SearchController {
 
     private final AddFlashCardInterface addFlashCardInterface;
+    private final AddFlashCardSetInterface addFlashCardSetInterface;
 
-    public SearchController(AddFlashCardInterface addFlashCardInterface) {
+    public SearchController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface) {
         this.addFlashCardInterface = addFlashCardInterface;
+        this.addFlashCardSetInterface = addFlashCardSetInterface;
     }
 
     @GetMapping("/search")
@@ -31,11 +33,15 @@ public class SearchController {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
         model.addAttribute("user", LoggedUser);
         List<FlashCards> flashCards = addFlashCardInterface.getSearchSuggestions(term);
-        model.addAttribute("flashCards", flashCards);
+        Set<FlashCards> distinctFlashCards = new HashSet<>(flashCards);
+        List<FlashCards> uniqueFlashCardsList = new ArrayList<>(distinctFlashCards);
+        model.addAttribute("flashCards", uniqueFlashCardsList);
         List<FlashCards> flashCards_list = addFlashCardInterface.getSearchSuggestions(term);
+        Set<FlashCards> distinctFlashCards_list = new HashSet<>(flashCards_list);
+        List<FlashCards> uniqueFlashCardsList_list = new ArrayList<>(distinctFlashCards_list);
         List<String> imagePaths = new ArrayList<>();
         Upload_image upload_image = new Upload_image();
-        for (FlashCards flashCard : flashCards_list) {
+        for (FlashCards flashCard : uniqueFlashCardsList_list) {
             if (!flashCard.getPath().equals("empty.jpg")) {
                 try {
                     ResponseEntity<byte[]> imageResponse = upload_image.showImage(flashCard.getPath());
@@ -51,8 +57,26 @@ public class SearchController {
             }
         }
         model.addAttribute("imagePaths", imagePaths);
+        model.addAttribute("Sets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
       //  return  addFlashCardInterface.getSearchSuggestions(term);
         return "Search";
 
+    }
+    @RequestMapping(value = "/CloneCard", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void test3(@RequestParam ("SetSelect") String SetSelect,
+                      @RequestParam ("FlashCardId") Long FlashCardId){
+        System.out.println(FlashCardId + " " +SetSelect);
+        FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
+        FlashCards flashCardClone = new FlashCards();
+        flashCardClone.setSetID(Long.parseLong(SetSelect));
+        flashCardClone.setDefinition(flashCard.getDefinition());
+        flashCardClone.setDescription(flashCard.getDescription());
+        flashCardClone.setPath(flashCard.getPath());
+        flashCardClone.setLearned(false);
+        flashCardClone.setNext_rep(LocalDate.now());
+        flashCardClone.setTime_out(0);
+        flashCardClone.setRep_Num(0);
+        addFlashCardInterface.save(flashCardClone);
     }
 }

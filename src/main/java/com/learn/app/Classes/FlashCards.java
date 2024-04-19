@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 
 @Entity
@@ -138,6 +139,19 @@ public class FlashCards {
 
     public void setLast_user_grade(byte q) {
         this.last_user_grade = q;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlashCards that = (FlashCards) o;
+        return Objects.equals(Definition, that.Definition) &&
+                Objects.equals(Description, that.Description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Definition, Description);
     }
 }
 
