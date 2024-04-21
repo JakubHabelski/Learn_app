@@ -44,7 +44,7 @@ article {
 
 .input_def_des_box {
     border-radius: 25px;
-    padding: 25px;
+    padding: 10px 25px 25px 25px;
     overflow: auto; /* Dodane */
     margin: 25px;
     background-color: #fde5ee;

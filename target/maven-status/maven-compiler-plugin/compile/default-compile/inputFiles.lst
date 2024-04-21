@@ -10,12 +10,14 @@ C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Config\h2confi
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Controllers\FlashCardSetController.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Interfaces\AddFlashCardInterface.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Classes\FlashCardSet.java
-C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Config\MailSender.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Config\CustomUserDetails.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\AppApplication.java
+C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Config\MyMailSenderService.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Config\CustomSuccessHandler.java
+C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Controllers\SearchController.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Classes\FlashCards.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Controllers\RegisterController.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Interfaces\AddFlashCardSetInterface.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Interfaces\UserInterface.java
+C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Controllers\EditUserProfileController.java
 C:\Users\Habel\IdeaProjects\Learn_app\src\main\java\com\learn\app\Interfaces\upload_Image_Interface.java

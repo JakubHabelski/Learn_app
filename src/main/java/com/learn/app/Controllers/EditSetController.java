@@ -172,17 +172,42 @@ public class EditSetController {
     public String EditCard(@RequestParam ("FlashCardId") Long FlashCardId,
                            @RequestParam ("SetID") Long SetID,
                            @RequestParam ("Definition") String Definition,
-                           @RequestParam ("Description") String Description
+                           @RequestParam ("Description") String Description,
+                           @RequestParam (name="file_edit", required = false) MultipartFile file
 
     ){
-        FlashCards flashCard = new FlashCards();
-        flashCard.setFlashCardId(FlashCardId);
+        FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
+       // flashCard.setFlashCardId(FlashCardId);
        //
-       
-        flashCard.setSetID(SetID);
+
+       // flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
+        Upload_image upload_image = new Upload_image();
+        image uploadedImage = upload_image.upload_image(file);
+        System.out.println("-----------file---------");
+        System.out.println(file.isEmpty());
+        System.out.println("------------------------------");
+        String path;
+        if ( file.isEmpty()) {
+            path = "src\\main\\resources\\static\\uploads\\empty.jpg";
+
+        } else {
+            path = uploadedImage.getPath();
+            uploadedImage.setUserID(null);
+            uploadedImage.setPath(path);
+            uploadedImage.setFlashCardId(flashCard.getFlashCardId());
+        }
+        String fullPath = path;
+        String fileName = fullPath.substring(fullPath.lastIndexOf(File.separator) + 1);
+        flashCard.setPath(fileName);
         addFlashCardInterface.save(flashCard);
+        upload_Image_Interface.save(uploadedImage);
+        if(file.isEmpty()){
+            System.out.println("-------------------------------------------------Plik nie został zmieniony-------------------------------------------------");
+        } else {
+            System.out.println("-------------------------------------------------Plik został zmieniony-------------------------------------------------");
+        }
         //return "UserPanel";
         return "redirect:/EditFlashCardSet/" + SetID;
     }

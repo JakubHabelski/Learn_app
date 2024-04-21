@@ -51,16 +51,18 @@
                 </div>
                 <div class="input_des_box">
                     <textarea class="input_def"  th:text="${card.Description}" name="Description" th:id="'DescriptionInput_' + ${card.FlashCardId}"  disabled></textarea>
-                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+
                     <div style="font-size: 16px">Defnicja</div>
                 </div>
-                </form>
+
                 <div>
-                    <label for="file-upload" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
+                    <label for="file-upload-edit" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
                         <i class="fas fa-upload"></i> Obraz
                     </label>
-                    <input id="file-upload" type="file" class="input_image" th:name="file">
+                    <input id="file-upload-edit" type="file" class="input_image" th:name="file_edit">
                 </div>
+                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+                </form>
                 <!-- Element docelowy -->
                 <img th:id="targetImage" alt="Obraz" style="max-height: 100px;">
                 <p th:text="'Time out: '+ ${card.time_out}"></p>
