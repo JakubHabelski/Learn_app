@@ -74,6 +74,8 @@ public class EditSetController {
         ArrayList slidecard = new ArrayList<FlashCards>();
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
         model.addAttribute("slidecard", slidecard);
+        FlashCards flashCards2 = addFlashCardInterface.customFindByID(Long.valueOf(14902));
+        model.addAttribute("flashCards2", flashCards2);
 
 
         List<FlashCards> flashCards_list = addFlashCardInterface.customFindBySetID(SetID);
@@ -135,8 +137,8 @@ public class EditSetController {
         image uploadedImage = upload_image.upload_image(file);
         String path;
         if ( file.isEmpty()) {
-            path = "src\\main\\resources\\static\\uploads\\empty.jpg";
-
+           path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"empty.jpg";
+          //  path = "src/main/resources/static/uploads/empty.jpg";
         } else {
             path = uploadedImage.getPath();
             uploadedImage.setUserID(null);
@@ -173,9 +175,9 @@ public class EditSetController {
                            @RequestParam ("SetID") Long SetID,
                            @RequestParam ("Definition") String Definition,
                            @RequestParam ("Description") String Description,
-                           @RequestParam (name="file_edit", required = false) MultipartFile file
+                           @RequestParam (name="file", required = false) MultipartFile file
 
-    ){
+    )throws Exception {
         FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
        // flashCard.setFlashCardId(FlashCardId);
        //
@@ -190,7 +192,9 @@ public class EditSetController {
         System.out.println("------------------------------");
         String path;
         if ( file.isEmpty()) {
-            path = "src\\main\\resources\\static\\uploads\\empty.jpg";
+           // path = "src/main/resources/static/uploads/empty.jpg";
+            path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"empty.jpg";
+
 
         } else {
             path = uploadedImage.getPath();
