@@ -76,13 +76,14 @@ public class EditSetController {
         model.addAttribute("slidecard", slidecard);
         FlashCards flashCards2 = addFlashCardInterface.customFindByID(Long.valueOf(14902));
         model.addAttribute("flashCards2", flashCards2);
+       
 
 
         List<FlashCards> flashCards_list = addFlashCardInterface.customFindBySetID(SetID);
         List<String> imagePaths = new ArrayList<>();
 
         for (FlashCards flashCard : flashCards_list) {
-            if (!flashCard.getPath().equals("empty.jpg")) {
+            if (!flashCard.getPath().equals("")) {
                 try {
                     ResponseEntity<byte[]> imageResponse = upload_image.showImage(flashCard.getPath());
                     String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
@@ -92,7 +93,7 @@ public class EditSetController {
                     e.printStackTrace();
                 }
             } else {
-                // Jeśli ścieżka pliku jest "empty.jpg", dodaj pustą ścieżkę do listy
+                // Jeśli ścieżka pliku jest "", dodaj pustą ścieżkę do listy
                 imagePaths.add("");
             }
         }
@@ -126,19 +127,13 @@ public class EditSetController {
         flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
-       // flashCard.setLearned(false);
-        addFlashCardInterface.save(flashCard);
-        System.out.println("-----------SetID---------");
-        System.out.println(flashCard.getFlashCardId());
-        System.out.println("------------------------------");
         //saving card image file to database
 
         Upload_image upload_image = new Upload_image();
         image uploadedImage = upload_image.upload_image(file);
         String path;
         if ( file.isEmpty()) {
-           path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"empty.jpg";
-          //  path = "src/main/resources/static/uploads/empty.jpg";
+           path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"";
         } else {
             path = uploadedImage.getPath();
             uploadedImage.setUserID(null);
@@ -179,25 +174,17 @@ public class EditSetController {
 
     )throws Exception {
         FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
-       // flashCard.setFlashCardId(FlashCardId);
-       //
-
-       // flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
+        Long old_img_id = upload_Image_Interface.findIdByFlashCardId(flashCard.getFlashCardId());
         Upload_image upload_image = new Upload_image();
         image uploadedImage = upload_image.upload_image(file);
-        System.out.println("-----------file---------");
-        System.out.println(file.isEmpty());
-        System.out.println("------------------------------");
         String path;
         if ( file.isEmpty()) {
-           // path = "src/main/resources/static/uploads/empty.jpg";
-            path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"empty.jpg";
-
-
+            path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"";
         } else {
             path = uploadedImage.getPath();
+            uploadedImage.setId(old_img_id);
             uploadedImage.setUserID(null);
             uploadedImage.setPath(path);
             uploadedImage.setFlashCardId(flashCard.getFlashCardId());
@@ -207,12 +194,6 @@ public class EditSetController {
         flashCard.setPath(fileName);
         addFlashCardInterface.save(flashCard);
         upload_Image_Interface.save(uploadedImage);
-        if(file.isEmpty()){
-            System.out.println("-------------------------------------------------Plik nie został zmieniony-------------------------------------------------");
-        } else {
-            System.out.println("-------------------------------------------------Plik został zmieniony-------------------------------------------------");
-        }
-        //return "UserPanel";
         return "redirect:/EditFlashCardSet/" + SetID;
     }
 
