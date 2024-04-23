@@ -56,10 +56,10 @@
                 </div>
 
                 <div>
-                    <label for="file-upload-edit" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
+                    <label th:for="'file-upload-edit' + ${card.FlashCardId}" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
                         <i class="fas fa-upload"></i> Obraz
                     </label>
-                    <input id="file-upload-edit" type="file" class="input_image" th:name="file">
+                    <input th:id="'file-upload-edit' + ${card.FlashCardId}" type="file" class="input_image" th:name="file">
                 </div>
                     <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
                 </form>
@@ -113,29 +113,7 @@
                 <p th:text="${leared.Definition}"></p>
                 <p th:text="${leared.Description}"></p>
             </div>
-            <!--Edit exist card---------------------------------------------------------------------->
-            <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data">
-                <input type="hidden" th:value="${flashCards2.FlashCardId}" name="FlashCardId">
-                <input type="hidden" th:value="${flashCards2.SetID}" name="SetID">
-                <div class="input_def_box">
-                    <textarea class="input_def"  th:text="${flashCards2.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}"  disabled></textarea>
-
-                    <div style="font-size: 16px">Pojęcie</div>
-                </div>
-                <div class="input_des_box">
-                    <textarea class="input_def"  th:text="${flashCards2.Description}" name="Description" th:id="'DescriptionInput_' + ${card.FlashCardId}"  disabled></textarea>
-
-                    <div style="font-size: 16px">Defnicja</div>
-                </div>
-
-                <div>
-                    <label for="file-upload-edit3" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
-                        <i class="fas fa-upload"></i> Obraz
-                    </label>
-                    <input id="file-upload-edit3" type="file" class="input_image" th:name="file">
-                </div>
-                <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${flashCards2.FlashCardId}" style="display: none">
-            </form>
+           
          </article>
     </main>
 
