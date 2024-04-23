@@ -12,5 +12,6 @@ public interface upload_Image_Interface extends JpaRepository<image, Long>{
     String findIdByUserID(@Param("userID") Long userID);
     @Query("SELECT i.path FROM image i WHERE i.userID = :userID")
     String findPathByUserID(@Param("userID") Long userID);
-
+    @Query("SELECT i.id FROM image i WHERE i.FlashCardId = :FlashCardId")
+    Long findIdByFlashCardId(@Param("FlashCardId") Long FlashCardId);
 }
