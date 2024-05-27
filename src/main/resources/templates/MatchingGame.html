@@ -4,11 +4,13 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" th:href="@{/MatchingGame.css}" />
+       <!-- <link rel="stylesheet" type="text/css" th:href="@{/MatchingGame.css}" /> -->
+        <link rel="stylesheet" type="text/css" href="/static/MatchingGame.css" />
+
         <title>Title</title>
     </head>
 <body>
-<div th:insert="~{/fragments/navbar}"></div>
+<div th:insert="fragments/navbar"></div>
 
 <a th:href="@{/userpanel}" class="dropdown-item">userpanel</a>
     <div id="container">

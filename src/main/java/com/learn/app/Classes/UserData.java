@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name="UserData")
+@Table(name="user_data")
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class UserData {
     private String UserPass;
     private String UserMail;
     private String UserToken;
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false", name = "user_active")
     private Boolean UserActive ;
 
 

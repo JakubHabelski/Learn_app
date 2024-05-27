@@ -42,7 +42,7 @@ public class SearchController {
         List<String> imagePaths = new ArrayList<>();
         Upload_image upload_image = new Upload_image();
         for (FlashCards flashCard : uniqueFlashCardsList_list) {
-            if (!flashCard.getPath().equals("empty.jpg")) {
+            if (!flashCard.getPath().equals("")) {
                 try {
                     ResponseEntity<byte[]> imageResponse = upload_image.showImage(flashCard.getPath());
                     String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());

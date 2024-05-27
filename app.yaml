@@ -4,3 +4,16 @@ env: standard
 handlers:
   - url: /.*
     script: this field is required, but ignored
+    static_dir: static
+
+instance_class: F2
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 5
+
+env_variables:
+  SPRING_DATASOURCE_URL: jdbc:mysql://34.76.242.149:3306/Learnapp-jh-db-db?useSSL=false&serverTimezone=UTC
+  SPRING_DATASOURCE_USERNAME: root
+  SPRING_DATASOURCE_PASSWORD: root

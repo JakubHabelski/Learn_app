@@ -5,7 +5,6 @@ import com.learn.app.Classes.image;
 import com.learn.app.Interfaces.UserInterface;
 import com.learn.app.Interfaces.upload_Image_Interface;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,12 +35,15 @@ public class EditUserProfileController {
         Upload_image upload_image = new Upload_image();
         try{
             String path = upload_Image_Interface.findPathByUserID(LoggedUser.getUserID());
-            path = path.replace("src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "uploads" + File.separator, "");
-            System.out.println("path: " + path);
-            ResponseEntity<byte[]> imageResponse = upload_image.showImage(path);
-            String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
-            String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
-            model.addAttribute("image", imageUrl);
+            if(path != null){
+                path = path.replace("src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "uploads" + File.separator, "");
+                System.out.println("path: " + path);
+                ResponseEntity<byte[]> imageResponse = upload_image.showImage(path);
+                String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
+                String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
+                model.addAttribute("image", imageUrl);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

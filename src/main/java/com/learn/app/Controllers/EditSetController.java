@@ -65,7 +65,7 @@ public class EditSetController {
         double progres = (double) count_learned /count_set_size;
         flashCardSet.setProgression(progres);
         flashCardSet.setLastvisit(LocalDate.now());
-        addFlashCardSetInterface.save(flashCardSet);
+      //  addFlashCardSetInterface.save(flashCardSet);
         model.addAttribute("flashcard_set_progress", Math.round(flashCardSet.getProgression()*100));
         model.addAttribute("flashcard_set_lastvisit", flashCardSet.getLastvisit());
         model.addAttribute("count_learned", Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count()));

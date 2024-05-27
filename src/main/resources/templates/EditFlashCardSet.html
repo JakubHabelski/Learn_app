@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" th:href="@{/EditFlashCardSet_style.css}" />
+    <link rel="stylesheet" type="text/css" href="/static/EditFlashCardSet_style.css" />
+
     <script src="https://kit.fontawesome.com/50d738d854.js" crossorigin="anonymous"></script>
 
     <title>Title</title>
 </head>
 <body>
-<div th:insert="~{/fragments/navbar}"></div>
+<div th:insert="fragments/navbar"></div>
 
 
     <th:block th:each="image, stat : ${imagePaths}">

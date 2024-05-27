@@ -1,5 +1,9 @@
 package com.learn.app.Controllers;
 
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import com.learn.app.Classes.image;
 import com.learn.app.Interfaces.upload_Image_Interface;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -16,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Files;
-
 
 
 @Controller
@@ -70,6 +73,35 @@ public class Upload_image {
                 .contentType(MediaType.valueOf(URLConnection.guessContentTypeFromName(name)))
                 .body(Files.readAllBytes(file.toPath()));
     }
-    
-    
+    public image uploadimage(@RequestPart(name = "file") MultipartFile file) {
+    image image_obj = new image();
+
+    try {
+        // The ID of your GCP project
+        String projectId = "learnapp-jh";
+
+        // The ID of your GCS bucket
+        String bucketName = "staging.learnapp-jh.appspot.com";
+
+        // The name of your object in GCS
+        String objectName = file.getOriginalFilename();
+
+        Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+        BlobId blobId = BlobId.of(bucketName, objectName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+
+        storage.create(blobInfo, file.getBytes());
+
+        // Set the path of the image object to the GCS URI
+        image_obj.setPath("gs://" + bucketName + "/" + objectName);
+
+        // upload_Image_Interface.save(image_obj);
+
+    } catch (IOException e) {
+        e.printStackTrace();
+        // return "Coś poszło  źle" + e.getMessage();
+    }
+    return image_obj;
+}
+
 }

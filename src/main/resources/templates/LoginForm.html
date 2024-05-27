@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-          <link rel="stylesheet" type="text/css" th:href="@{/login_style.css}" />
+    <!--<link rel="stylesheet" type="text/css" th:href="@{/login_style.css}" /> -->
+    <link rel="stylesheet" type="text/css" href="/static/login_style.css" />
     <title>Title</title>
 </head>
 <body>
@@ -13,13 +14,45 @@
     <span id="error" th:if="${login_error == 'login_error'}" class="form-control" style="margin-bottom: 16px; background-color: cornsilk">Wrong login or password</span>
 
     <input name="UserLogin"  class="form-control" placeholder="Username" required>
-        <input name="UserPass" class="form-control" placeholder="Password" type="password" required>
-        <input type="submit" value="Login" class="btn btn-primary">
-        <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
-    </form>
-    <div id="alertPlaceholder"></div>
-</body>
-<script th:inline="javascript">
+    <input name="UserPass" class="form-control" placeholder="Password" type="password" required>
+    <input type="submit" value="Login" class="btn btn-primary">
+    <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
+</form>
+<div id="alertPlaceholder"></div>
 
+<!--
+<h1>Text To Speech</h1>
+<p>Click the button to hear a greeting.</p>
+<textarea id="text" rows="4" cols="50">Welcome to this tutorial!</textarea>
+<button onclick="speak()">Speak</button>
+-->
+
+</body>
+<script src="langdetect.js"></script>
+<script src="franc.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/franc-min@3.0.2"></script>
+<script th:inline="javascript">
+    const voices = speechSynthesis.getVoices();
+    function speak() {
+        // Create a SpeechSynthesisUtterance
+
+        const text = document.getElementById("text").value;
+        const utterance = new SpeechSynthesisUtterance(text);
+        // Select a voice
+
+        utterance.voice = voices[0]; // Choose a specific voice
+
+        console.log(utterance.voice);
+
+        // Speak the text
+        speechSynthesis.speak(utterance);
+        body= document.getElementsByTagName("body")[0];
+        body.style.backgroundColor = "red";
+    }
+
+    const detectedLanguage = franc('Your text to detect language.');
+    console.log('Detected language:', detectedLanguage);
+    const detectedLanguageName = franc.all('Your text to detect language.');
 </script>
+
 </html>

@@ -68,12 +68,12 @@ public class RegisterController {
         return "redirect:/loginform";
     }
     @RequestMapping("/register_success/{UserToken}")
-    @ResponseBody
-    public UserData register_success( @PathVariable String UserToken){
+
+    public String register_success( @PathVariable String UserToken){
         UserData user = userInterface.findByUserToken(UserToken);
         user.setUserActive(true);
         userInterface.save(user);
-        return user;
+        return "redirect:/loginform";
     }
     @RequestMapping("/jkj")
     @ResponseBody
