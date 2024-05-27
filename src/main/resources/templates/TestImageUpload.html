@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form th:action="@{/test_image_upload_post}" method="post" class="form-group" enctype="multipart/form-data">
+        <input type="file" th:name="file" />
+        <input type="submit" value="Send photo" class="btn btn-primary">
+        <span th:text="${fileUrl}"></span>
+    </form>
+</body>
+</html>

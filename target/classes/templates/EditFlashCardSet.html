@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/EditFlashCardSet_style.css" />
+
+    <script src="https://kit.fontawesome.com/50d738d854.js" crossorigin="anonymous"></script>
+
+    <title>Title</title>
+</head>
+<body>
+<div th:insert="fragments/navbar"></div>
+
+
+    <th:block th:each="image, stat : ${imagePaths}">
+        <img th:src="${image}" alt="Obraz fiszki" style="display: none" th:id="'source_image' + ${stat.index}"/>
+    </th:block>
+
+
+
+
+<main>
+        <aside>
+            <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
+            <a href="#" th:href="@{/QuizGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
+            <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
+        </aside>
+        <section >
+
+            <div class="input_def_des_box" th:each="card :${flashCard}" >
+                <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
+                    <i class="fa-solid fa-x" ></i>
+
+                </a>
+                <button th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))" style="background: none; border: none; float: right">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <!--------------------------------------------------------------------------------------->
+                <!--Edit exist card---------------------------------------------------------------------->
+                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
+                    <input type="hidden" th:value="${card.SetID}" name="SetID">
+                <div class="input_def_box">
+                    <textarea wrap="hard" class="input_def"  th:text="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}"  disabled></textarea>
+
+                    <div style="font-size: 16px">Pojęcie</div>
+                </div>
+                <div class="input_des_box">
+                    <textarea wrap="hard" class="input_def"  th:text="${card.Description}" name="Description" th:id="'DescriptionInput_' + ${card.FlashCardId}"  disabled></textarea>
+
+                    <div style="font-size: 16px">Defnicja</div>
+                </div>
+
+                <div>
+                    <label th:for="'file-upload-edit' + ${card.FlashCardId}" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
+                        <i class="fas fa-upload"></i> Obraz
+                    </label>
+                    <input th:id="'file-upload-edit' + ${card.FlashCardId}" type="file" class="input_image" th:name="file">
+                </div>
+                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+                </form>
+                <!-- Element docelowy -->
+                <img th:id="targetImage" alt="Obraz" style="max-height: 100px;">
+                <p th:text="'Time out: '+ ${card.time_out}"></p>
+                <p th:text="'next_rep: '+ ${card.next_rep}"></p>
+
+            </div>
+            <!--------------------------------------------------------------------------------------->
+            <!--Input a new card--------------------------------------------------------------------->
+            <div class="input_def_des_box">
+                <p style="float: left; margin: 0; margin-left: 10px;" >Create new card</p>
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
+                    <div class="input_def_box">
+                        <textarea wrap="hard" class="input_def" name="Definition"></textarea>
+
+                        <div style="font-size: 16px">Pojęcie</div>
+                    </div>
+                    <div>
+                        <label for="file-upload2" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
+                            <i class="fas fa-upload"></i> Obraz
+                        </label>
+                        <input id="file-upload2" type="file" class="input_image" th:name="file" >
+                    </div>
+                    <div class="input_des_box">
+                        <textarea wrap="hard" class="input_def"   name="Description" ></textarea>
+                        <input type="submit" value="Add Card">
+                        <div style="font-size: 16px">Defnicja</div>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+        <article>
+            <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
+
+            <p>You last vist:</p>
+            <p th:text="${flashcard_set_lastvisit}"></p>
+            <p>Your set learning progress is:</p>
+            <p th:text="${flashcard_set_progress}"></p>
+            <p>Count learned:</p>
+            <p th:text="${count_learned}"></p>
+            <p>set_size:</p>
+            <p th:text="${set_size}"></p>
+            You know these cards:
+            <div th:each="leared :${learncard}">
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <p th:text="${leared.Definition}"></p>
+                <p th:text="${leared.Description}"></p>
+            </div>
+           
+         </article>
+    </main>
+
+
+
+
+
+
+
+
+
+           
+
+<script th:inline="javascript">
+   
+   function showEditField(cardId) {
+        var definitionInput = document.getElementById('DefinitionInput_' + cardId);
+        var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
+        let Confirm_button = document.getElementById('Confirm_' + cardId);
+        Confirm_button.style.display="block";
+        let Inputs=[definitionInput, descriptionInput];
+        Inputs.forEach(input => {
+            input.disabled= false;
+            autoResize.call(input);
+        });
+
+        function autoResize() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const textareas = document.querySelectorAll('.input_def');
+
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', autoResize, false);
+            autoResize.call(textarea);
+        });
+
+        function autoResize() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }
+    });
+    
+   
+    /*<![CDATA[*/
+
+    let arr = /*[[${slidecard}]]*/ "";
+    console.log(arr);
+
+
+    //----------------------------------------------------------    
+    
+   
+        let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
+        console.log(hiddenImages);
+        let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');        
+        for(let i=0; i<hiddenImages.length; i++){
+            if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
+                targetImageArr[i].src = hiddenImages[i].src;
+                targetImageArr[i].alt = 'Obraz fiszki';
+                targetImageArr[i].style.display = 'inline';
+            }else{
+                targetImageArr[i].style.display = 'none';
+            }
+        }
+
+    //----------------------------------------------------------
+  /*]]>*/
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

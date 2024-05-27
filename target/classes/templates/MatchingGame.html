@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+       <!-- <link rel="stylesheet" type="text/css" th:href="@{/MatchingGame.css}" /> -->
+        <link rel="stylesheet" type="text/css" href="/static/MatchingGame.css" />
+
+        <title>Title</title>
+    </head>
+<body>
+<div th:insert="fragments/navbar"></div>
+
+<a th:href="@{/userpanel}" class="dropdown-item">userpanel</a>
+    <div id="container">
+        <button id="field1" onclick="select_2_fields(1)"></button>
+        <button id="field2" onclick="select_2_fields(2)"></button>
+        <button id="field3" onclick="select_2_fields(3)"></button>
+        <button id="field4" onclick="select_2_fields(4)"></button>
+        <button id="field5" onclick="select_2_fields(5)"></button>
+        <button id="field6" onclick="select_2_fields(6)"></button>
+        <button id="field7" onclick="select_2_fields(7)"></button>
+        <button id="field8" onclick="select_2_fields(8)"></button>
+        <button id="field9" onclick="select_2_fields(9)"></button>
+        <button id="field10" onclick="select_2_fields(10)"></button>
+        <button id="field11" onclick="select_2_fields(11)"></button>
+        <button id="field12" onclick="select_2_fields(12)"></button>        
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let arr = /*[[${slidecard}]]*/ "";
+        let CardArr = [];
+        let Selected_Cards = [];
+        let used_fields = [];
+        let buttons = document.querySelectorAll('#container button');
+        class Card{
+            constructor(def, des){
+                this.def = def;
+                this.des = des;
+            }
+        }
+        for(let i = 0; i < arr.length; i++){
+            CardArr.push(new Card(arr[i].definition, arr[i].description));
+        }
+
+        let temp_arr = CardArr;
+        for(let i=0; i<6; i++){
+            let random = Math.floor(Math.random() * temp_arr.length);
+            Selected_Cards.push(temp_arr[random]);
+            temp_arr.splice(random, 1);
+            console.log(Selected_Cards[i]);
+        }
+
+        for(let i=0; i<6; i++){
+            let random = Math.floor(Math.random() * 12)+1;
+            while(used_fields.includes(random)){
+                random = Math.floor(Math.random() * 12)+1;
+            }
+            used_fields.push(random);
+            buttons[random-1].textContent = Selected_Cards[i].def;
+            random = Math.floor(Math.random() * 12)+1;
+            while(used_fields.includes(random)){
+                random = Math.floor(Math.random() * 12)+1;
+            }
+            used_fields.push(random);
+            buttons[random-1].textContent = Selected_Cards[i].des;
+        }
+       for(let i=0; i<12; i++){
+            buttons[i].setAttribute("is_selected", "not_selected");            
+        }
+        function count_selected_fields(){
+            let count = 0;
+            let temp_arr = [];
+            let containerButtons = document.querySelectorAll('#container button');
+            for(let i=0; i<containerButtons.length; i++){
+                if(containerButtons[i].getAttribute("is_selected") === "selected" ){
+                    count++;
+                    temp_arr.push(containerButtons[i]);
+                }
+            }
+
+            if(count === 2){
+                console.log(temp_arr[0].textContent," " ,temp_arr[1].textContent);
+                setTimeout(function(){
+                    let success_count = false;
+                    console.log("2 fields selected");
+                    for(let i=0; i<6; i++){
+                        if(temp_arr[0].textContent === Selected_Cards[i].def){
+                            if(temp_arr[1].textContent === Selected_Cards[i].des){
+                                success_count = true;
+                                console.log("match found");
+                            }
+                        }
+                        if(temp_arr[1].textContent === Selected_Cards[i].def){
+                            if(temp_arr[0].textContent === Selected_Cards[i].des){
+                                success_count = true;
+                                console.log("match found");
+                            }
+                        }
+
+                    }
+                    if(success_count === true){
+                        for(let i=0; i<containerButtons.length; i++){
+                            if(containerButtons[i].getAttribute("is_selected") === "selected" ){
+                                containerButtons[i].setAttribute("is_selected", "not_selected");
+                                containerButtons[i].style.visibility = "hidden";
+                            }
+                        }
+                    }else{
+                        for(let i=0; i<containerButtons.length; i++){
+                            containerButtons[i].setAttribute("is_selected", "not_selected");
+                            containerButtons[i].style.backgroundColor = "white";
+                        }
+                    }
+                }, 1000);
+
+            }
+        }
+
+
+        function select_2_fields(field){
+            buttons[field-1].setAttribute("is_selected", "selected");
+            if(buttons[field-1].getAttribute("is_selected") === "selected"){
+                buttons[field-1].style.backgroundColor = "red";
+                console.log(buttons[field-1].textContent); 
+                console.log(buttons[field-1].getAttribute("is_selected"));
+            }
+            count_selected_fields();
+        }
+        
+        /*]]>*/
+        document.getElementById("customLink").addEventListener("click", function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            document.getElementById("userForm").submit(); // Submit the form
+        });
+    </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
