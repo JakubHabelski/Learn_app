@@ -1,12 +1,11 @@
 package com.learn.app.Controllers;
 
 import com.learn.app.Classes.UserData;
-import com.learn.app.Classes.image;
 import com.learn.app.Interfaces.UserInterface;
 import com.learn.app.Interfaces.upload_Image_Interface;
+import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
 
 @Controller
 public class EditUserProfileController {
@@ -36,12 +34,9 @@ public class EditUserProfileController {
         try{
             String path = upload_Image_Interface.findPathByUserID(LoggedUser.getUserID());
             if(path != null){
-                path = path.replace("src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "uploads" + File.separator, "");
-                System.out.println("path: " + path);
-                ResponseEntity<byte[]> imageResponse = upload_image.showImage(path);
-                String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
-                String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
-                model.addAttribute("image", imageUrl);
+                String displayUrl =  TestImageUpload.getImageUrl("learn-app-jh-bucket",path);
+                File file = new File(displayUrl);
+                model.addAttribute("image", file);
             }
 
         } catch (IOException e) {
@@ -61,7 +56,7 @@ public class EditUserProfileController {
                                   @Param("userName") String userName,
                                   @Param("userSurname") String userSurname,
                                   @Param("UserMail") String UserMail,
-                                  @RequestPart("image") MultipartFile file){
+                                  @RequestPart("image") MultipartFile file) throws IOException {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         if (userName != null &&  !userName.isEmpty()) {
             LoggedUser.setUserName(userName);
@@ -78,17 +73,17 @@ public class EditUserProfileController {
         } else {
             LoggedUser.setUserMail(LoggedUser.getUserMail());
         }
-        userInterface.save(LoggedUser);
-        if(!file.isEmpty()){
-            Upload_image upload_image = new Upload_image();
-            Long id= Long.valueOf(upload_Image_Interface.findIdByUserID(LoggedUser.getUserID()));
-            image uploadedImage = upload_image.upload_image(file);
-            uploadedImage.setId(id);
-            uploadedImage.setUserID(LoggedUser.getUserID());
-            uploadedImage.setPath(uploadedImage.getPath());
-            upload_Image_Interface.save(uploadedImage);
-        }
 
+        String path;
+        String image_obj_path = "UserPhoto";
+        if(!file.isEmpty()){
+            ImageUploadService imageUploadService = new ImageUploadService();
+            path = "UserPhoto/" + file.getOriginalFilename();
+            imageUploadService.uploadImage(file, image_obj_path);
+            LoggedUser.setPath(path);
+            //userInterface.save(LoggedUser);
+        }
+        userInterface.save(LoggedUser);
         return "redirect:/UserProfile";
     }
 }

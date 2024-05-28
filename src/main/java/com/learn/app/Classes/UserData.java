@@ -21,7 +21,7 @@ public class UserData {
     private String UserToken;
     @Column(columnDefinition = "boolean default false", name = "user_active")
     private Boolean UserActive ;
-
+    private String path;
 
     @OneToMany(mappedBy = "userData")
     private List<FlashCardSet> flashCardSets;
@@ -146,5 +146,13 @@ public class UserData {
 
     public void setUserActive(Boolean userActive) {
         UserActive = userActive;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

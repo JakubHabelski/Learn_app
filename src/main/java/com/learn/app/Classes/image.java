@@ -11,6 +11,8 @@ public class image {
     
     private Long userID;
     private Long FlashCardId;
+    @Column(name = "id_of_flashCard")
+    private Long id_of_flashCard;
 
     @OneToOne
     @JoinColumn(name="userID" , insertable=false, updatable=false)
@@ -43,6 +45,11 @@ public class image {
         this.FlashCardId = FlashCardId;
     }
 
+    public image(Long userID, String path, Long id_of_flashCard) {
+        this.userID = userID;
+        this.path = path;
+        this.id_of_flashCard = id_of_flashCard;
+    }
 
     public Long getId() {
         return id;
@@ -58,5 +65,13 @@ public class image {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Long getId_of_flashCard() {
+        return id_of_flashCard;
+    }
+
+    public void setId_of_flashCard(Long id_of_flashCard) {
+        this.id_of_flashCard = id_of_flashCard;
     }
 }

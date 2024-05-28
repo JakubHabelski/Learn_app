@@ -2,11 +2,9 @@ package com.learn.app.Controllers;
 
 
 import com.learn.app.Classes.UserData;
-import com.learn.app.Classes.image;
 import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Interfaces.UserInterface;
-import com.learn.app.Interfaces.upload_Image_Interface;
-
+import com.learn.app.Services.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,16 +18,19 @@ import java.util.UUID;
 public class RegisterController {
 
     private final UserInterface userInterface;
-    private final upload_Image_Interface upload_Image_Interface;
+   // private final upload_Image_Interface upload_Image_Interface;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private MyMailSenderService myMailSenderService;
+    @Autowired
+    private ImageUploadService imageUploadService;
 
-    public RegisterController(UserInterface userInterface, upload_Image_Interface upload_Image_Interface, PasswordEncoder passwordEncoder) {
+
+    public RegisterController(UserInterface userInterface, PasswordEncoder passwordEncoder) {
         this.userInterface = userInterface;
-        this.upload_Image_Interface = upload_Image_Interface;
+      //  this.upload_Image_Interface = upload_Image_Interface;
         this.passwordEncoder = passwordEncoder;
     }
     @GetMapping("/GetRegister")
@@ -55,16 +56,35 @@ public class RegisterController {
         user.setUserPass(passwordEncoder.encode(UserPass));
         userInterface.save(user);
         myMailSenderService.sendEmail(UserMail, "Potwierdzenie rejestracji", "http://localhost:8080/register_success/" + UserToken);
+        ImageUploadService imageUploadService = new ImageUploadService();
+        String path;
+        String image_obj_path = "UserPhoto";
+        if ( file.isEmpty()) {
+            path = "";
+        } else {
+
+            // uploadedImage.setUserID(null);
+            // uploadedImage.setPath(path);
+            // uploadedImage.setFlashCardId(flashCard.getFlashCardId());
+            imageUploadService.uploadImage(file, image_obj_path);
+            // path = imageUploadService.uploadImage(file, image_obj_path).toString();
+            path = "UserPhoto/" + file.getOriginalFilename();
+            // image_obj.setPath(imageUploadService.uploadImage(file, image_obj_path));
+            //  image_obj.setFlashCardId(flashCard.getFlashCardId());
+            // image_obj.setId_of_flashCard(Long.valueOf(32));
+            // upload_Image_Interface.save(image_obj);
+            user.setPath(path);
+        }
         //saving user image file to da
-        Upload_image upload_image = new Upload_image();
-        image uploadedImage = upload_image.upload_image(file);
-        String path = uploadedImage.getPath();
+     //   Upload_image upload_image = new Upload_image();
+      //  image uploadedImage = upload_image.upload_image(file);
+     //   String path = uploadedImage.getPath();
        // image image_obj = new image();
-        uploadedImage.setUserID(user.getUserID());
-        uploadedImage.setPath(path);
-        uploadedImage.setFlashCardId(null);
-        System.out.println(uploadedImage.getPath());
-        upload_Image_Interface.save(uploadedImage);
+     //   uploadedImage.setUserID(user.getUserID());
+     //   uploadedImage.setPath(path);
+       // uploadedImage.setFlashCardId(null);
+     //   System.out.println(uploadedImage.getPath());
+     //   upload_Image_Interface.save(uploadedImage);
         return "redirect:/loginform";
     }
     @RequestMapping("/register_success/{UserToken}")

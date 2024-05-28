@@ -8,9 +8,9 @@ import com.learn.app.Classes.image;
 import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Interfaces.upload_Image_Interface;
+import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 
@@ -33,11 +32,11 @@ public class EditSetController {
    @Autowired
     private final AddFlashCardInterface addFlashCardInterface;
     private final AddFlashCardSetInterface addFlashCardSetInterface;
-    private final upload_Image_Interface upload_Image_Interface;
+  //  private final upload_Image_Interface upload_Image_Interface;
     public EditSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, upload_Image_Interface upload_Image_Interface) {
         this.addFlashCardInterface = addFlashCardInterface;
         this.addFlashCardSetInterface = addFlashCardSetInterface;
-        this.upload_Image_Interface = upload_Image_Interface;
+       // this.upload_Image_Interface = upload_Image_Interface;
     }
 
     UserData user = new UserData();
@@ -48,7 +47,7 @@ public class EditSetController {
     public String EditFlashCardSet_GET(@PathVariable Long SetID,
                                        Model model,
                                        FlashCards flashCards,
-                                       HttpSession session) {
+                                       HttpSession session) throws IOException {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         Upload_image upload_image = new Upload_image();
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
@@ -81,20 +80,18 @@ public class EditSetController {
 
         List<FlashCards> flashCards_list = addFlashCardInterface.customFindBySetID(SetID);
         List<String> imagePaths = new ArrayList<>();
-
+        List<File> flashCard_Images = new ArrayList<>();
         for (FlashCards flashCard : flashCards_list) {
             if (!flashCard.getPath().equals("")) {
-                try {
-                    ResponseEntity<byte[]> imageResponse = upload_image.showImage(flashCard.getPath());
-                    String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
-                    String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
-                    imagePaths.add(imageUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                    String displayUrl =  TestImageUpload.getImageUrl("learn-app-jh-bucket", flashCard.getPath());
+                    File file = new File(displayUrl);
+                    flashCard_Images.add(file);
+
             } else {
                 // Jeśli ścieżka pliku jest "", dodaj pustą ścieżkę do listy
                 imagePaths.add("");
+                flashCard_Images.add(null);
             }
         }
         ArrayList learncard = new ArrayList<FlashCards>();
@@ -103,7 +100,7 @@ public class EditSetController {
         model.addAttribute("learncard", learncard);
 
 
-        model.addAttribute("imagePaths", imagePaths);
+        model.addAttribute("imagePaths", flashCard_Images);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
 
         return  ("EditFlashCardSet");
@@ -116,6 +113,9 @@ public class EditSetController {
                                         @RequestParam (name="file", required = false) MultipartFile file,
                                         HttpSession session,
                                         Model model) throws Exception {
+        ImageUploadService imageUploadService = new ImageUploadService();
+        image image_obj = new image();
+        String image_obj_path = "test";
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
@@ -129,31 +129,42 @@ public class EditSetController {
         flashCard.setDescription(Description);
         //saving card image file to database
 
-        Upload_image upload_image = new Upload_image();
-        image uploadedImage = upload_image.upload_image(file);
+       // Upload_image upload_image = new Upload_image();
+      //  image uploadedImage = upload_image.upload_image(file);
         String path;
         if ( file.isEmpty()) {
-           path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"";
+           path = "";
         } else {
-            path = uploadedImage.getPath();
-            uploadedImage.setUserID(null);
-            uploadedImage.setPath(path);
-            uploadedImage.setFlashCardId(flashCard.getFlashCardId());
+
+           // uploadedImage.setUserID(null);
+           // uploadedImage.setPath(path);
+           // uploadedImage.setFlashCardId(flashCard.getFlashCardId());
+            imageUploadService.uploadImage(file, image_obj_path);
+           // path = imageUploadService.uploadImage(file, image_obj_path).toString();
+            path = "test/" + file.getOriginalFilename();
+           // image_obj.setPath(imageUploadService.uploadImage(file, image_obj_path));
+          //  image_obj.setFlashCardId(flashCard.getFlashCardId());
+          // image_obj.setId_of_flashCard(Long.valueOf(32));
+           // upload_Image_Interface.save(image_obj);
         }
-        String fullPath = path;
-        String fileName = fullPath.substring(fullPath.lastIndexOf(File.separator) + 1);
-        System.out.println(fileName);
+       // String fullPath = path;
+      //  String fileName = fullPath.substring(fullPath.lastIndexOf(File.separator) + 1);
+       // System.out.println(fileName);
         flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
-        flashCard.setPath(fileName);
+        flashCard.setPath(path);
         flashCard.setTime_out(0);
         flashCard.setRep_Num(0);
         flashCard.setEF(2.5F);
         flashCard.setNext_rep(LocalDate.now());
         addFlashCardInterface.save(flashCard);
-        upload_Image_Interface.save(uploadedImage);
+        if(!file.isEmpty()){
+           // flashCard.setPath(imageUploadService.uploadImage(file, image_obj_path).toString());
+        }
+       // upload_Image_Interface.save(uploadedImage);
 
+        System.out.println("FlashCardId: " + imageUploadService.uploadImage(file, image_obj_path).toString());
         //return "UserPanel";
         return "redirect:/EditFlashCardSet/" + SetID;
     }
@@ -176,7 +187,7 @@ public class EditSetController {
         FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
-        Long old_img_id = upload_Image_Interface.findIdByFlashCardId(flashCard.getFlashCardId());
+       // Long old_img_id = upload_Image_Interface.findIdByFlashCardId(flashCard.getFlashCardId());
         Upload_image upload_image = new Upload_image();
         image uploadedImage = upload_image.upload_image(file);
         String path;
@@ -184,16 +195,16 @@ public class EditSetController {
             path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"";
         } else {
             path = uploadedImage.getPath();
-            uploadedImage.setId(old_img_id);
+         //   uploadedImage.setId(old_img_id);
             uploadedImage.setUserID(null);
             uploadedImage.setPath(path);
-            uploadedImage.setFlashCardId(flashCard.getFlashCardId());
+            uploadedImage.setId_of_flashCard(flashCard.getFlashCardId());
         }
         String fullPath = path;
         String fileName = fullPath.substring(fullPath.lastIndexOf(File.separator) + 1);
         flashCard.setPath(fileName);
         addFlashCardInterface.save(flashCard);
-        upload_Image_Interface.save(uploadedImage);
+      //  upload_Image_Interface.save(uploadedImage);
         return "redirect:/EditFlashCardSet/" + SetID;
     }
 
