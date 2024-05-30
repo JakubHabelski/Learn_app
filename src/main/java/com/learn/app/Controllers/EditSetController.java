@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class EditSetController {
     public String EditFlashCardSet_GET(@PathVariable Long SetID,
                                        Model model,
                                        FlashCards flashCards,
-                                       HttpSession session) throws IOException {
+                                       HttpSession session) throws Exception {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         Upload_image upload_image = new Upload_image();
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
@@ -84,7 +83,7 @@ public class EditSetController {
         for (FlashCards flashCard : flashCards_list) {
             if (!flashCard.getPath().equals("")) {
 
-                    String displayUrl =  TestImageUpload.getImageUrl("learn-app-jh-bucket", flashCard.getPath());
+                    String displayUrl =  TestImageUpload.getImageUrl2( flashCard.getPath());
                     File file = new File(displayUrl);
                     flashCard_Images.add(file);
 

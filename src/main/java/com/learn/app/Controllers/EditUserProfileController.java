@@ -26,7 +26,7 @@ public class EditUserProfileController {
         this.upload_Image_Interface = upload_Image_Interface;
     }
     @GetMapping("/UserProfile")
-    public String UserProfile(Model model, HttpSession session){
+    public String UserProfile(Model model, HttpSession session) throws Exception{
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
 
 
@@ -34,7 +34,7 @@ public class EditUserProfileController {
         try{
             String path = upload_Image_Interface.findPathByUserID(LoggedUser.getUserID());
             if(path != null){
-                String displayUrl =  TestImageUpload.getImageUrl("learn-app-jh-bucket",path);
+                String displayUrl =  TestImageUpload.getImageUrl2(path);
                 File file = new File(displayUrl);
                 model.addAttribute("image", file);
             }
