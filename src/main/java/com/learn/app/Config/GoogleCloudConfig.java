@@ -21,7 +21,7 @@ public class GoogleCloudConfig {
         Storage storage = StorageOptions.getDefaultInstance().getService();
 
         // Get the blob of the JSON file from Cloud Storage
-        Blob jsonBlob = storage.get(BlobId.of("learn-app-jh-bucket", "learnapp-jh-klucz.json"));
+        Blob jsonBlob = storage.get(BlobId.of("project-jh-storager", "project-jh-425111-da29a7a8eed2.json"));
 
         // Get a ReadChannel for the JSON blob
         ReadChannel jsonBlobChannel = jsonBlob.reader();

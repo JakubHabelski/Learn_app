@@ -9,7 +9,7 @@ import java.io.IOException;
 public class ImageUploadService {
 
     private Storage storage;
-    private final String bucketName = "learn-app-jh-bucket";
+    private final String bucketName = "project-jh-storager";
 
     public ImageUploadService() {
         storage = StorageOptions.getDefaultInstance().getService();

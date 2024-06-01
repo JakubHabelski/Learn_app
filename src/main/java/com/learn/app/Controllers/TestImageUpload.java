@@ -47,12 +47,15 @@ public class TestImageUpload {
     }
   //  public static final String BASE_URL = "https://storage.googleapis.com/";
 
+
+    private static final String BASE_URL = "https://storage.cloud.google.com/project-jh-storager/";
+
     public static String getImageUrl2(String objectName) throws Exception {
         // Initialize a Cloud Storage client
         Storage storage = StorageOptions.getDefaultInstance().getService();
 
         // Get the blob of the JSON file from Cloud Storage
-        Blob jsonBlob = storage.get(BlobId.of("learn-app-jh-bucket", "learnapp-jh-klucz.json"));
+        Blob jsonBlob = storage.get(BlobId.of("project-jh-storager", "project-jh-425111-da29a7a8eed2.json"));
 
         // Get a ReadChannel for the JSON blob
         ReadChannel jsonBlobChannel = jsonBlob.reader();
@@ -69,18 +72,27 @@ public class TestImageUpload {
         // Get BlobId of the image file
         BlobId blobId = BlobId.of("learn-app-jh-bucket", objectName);
 
-        // Get BlobInfo of the image file
-        BlobInfo blobInfo = storageWithCredentials.get(blobId);
-
         // Generate signed URL for the image file
-        URL signedUrl = storageWithCredentials.signUrl(blobInfo, 15, TimeUnit.MINUTES, Storage.SignUrlOption.withV4Signature());
+        URL signedUrl = storageWithCredentials.signUrl(
+                BlobInfo.newBuilder(blobId).build(),
+                15, TimeUnit.MINUTES,
+                Storage.SignUrlOption.withV4Signature()
+        );
 
-        // Return the signed URL as a string, prepended with the base URL
-        return BASE_URL + signedUrl.getFile().substring(1);
+        // Construct the final URL
+        String finalUrl = BASE_URL + objectName + "?" + signedUrl.getQuery();
+
+        // Remove unwanted prefix if it exists
+        if (finalUrl.contains("project-jh-425111.ew.r.appspot.com")) {
+            finalUrl = finalUrl.replace("https://project-jh-425111.ew.r.appspot.com/", "");
+        }
+
+        // Return the final URL as a string
+        return finalUrl;
     }
-    private static final String BASE_URL = "https://storage.googleapis.com/";
-    private static final String BUCKET_NAME = "learn-app-jh-bucket";
-    private static final String CREDENTIALS_FILE_PATH = "learnapp-jh-klucz.json";
+   // private static final String BASE_URL = "https://storage.googleapis.com/";
+    private static final String BUCKET_NAME = "lproject-jh-storager";
+    private static final String CREDENTIALS_FILE_PATH = "project-jh-425111-da29a7a8eed2.json";
 
     public static String getImageUrl3(String objectName) throws Exception {
         // Initialize a Cloud Storage client

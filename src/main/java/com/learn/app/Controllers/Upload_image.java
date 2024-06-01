@@ -78,7 +78,7 @@ public class Upload_image {
 
     try {
         // The ID of your GCP project
-        String projectId = "learnapp-jh";
+        String projectId = "project-jh-425111";
 
         // The ID of your GCS bucket
         String bucketName = "staging.learnapp-jh.appspot.com";
