@@ -113,7 +113,7 @@ public class EditSetController {
                                         HttpSession session,
                                         Model model) throws Exception {
         ImageUploadService imageUploadService = new ImageUploadService();
-        image image_obj = new image();
+
         String image_obj_path = "test";
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         user.setUserLogin(LoggedUser.getUserLogin());
@@ -126,29 +126,13 @@ public class EditSetController {
         flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
-        //saving card image file to database
-
-       // Upload_image upload_image = new Upload_image();
-      //  image uploadedImage = upload_image.upload_image(file);
         String path;
         if ( file.isEmpty()) {
            path = "";
         } else {
-
-           // uploadedImage.setUserID(null);
-           // uploadedImage.setPath(path);
-           // uploadedImage.setFlashCardId(flashCard.getFlashCardId());
             imageUploadService.uploadImage(file, image_obj_path);
-           // path = imageUploadService.uploadImage(file, image_obj_path).toString();
             path = "test/" + file.getOriginalFilename();
-           // image_obj.setPath(imageUploadService.uploadImage(file, image_obj_path));
-          //  image_obj.setFlashCardId(flashCard.getFlashCardId());
-          // image_obj.setId_of_flashCard(Long.valueOf(32));
-           // upload_Image_Interface.save(image_obj);
         }
-       // String fullPath = path;
-      //  String fileName = fullPath.substring(fullPath.lastIndexOf(File.separator) + 1);
-       // System.out.println(fileName);
         flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
@@ -158,12 +142,6 @@ public class EditSetController {
         flashCard.setEF(2.5F);
         flashCard.setNext_rep(LocalDate.now());
         addFlashCardInterface.save(flashCard);
-        if(!file.isEmpty()){
-           // flashCard.setPath(imageUploadService.uploadImage(file, image_obj_path).toString());
-        }
-       // upload_Image_Interface.save(uploadedImage);
-
-        System.out.println("FlashCardId: " + imageUploadService.uploadImage(file, image_obj_path).toString());
         //return "UserPanel";
         return "redirect:/EditFlashCardSet/" + SetID;
     }
@@ -183,7 +161,9 @@ public class EditSetController {
                            @RequestParam (name="file", required = false) MultipartFile file
 
     )throws Exception {
+        ImageUploadService imageUploadService = new ImageUploadService();
         FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
+        String image_obj_path = "test";
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
        // Long old_img_id = upload_Image_Interface.findIdByFlashCardId(flashCard.getFlashCardId());
@@ -191,17 +171,13 @@ public class EditSetController {
         image uploadedImage = upload_image.upload_image(file);
         String path;
         if ( file.isEmpty()) {
-            path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"uploads"+File.separator+"";
+            path = "";
         } else {
-            path = uploadedImage.getPath();
-         //   uploadedImage.setId(old_img_id);
-            uploadedImage.setUserID(null);
-            uploadedImage.setPath(path);
-            uploadedImage.setId_of_flashCard(flashCard.getFlashCardId());
+            imageUploadService.uploadImage(file, image_obj_path);
+            path = "test/" + file.getOriginalFilename();
+            flashCard.setPath(path);
         }
-        String fullPath = path;
-        String fileName = fullPath.substring(fullPath.lastIndexOf(File.separator) + 1);
-        flashCard.setPath(fileName);
+
         addFlashCardInterface.save(flashCard);
       //  upload_Image_Interface.save(uploadedImage);
         return "redirect:/EditFlashCardSet/" + SetID;

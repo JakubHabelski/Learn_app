@@ -70,7 +70,7 @@ public class TestImageUpload {
                 .getService();
 
         // Get BlobId of the image file
-        BlobId blobId = BlobId.of("learn-app-jh-bucket", objectName);
+        BlobId blobId = BlobId.of("project-jh-storager", objectName);
 
         // Generate signed URL for the image file
         URL signedUrl = storageWithCredentials.signUrl(
@@ -83,7 +83,7 @@ public class TestImageUpload {
         String finalUrl = BASE_URL + objectName + "?" + signedUrl.getQuery();
 
         // Remove unwanted prefix if it exists
-        if (finalUrl.contains("project-jh-425111.ew.r.appspot.com")) {
+        if (finalUrl.contains("https://project-jh-425111.ew.r.appspot.com/")) {
             finalUrl = finalUrl.replace("https://project-jh-425111.ew.r.appspot.com/", "");
         }
 

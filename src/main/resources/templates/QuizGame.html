@@ -13,23 +13,25 @@
 <body>
 <div th:insert="fragments/navbar"></div>
 
-    <div id="container">   
-        <p id="questionText">Question</p>        
-            <button class="btn-primary" id="AnsA" onclick="check_answer(this)">A</button>
-            <button class="btn-primary" id="AnsB" onclick="check_answer(this)">B</button>
-            <button class="btn-primary" id="AnsC" onclick="check_answer(this)">C</button>
-            <button class="btn-primary" id="AnsD" onclick="check_answer(this)">D</button>                      
-        <p id="score"></p>
-        <a href="#" th:href="@{/userpanel}" class="btn btn-primary">Return to userpanel</a>
-        <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-primary" 
-        style=" grid-row-start: 6;
-                grid-row-end: 6;
-                grid-column-start: 1;
-                grid-column-end: 3;
-                border-radius: 10px;">Reurn to  EditFlashCardSet</a>            
+
+<div id="container">
+    <p id="questionText">Question</p>
+    <div id="button-container">
+        <button class="quiz-btn" id="AnsA" onclick="check_answer(this)">A</button>
+        <button class="quiz-btn" id="AnsB" onclick="check_answer(this)">B</button>
+        <button class="quiz-btn" id="AnsC" onclick="check_answer(this)">C</button>
+        <button class="quiz-btn" id="AnsD" onclick="check_answer(this)">D</button>
     </div>
-    
-    
+    <p id="score"></p>
+    <a th:href="@{/userpanel}" class="btn btn-outline-dark btn-block" href="#" role="button">Return to userpanel</a>
+    <a h th:href="@{/redirect_EditFlashCardSet}" class="btn btn-outline-dark btn-block" href="#" role="button">Return to EditFlashCardSet</a>
+</div>
+
+
+
+
+
+
 
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -107,10 +109,15 @@
             current_question++;
             show_questrion(current_question);
         }
-    
-    
-    
-    
+
+
+
+// Adjust font size for all buttons
+document.querySelectorAll('.btn-primary').forEach(button => {
+    adjustButtonFontSize(button);
+});
+
+
     /*]]>*/
     document.getElementById("customLink").addEventListener("click", function(e) {
         e.preventDefault(); // Prevent default link behavior

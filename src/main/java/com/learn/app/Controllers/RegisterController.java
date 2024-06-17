@@ -55,7 +55,7 @@ public class RegisterController {
         UserData user = new UserData(UserName, UserSurname, UserLogin, UserPass, UserMail, UserToken, false);
         user.setUserPass(passwordEncoder.encode(UserPass));
         userInterface.save(user);
-        myMailSenderService.sendEmail(UserMail, "Potwierdzenie rejestracji", "http://localhost:8080/register_success/" + UserToken);
+        myMailSenderService.sendEmail(UserMail, "Potwierdzenie rejestracji", "https://project-jh-425111.ew.r.appspot.com/register_success/" + UserToken);
         ImageUploadService imageUploadService = new ImageUploadService();
         String path;
         String image_obj_path = "UserPhoto";
