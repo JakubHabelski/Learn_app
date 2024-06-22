@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
+
 @Service
 public class ImageUploadService {
 
@@ -17,16 +19,24 @@ public class ImageUploadService {
 
     public String uploadImage(MultipartFile file, String path) throws IOException {
         try {
-            String blobName = path + "/" + file.getOriginalFilename();
+            // Generate a unique identifier
+            String uniqueID = UUID.randomUUID().toString();
+
+            // Append the unique identifier to the file name
+            String blobName = path + "/" + uniqueID + "_" + file.getOriginalFilename();
             BlobId blobId = BlobId.of(bucketName, blobName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
             storage.create(blobInfo, file.getInputStream());
 
-            // Zwracamy publiczny URL przesłanego pliku
-            return "https://storage.googleapis.com" + "/"+ bucketName + "/"+ file.getOriginalFilename();
+            // Return the public URL of the uploaded file
+            return path + "/" + uniqueID + "_" + file.getOriginalFilename();
         } catch (StorageException e) {
             e.printStackTrace();
             throw new IOException("Nie udało się przesłać pliku do Google Cloud Storage");
         }
+    }
+    public void deleteImage(String path) {
+        BlobId blobId = BlobId.of(bucketName, path);
+        storage.delete(blobId);
     }
 }

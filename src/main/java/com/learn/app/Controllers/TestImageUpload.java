@@ -48,7 +48,7 @@ public class TestImageUpload {
   //  public static final String BASE_URL = "https://storage.googleapis.com/";
 
 
-    private static final String BASE_URL = "https://storage.cloud.google.com/project-jh-storager/";
+    private static final String BASE_URL = "https://storage.googleapis.com/";
 
     public static String getImageUrl2(String objectName) throws Exception {
         // Initialize a Cloud Storage client
@@ -79,18 +79,11 @@ public class TestImageUpload {
                 Storage.SignUrlOption.withV4Signature()
         );
 
-        // Construct the final URL
-        String finalUrl = BASE_URL + objectName + "?" + signedUrl.getQuery();
-
-        // Remove unwanted prefix if it exists
-        if (finalUrl.contains("https://project-jh-425111.ew.r.appspot.com/")) {
-            finalUrl = finalUrl.replace("https://project-jh-425111.ew.r.appspot.com/", "");
-        }
-
-        // Return the final URL as a string
-        return finalUrl;
+        // Return the signed URL as a string
+        return signedUrl.toString();
     }
-   // private static final String BASE_URL = "https://storage.googleapis.com/";
+
+    // private static final String BASE_URL = "https://storage.googleapis.com/";
     private static final String BUCKET_NAME = "lproject-jh-storager";
     private static final String CREDENTIALS_FILE_PATH = "project-jh-425111-da29a7a8eed2.json";
 

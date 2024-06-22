@@ -2,15 +2,11 @@ package com.learn.app.Controllers;
 
 import com.learn.app.Classes.UserData;
 import com.learn.app.Config.MyMailSenderService;
-import com.learn.app.Config.UserService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Interfaces.UserInterface;
 import com.learn.app.Interfaces.upload_Image_Interface;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class LoginController {
-    Logger logger = LoggerFactory.getLogger(LoginController.class);
+   // Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private final AddFlashCardSetInterface addFlashCardSetInterface;
@@ -41,34 +37,23 @@ public class LoginController {
     }
 
 
-    // Reszta Twojego kodu...
 
 
     @PersistenceContext
-    @Autowired
-    private EntityManager entityManager;
+  //  @Autowired
+  //  private EntityManager entityManager;
 
-    @Autowired
-    private UserService userService;
+  //  @Autowired
+  //  private UserService userService;
 
 
     UserData user = new UserData();
 
-    boolean userfound = true;
+  //  boolean userfound = true;
 
 
     @GetMapping(value = "/loginform")
     public String loginform(Model model, HttpSession session) {
-
-
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         user.setUserLogin("");
         user.setUserPass("");
         model.addAttribute("user", user);
@@ -119,10 +104,6 @@ public class LoginController {
             return "UserPanel";
 
         }
-
-
-
-        // Redirect to login or handle not logged in scenario
         return "redirect:/loginform";
     }
 

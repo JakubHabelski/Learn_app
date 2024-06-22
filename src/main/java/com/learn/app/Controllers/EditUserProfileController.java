@@ -31,16 +31,14 @@ public class EditUserProfileController {
 
 
         Upload_image upload_image = new Upload_image();
-        try{
-            String path = upload_Image_Interface.findPathByUserID(LoggedUser.getUserID());
-            if(path != null){
-                String displayUrl =  TestImageUpload.getImageUrl2(path);
-                File file = new File(displayUrl);
-                model.addAttribute("image", file);
-            }
+        if(!LoggedUser.getPath().equals("")) {
+            String displayUrl =  TestImageUpload.getImageUrl2( LoggedUser.getPath());
+            File file = new File(displayUrl);
+            model.addAttribute("image", file);
+        }else {
+            // Jeśli ścieżka pliku jest "", dodaj pustą ścieżkę do listy
+            model.addAttribute("image", "");
 
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         if(LoggedUser != null){
             model.addAttribute("user", LoggedUser);
@@ -76,12 +74,11 @@ public class EditUserProfileController {
 
         String path;
         String image_obj_path = "UserPhoto";
-        if(!file.isEmpty()){
-            ImageUploadService imageUploadService = new ImageUploadService();
-            path = "UserPhoto/" + file.getOriginalFilename();
-            imageUploadService.uploadImage(file, image_obj_path);
+        ImageUploadService imageUploadService = new ImageUploadService();
+        if (! file.isEmpty()) {
+            imageUploadService.deleteImage(LoggedUser.getPath());
+            path = imageUploadService.uploadImage(file, image_obj_path);
             LoggedUser.setPath(path);
-            //userInterface.save(LoggedUser);
         }
         userInterface.save(LoggedUser);
         return "redirect:/UserProfile";

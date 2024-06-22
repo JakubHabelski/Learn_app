@@ -6,12 +6,14 @@ import com.learn.app.Classes.FlashCards;
 import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Classes.UserData;
+import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 
 
 @Controller
@@ -71,7 +73,16 @@ public class FlashCardSetController {
                                      HttpSession session,
                                      @RequestParam("SetID") Long SetID) {
         UserData loggedUser = (UserData) session.getAttribute("LoggedUser");
-        
+        ArrayList FlashCardList = new ArrayList<FlashCards>();
+        FlashCardList.addAll(addFlashCardInterface.customFindBySetID(SetID));
+        ImageUploadService imageUploadService = new ImageUploadService();
+        for (int i = 0; i < FlashCardList.size(); i++) {
+            FlashCards flashCard = (FlashCards) FlashCardList.get(i);
+            if (!flashCard.getPath().equals("")) {
+                imageUploadService.deleteImage(flashCard.getPath());
+            }
+        }
+       // imageUploadService.deleteImage(flashCard.getPath());
             // Tutaj dodaj logikę usuwania zestawu kart
             addFlashCardSetInterface.deleteById(SetID);
 

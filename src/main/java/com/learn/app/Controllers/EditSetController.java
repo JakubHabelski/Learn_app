@@ -130,8 +130,8 @@ public class EditSetController {
         if ( file.isEmpty()) {
            path = "";
         } else {
-            imageUploadService.uploadImage(file, image_obj_path);
-            path = "test/" + file.getOriginalFilename();
+
+            path = imageUploadService.uploadImage(file, image_obj_path);
         }
         flashCard.setSetID(SetID);
         flashCard.setDefinition(Definition);
@@ -149,7 +149,11 @@ public class EditSetController {
     @RequestMapping("/deleteCard")
     public String deleteCard(@RequestParam String FlashCardId,
                              @RequestParam String SetID){
+        FlashCards flashCard = addFlashCardInterface.customFindByID(Long.valueOf(FlashCardId));
+        ImageUploadService imageUploadService = new ImageUploadService();
+        imageUploadService.deleteImage(flashCard.getPath());
         addFlashCardInterface.deleteById(Long.valueOf(FlashCardId));
+
         return "redirect:/EditFlashCardSet/"  + SetID;
     }
 
