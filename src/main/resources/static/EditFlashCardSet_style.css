@@ -24,16 +24,16 @@ header {
 aside {
     width: 25%;
     float: left;
-    position: fixed;
+    position: sticky;
     display: flex;
     gap: 10px;
     flex-direction: column;
     padding: 10px;
+    top: 76px;
 }
 
 section {
     width: 50%;
-    float: left;
     margin-left: 25%;
 }
 
@@ -41,7 +41,9 @@ article {
     width: 25%;
     float: left;
 }
-
+main{
+    margin-top: 76px;
+}
 .input_def_des_box {
     border-radius: 25px;
     padding: 10px 25px 25px 25px;

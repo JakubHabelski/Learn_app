@@ -5,7 +5,6 @@ import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Interfaces.UserInterface;
 import com.learn.app.Interfaces.upload_Image_Interface;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -39,7 +38,7 @@ public class LoginController {
 
 
 
-    @PersistenceContext
+
   //  @Autowired
   //  private EntityManager entityManager;
 
