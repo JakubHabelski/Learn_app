@@ -36,6 +36,7 @@ public class FlashCardGames {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         FlashCards flashCard = new FlashCards();
         Long SetID = (Long) session.getAttribute("SetID");
+        FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
         model.addAttribute("user", user);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
         user.setUserLogin(LoggedUser.getUserLogin());
@@ -45,6 +46,8 @@ public class FlashCardGames {
         user.setUserSurname(LoggedUser.getUserSurname());
         ArrayList slidecard = new ArrayList<FlashCards>();
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
+        Integer Learned = addFlashCardInterface.find_learnedFlashCards(SetID, true).size();
+        Integer NotLearned = addFlashCardInterface.find_learnedFlashCards(SetID, false).size();
        // slidecard.addAll(addFlashCardInterface.customFindBySetIDAndTimeOut(SetID, 1));
         Date currentDate = java.sql.Date.valueOf(LocalDate.now());
         Iterator<FlashCards> iterator = slidecard.iterator();
@@ -58,6 +61,8 @@ public class FlashCardGames {
         model.addAttribute("slidecard", slidecard);
         model.addAttribute("user", user);
         model.addAttribute("slidecard", slidecard);
+        model.addAttribute("Learned", Learned);
+        model.addAttribute("NotLearned", NotLearned);
         return "FlashCardGame";
     }    
     @GetMapping("/QuizGame")
@@ -134,7 +139,7 @@ public class FlashCardGames {
         addFlashCardInterface.save(flashCard);
 
     }
-    @RequestMapping(value = "/test2", method = RequestMethod.GET)
+    @RequestMapping(value = "/submit_grade", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void test2(HttpSession session,
                      @RequestParam ("flashCardId") Long flashCardId,
@@ -171,6 +176,7 @@ public class FlashCardGames {
         flashCard.setRep_Num(rep_Num);
         flashCard.setNext_rep(LocalDate.now().plusDays(I));
         flashCard.setLast_user_grade(Q);
+        flashCard.setLearned(true);
         addFlashCardInterface.save(flashCard);
 
     }

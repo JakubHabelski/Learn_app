@@ -75,34 +75,30 @@ body {
     margin-top: 1em;
     justify-content: center;
 }
-#Return{
-    display: flex;
-    margin-bottom: 1rem;
-    margin-top: 1em;
-    justify-content: center;
-}
+
 #buttons {
-    padding: 1em 0px 1em 0px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    height: 5em;
-    gap: 1em;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: 50px 50px;
+    height: 100px;
+    margin: 20px 0 20px 0;
+    gap:10px;
 }
 #know_dont_know{
-    height: 100px;
+    height: 50px;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: white;
-
+    margin-top: 30px;
 }
 #know_dont_know >*{
     display: flex;
-    height: 100px;
-    width: 100px;
+    height: 100%;
+    width: 200px;
     background-color: rgb(68, 0, 255);
     justify-content: center;
     align-items: center;
@@ -112,7 +108,25 @@ body {
 * {
     box-sizing: border-box;
 }
-
+#knowForm2{
+    display: none;
+    visibility: hidden;
+}
+.a-links{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 50px;
+    grid-gap: 10px;
+}
+.a-links > *{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#previous, #next{
+    margin-top: 0;
+}
 @media (max-width: 991px){
     #show_card_container{
         width: 600px

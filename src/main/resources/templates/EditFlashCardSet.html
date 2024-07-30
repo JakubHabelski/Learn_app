@@ -27,6 +27,22 @@
             <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
             <a href="#" th:href="@{/QuizGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
             <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
+            <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
+
+            <p>You last vist:</p>
+            <p th:text="${flashcard_set_lastvisit}"></p>
+            <p>Your set learning progress is:</p>
+            <p th:text="${flashcard_set_progress}"></p>
+            <p>Count learned:</p>
+            <p th:text="${count_learned}"></p>
+            <p>set_size:</p>
+            <p th:text="${set_size}"></p>
+            You know these cards:
+            <div th:each="leared :${learncard}">
+                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                <p th:text="${leared.Definition}"></p>
+                <p th:text="${leared.Description}"></p>
+            </div>
         </aside>
         <section >
 
@@ -97,25 +113,7 @@
 
             </div>
         </section>
-        <article>
-            <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
 
-            <p>You last vist:</p>
-            <p th:text="${flashcard_set_lastvisit}"></p>
-            <p>Your set learning progress is:</p>
-            <p th:text="${flashcard_set_progress}"></p>
-            <p>Count learned:</p>
-            <p th:text="${count_learned}"></p>
-            <p>set_size:</p>
-            <p th:text="${set_size}"></p>
-            You know these cards:
-            <div th:each="leared :${learncard}">
-                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
-                <p th:text="${leared.Definition}"></p>
-                <p th:text="${leared.Description}"></p>
-            </div>
-           
-         </article>
     </main>
 
 
