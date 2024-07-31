@@ -29,11 +29,13 @@
             <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
             <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
 
-            <p>You last vist:</p>
-            <p th:text="${flashcard_set_lastvisit}"></p>
-            <p>Your set learning progress is:</p>
-            <p th:text="${flashcard_set_progress}"></p>
-            <p>Count learned:</p>
+            <!--<p>You last vist:</p>
+            <p th:text="${flashcard_set_lastvisit}"></p> -->
+            <p th:text="'Your set learning progress is: ' + ${flashcard_set_progress}+'%'"></p>
+            <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" th:aria-valuenow="${flashcard_set_progress}" aria-valuemin="0" aria-valuemax="100" th:style="'width:' + ${flashcard_set_progress} + '%'"></div>
+            </div>
+            <!--<p>Count learned:</p>
             <p th:text="${count_learned}"></p>
             <p>set_size:</p>
             <p th:text="${set_size}"></p>
@@ -42,7 +44,7 @@
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
                 <p th:text="${leared.Definition}"></p>
                 <p th:text="${leared.Description}"></p>
-            </div>
+            </div> -->
         </aside>
         <section >
 
@@ -81,7 +83,7 @@
                     <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
                 </form>
                 <!-- Element docelowy -->
-                <img th:id="targetImage" alt="Obraz" style="max-height: 100px;">
+                <img th:id="targetImage" alt="Obraz" style="max-width: 200px;">
                 <!-- <p th:text="'Time out: '+ ${card.time_out}"></p>-->
                  <!-- <p th:text="'next_rep: '+ ${card.next_rep}"></p>-->
 

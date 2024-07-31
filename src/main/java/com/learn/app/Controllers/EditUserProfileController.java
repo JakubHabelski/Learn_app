@@ -31,7 +31,7 @@ public class EditUserProfileController {
 
 
         Upload_image upload_image = new Upload_image();
-        if(!LoggedUser.getPath().equals("")) {
+        if(!LoggedUser.getPath().isEmpty()) {
             String displayUrl =  TestImageUpload.getImageUrl2( LoggedUser.getPath());
             File file = new File(displayUrl);
             model.addAttribute("image", file);

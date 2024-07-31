@@ -61,6 +61,7 @@ public class RegisterController {
         String image_obj_path = "UserPhoto";
         if ( file.isEmpty()) {
             path = "";
+            user.setPath(path);
         } else {
 
             // uploadedImage.setUserID(null);

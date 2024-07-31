@@ -8,14 +8,13 @@ import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
 
 @Controller
@@ -163,9 +162,11 @@ public class FlashCardGames {
                 I = (int) Math.round(I*EF);
             }
             rep_Num++;
+            flashCard.setLearned(true);
         } else{
             rep_Num = 0;
             I=1;
+            flashCard.setLearned(false);
         }
         EF = (float) (EF + (0.1 - (5-Q)*(0.08+(5-Q)*0.02)));
         if (EF < 1.3F){
@@ -176,8 +177,39 @@ public class FlashCardGames {
         flashCard.setRep_Num(rep_Num);
         flashCard.setNext_rep(LocalDate.now().plusDays(I));
         flashCard.setLast_user_grade(Q);
-        flashCard.setLearned(true);
+
+        Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
+        Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
+        double progres = (double) count_learned /count_set_size;
+        flashCardSet.setProgression(progres);
+        addFlashCardSetInterface.save(flashCardSet);
         addFlashCardInterface.save(flashCard);
 
-    }
+            }
+        @GetMapping("/getProgress")
+        public ResponseEntity<Map<String, Integer>> getProgress(HttpSession session) {
+            Long SetID = (Long) session.getAttribute("SetID");
+
+            Integer Learned = addFlashCardInterface.find_learnedFlashCards(SetID, true).size();
+            Integer NotLearned = addFlashCardInterface.find_learnedFlashCards(SetID, false).size();
+
+            Map<String, Integer> response = new HashMap<>();
+            response.put("Learned", Learned);
+            response.put("NotLearned", NotLearned);
+
+            return ResponseEntity.ok(response);
+        }
+        @PostMapping("/updateGrade")
+        public ResponseEntity<Map<String, Integer>> updateGrade(@RequestParam Long flashCardId, @RequestParam Integer grade, HttpSession session) {
+            Long SetID = (Long) session.getAttribute("SetID");
+
+            Integer Learned = addFlashCardInterface.find_learnedFlashCards(SetID, true).size();
+            Integer NotLearned = addFlashCardInterface.find_learnedFlashCards(SetID, false).size();
+
+            Map<String, Integer> response = new HashMap<>();
+            response.put("Learned", Learned);
+            response.put("NotLearned", NotLearned);
+
+            return ResponseEntity.ok(response);
+        }
 }

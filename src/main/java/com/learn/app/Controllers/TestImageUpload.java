@@ -124,7 +124,7 @@ public class TestImageUpload {
     public String show_image( Model model) throws Exception {
 
 
-        String displayUrl = getImageUrl2( "UserPhoto/żółw.png");
+        String displayUrl = getImageUrl2( "test/DFT.jpg");
         File file = new File(displayUrl);
         System.out.println(displayUrl);
         model.addAttribute("file", file);

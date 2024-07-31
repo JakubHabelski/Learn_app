@@ -53,7 +53,30 @@
 
     </div>
 
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="position: absolute; top: 50%; display: none" >
+    Launch demo modal
+</button>
 
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document" > <!-- style="display: flex; align-items: center; min-height: calc(100% - 4rem);" -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Congratulation, You have finished</h5>
+            </div>
+            <div class="modal-body">
+                Tu dam może jakie wyniki danej sesji
+            </div>
+            <div class="modal-footer">
+                <a href="#" th:href="@{/userpanel}" class="btn btn-info">Return to Main Panel</a>
+                <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-info" id="Return2">Return to Flashcard Set</a>
+                <a href="#" th:href="@{/FlashCardGame}" class="btn btn-info" >Reset Flashcard game</a>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script th:inline="javascript">
         function showEditField(cardId) {
@@ -73,7 +96,7 @@
                 this.definition=definition;
                 this.description=description;
                 this.flashCardId=flashCardId;
-                this.Is_known=Is_known;
+                this.Is_known=false;
                 this.Is_viewed=Is_viewed;
             }
         }
@@ -89,7 +112,7 @@
         let i=0;
         let j=0;
         let side=0;
-    
+
         document.getElementById("card_def").innerHTML=arr[0].definition;
         document.getElementById("card_des").innerHTML=arr[0].description;
         function change_card(direction){
@@ -141,6 +164,25 @@
 
             // Wysłanie formularza
             document.getElementById("knowForm2").submit();
+            const knowSpan = document.getElementById("know");
+            const dontKnowSpan = document.getElementById("dont_know");
+
+            // Wydobywanie liczby na końcu tekstu
+            const knowCount = parseInt(knowSpan.innerHTML.match(/\d+$/)[0]);
+            const dontKnowCount = parseInt(dontKnowSpan.innerHTML.match(/\d+$/)[0]);
+
+            if (grade > 3 && card_arr[i].Is_known === false) {
+                card_arr[i].Is_known = true;
+                knowSpan.innerHTML = "You know: " + (knowCount + 1);
+                dontKnowSpan.innerHTML = "Still learning: " + (dontKnowCount - 1);
+            } else if (grade <= 3 && card_arr[i].Is_known === true) {
+                card_arr[i].Is_known = false;
+                knowSpan.innerHTML = "You know: " + (knowCount - 1);
+                dontKnowSpan.innerHTML = "Still learning: " + (dontKnowCount + 1);
+            }
+            if(i==arr.length-1){
+                $('#exampleModal').modal('show');
+            }
         }
 
 

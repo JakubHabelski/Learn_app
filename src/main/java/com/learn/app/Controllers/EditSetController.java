@@ -178,7 +178,8 @@ public class EditSetController {
             path = "";
         } else {
             imageUploadService.uploadImage(file, image_obj_path);
-            path = "test/" + file.getOriginalFilename();
+           // path = "test/" + file.getOriginalFilename();
+            path = imageUploadService.uploadImage(file, image_obj_path);
             flashCard.setPath(path);
         }
 
@@ -212,6 +213,9 @@ public class EditSetController {
             flashCard.setLast_user_grade((byte) 0);
             addFlashCardInterface.save(flashCard);
         }
+        FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
+        flashCardSet.setProgression(0);
+        addFlashCardSetInterface.save(flashCardSet);
         return "redirect:/EditFlashCardSet/" + SetID;
     }
 
