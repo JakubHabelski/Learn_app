@@ -101,17 +101,24 @@ public class EditSetController {
 
         model.addAttribute("imagePaths", flashCard_Images);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
-
+        model.addAttribute("file", new ArrayList<MultipartFile>());
         return  ("EditFlashCardSet");
 
     }
     @PostMapping(value = "/AddCard")
     public String EditFlashCardSet_POST(@RequestParam Long SetID,
-                                        @RequestParam String Definition,
-                                        @RequestParam String Description,
-                                        @RequestParam (name="file", required = false) MultipartFile file,
+                                        @RequestParam ("Definition[]") List<String> Definition,
+                                        @RequestParam ("Description[]") List<String> Description,
+                                        @RequestParam (name="file[]", required = false) List<MultipartFile> files,
                                         HttpSession session,
                                         Model model) throws Exception {
+        // Log the number of received files
+        System.out.println("Received " + files.size() + " files.");
+
+        // Log the names of the received files
+        for (MultipartFile file : files) {
+            System.out.println("Received file: " + file.getOriginalFilename());
+        }
         ImageUploadService imageUploadService = new ImageUploadService();
 
         String image_obj_path = "test";
@@ -122,30 +129,37 @@ public class EditSetController {
         model.addAttribute("user" , user);
         model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
 
-        FlashCards flashCard = new FlashCards();
-        flashCard.setSetID(SetID);
-        flashCard.setDefinition(Definition);
-        flashCard.setDescription(Description);
-        String path;
-        if ( file.isEmpty()) {
-           path = "";
-        } else {
+        for (int i = 0; i < Definition.size(); i++) {
+            FlashCards flashCard = new FlashCards();
+            flashCard.setSetID(SetID);
+            flashCard.setDefinition(Definition.get(i));
+            flashCard.setDescription(Description.get(i));
+            String path;
+            if (files != null && i < files.size() && !files.get(i).isEmpty()) {
+                path = imageUploadService.uploadImage(files.get(i), image_obj_path);
+            } else {
+                path = "";
+            }
+            flashCard.setSetID(SetID);
+            flashCard.setDefinition(Definition.get(i));
+            flashCard.setDescription(Description.get(i));
+            flashCard.setPath(path);
+            flashCard.setTime_out(0);
+            flashCard.setRep_Num(0);
+            flashCard.setEF(2.5F);
+            flashCard.setNext_rep(LocalDate.now());
+            addFlashCardInterface.save(flashCard);
+            // Log the number of received files
+            System.out.println("Received " + files.size() + " files.");
 
-            path = imageUploadService.uploadImage(file, image_obj_path);
+            // Log the names of the received files
+            for (MultipartFile file : files) {
+                System.out.println("Received file: " + file.getOriginalFilename());
+            }
         }
-        flashCard.setSetID(SetID);
-        flashCard.setDefinition(Definition);
-        flashCard.setDescription(Description);
-        flashCard.setPath(path);
-        flashCard.setTime_out(0);
-        flashCard.setRep_Num(0);
-        flashCard.setEF(2.5F);
-        flashCard.setNext_rep(LocalDate.now());
-        addFlashCardInterface.save(flashCard);
-        //return "UserPanel";
+
         return "redirect:/EditFlashCardSet/" + SetID;
     }
-
     @RequestMapping("/deleteCard")
     public String deleteCard(@RequestParam String FlashCardId,
                              @RequestParam String SetID){

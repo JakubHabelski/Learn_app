@@ -46,14 +46,15 @@
                 <p th:text="${leared.Description}"></p>
             </div> -->
         </aside>
-        <section >
-
+    <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
+        <section id="cardSection">
+            <div id="formContainer">
             <div class="input_def_des_box" th:each="card :${flashCard}" >
                 <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
                     <i class="fa-solid fa-x" ></i>
 
                 </a>
-                <button th:data-name="${card.FlashCardId}" th:onclick="showEditField(this.getAttribute('data-name'))" style="background: none; border: none; float: right">
+                <button th:data-name="${card.FlashCardId}" onclick="showEditField(event, this.getAttribute('data-name'))" style="background: none; border: none; float: right">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
 
@@ -93,10 +94,10 @@
             <div class="input_def_des_box">
                 <p style="float: left; margin: 0; margin-left: 10px;" >Create new card</p>
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
-                <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" th:field="${flashCards.SetID}" name="SetID">
+
+                    <input type="hidden" id="setID" th:value="${flashCards.SetID}"   th:field="${flashCards.SetID}" name="SetID">
                     <div class="input_def_box">
-                        <textarea wrap="hard" class="input_def" name="Definition"></textarea>
+                        <textarea wrap="hard" class="input_def" name="Definition[]"></textarea>
 
                         <div style="font-size: 16px">Pojęcie</div>
                     </div>
@@ -104,18 +105,23 @@
                         <label for="file-upload2" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
                             <i class="fas fa-upload"></i> Obraz
                         </label>
-                        <input id="file-upload2" type="file" class="input_image" th:name="file" >
+                        <input id="file-upload2" type="file" class="input_image" th:name="file[]" multiple>
                     </div>
                     <div class="input_des_box">
-                        <textarea wrap="hard" class="input_def"   name="Description" ></textarea>
-                        <input type="submit" value="Add Card">
+                        <textarea wrap="hard" class="input_def"   name="Description[]"></textarea>
+
                         <div style="font-size: 16px">Defnicja</div>
                     </div>
-                </form>
 
             </div>
-        </section>
+            </div>
+            <div style="margin-bottom: 25px">
+                <button id="addCardButton" type="button">Dodaj kartę</button>
+                <input type="submit" value="Add Card">
+            </div>
 
+        </section>
+    </form>
     </main>
 
 
@@ -129,9 +135,11 @@
            
 
 <script th:inline="javascript">
-   
-   function showEditField(cardId) {
-        var definitionInput = document.getElementById('DefinitionInput_' + cardId);
+
+    // funkcja pokazująca pole edycji fiszki po kliknięciu przycisku
+   function showEditField(event, cardId) {
+       event.preventDefault(); // Zapobiega domyślnemu zachowaniu przycisku
+       var definitionInput = document.getElementById('DefinitionInput_' + cardId);
         var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
         let Confirm_button = document.getElementById('Confirm_' + cardId);
         Confirm_button.style.display="block";
@@ -140,26 +148,9 @@
             input.disabled= false;
             autoResize.call(input);
         });
-
-        function autoResize() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        }
     }
 
-    window.addEventListener('DOMContentLoaded', (event) => {
-        const textareas = document.querySelectorAll('.input_def');
 
-        textareas.forEach(textarea => {
-            textarea.addEventListener('input', autoResize, false);
-            autoResize.call(textarea);
-        });
-
-        function autoResize() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        }
-    });
     
    
     /*<![CDATA[*/
@@ -167,10 +158,8 @@
     let arr = /*[[${slidecard}]]*/ "";
     console.log(arr);
 
-
-    //----------------------------------------------------------    
     
-   
+   //ukrywanie obrazków przesłanych bezposrednio z serwera. Potem są one wyświetlane w odpowiednich miejscach
         let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
         console.log(hiddenImages);
         let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');        
@@ -184,8 +173,74 @@
             }
         }
 
+            // automatyczne dostosowanie wysokości textarea do zawartości
+           function autoResize(textarea) {
+               textarea.style.height = 'auto';
+               textarea.style.height = textarea.scrollHeight + 'px';
+           }
+
+           function addAutoResizeToTextarea(textarea) {
+               textarea.addEventListener('input', function() { autoResize(textarea); }, false);
+               autoResize(textarea);
+           }
+
+           window.addEventListener('DOMContentLoaded', (event) => {
+               const textareas = document.querySelectorAll('.input_def');
+               textareas.forEach(addAutoResizeToTextarea);
+           });
+
+
+            //dodawanie nowych formularzy po kliknięciu przycisku
+             let formCount = 0;
+           document.getElementById('addCardButton').addEventListener('click', function() {
+                const formContainer = document.getElementById('formContainer');
+                const setID = document.getElementById('setID').value;
+
+                const newCardForm = document.createElement('div');
+                newCardForm.innerHTML = `
+                    <div class="input_def_des_box">
+                        <p style="float: left; margin: 0; margin-left: 10px;">Create new card</p>
+                        <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
+                        <input type="hidden" value="${setID}" name="SetID">
+                        <div class="input_def_box">
+                            <textarea wrap="hard" class="input_def" name="Definition[]"></textarea>
+                            <div style="font-size: 16px">Pojęcie</div>
+                        </div>
+                        <div>
+                            <label for="file-upload${formCount}" class="custom-file-upload" style="text-align: center; font-size: 13px;">
+                                <i class="fas fa-upload"></i> Obraz
+                            </label>
+                            <input id="file-upload${formCount}" type="file" class="input_image" name="file[]" multiple>
+                        </div>
+                        <div class="input_des_box">
+                            <textarea wrap="hard" class="input_def" name="Description[]"></textarea>
+                            <div style="font-size: 16px">Definicja</div>
+                        </div>
+                    </div>
+                `;
+
+                formContainer.appendChild(newCardForm);
+                formCount++;
+                const newTextareas = newCardForm.querySelectorAll('.input_def');
+                newTextareas.forEach(addAutoResizeToTextarea);
+            });
+
+            // wysłanie wszystkich formularzy po kliknięciu przycisku
+           document.getElementById('submitButton').addEventListener('click', function(event) {
+               event.preventDefault(); // Zapobiega domyślnemu przesyłaniu formularza
+               // Dodanie wszystkich formularzy do jednego
+               const mainForm = document.getElementById('mainForm');
+               const formContainer = document.getElementById('formContainer');
+               const forms = formContainer.querySelectorAll('div.input_def_des_box');
+               forms.forEach(function(form) {
+                   mainForm.appendChild(form.cloneNode(true));
+               });
+               mainForm.submit(); // Przesłanie formularza
+           });
     //----------------------------------------------------------
   /*]]>*/
+
+
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

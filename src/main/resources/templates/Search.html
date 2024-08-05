@@ -21,7 +21,7 @@
     </th:block>
 
 
-
+<section style="margin-top: 76px">
     <div class="input_def_des_box" th:each="card :${flashCards}" >
 
 
@@ -42,8 +42,8 @@
                 <div style="font-size: 16px">Defnicja</div>
             </div>
 
-        <!-- Element docelowy -->
-        <img th:id="targetImage" alt="Obraz" style="max-height: 100px;" class="target_image">
+            <!-- Element docelowy -->
+            <img th:id="targetImage" alt="Obraz" style="max-height: 100px;" class="target_image">
             <br>
             <div style="width: 100%; float: left">
                 <button type="button" data-toggle="collapse" th:data-target="'#SetSelectCollapsible' +${card.FlashCardId}" class="btn btn-primary">Clone Card to your set:</button>
@@ -60,6 +60,8 @@
         </form>
 
     </div>
+</section>
+
 </body>
 <script th:inline="javascript">
 
