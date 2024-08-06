@@ -17,13 +17,13 @@
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Create new set
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown1" style="padding: 10px">
                     <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post"  style="display: block">
                         <label for="SetName">Set Name</label>
                         <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">
                         <label for="Description">Description</label>
                         <input name="Description" id="Description" class="form-control" placeholder="Description" style="width: auto; margin-bottom: 0.5rem">
-                        <input type="submit" value="Add">
+                        <input type="submit" value="Add new set" class="btn btn-primary">
                     </form>
                 </div>
             </li>

@@ -1,5 +1,10 @@
 package com.learn.app.Controllers;
 
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
+import com.github.pemistahl.lingua.api.Language;
+import com.github.pemistahl.lingua.api.LanguageDetector;
+import com.github.pemistahl.lingua.api.LanguageDetectorBuilder;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
@@ -13,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.PostConstruct;
 
 @Controller
 public class LoginController {
@@ -50,7 +57,14 @@ public class LoginController {
 
   //  boolean userfound = true;
 
-
+    @PostConstruct
+    public void init() {
+        try {
+            DetectorFactory.loadProfile("lang_profiles");
+        } catch (LangDetectException e) {
+            e.printStackTrace();
+        }
+    }
     @GetMapping(value = "/loginform")
     public String loginform(Model model, HttpSession session) {
         user.setUserLogin("");
@@ -61,7 +75,18 @@ public class LoginController {
             model.addAttribute("login_error", "login_error");
 
         }
-
+        /*
+        try {
+            com.cybozu.labs.langdetect.Detector detector = DetectorFactory.create();
+            detector.append("Tekst do wykrycia języka");
+            String language = detector.detect();
+            model.addAttribute("language", language);
+            System.out.println("Wykryty język: " + language);
+        } catch (LangDetectException e) {
+            e.printStackTrace();
+        }
+         */
+        System.out.println(language("Chuj ci w dupe"));
         return "LoginForm";
     }
     // LoginController.java
@@ -113,7 +138,11 @@ public class LoginController {
         session.invalidate();
         return "redirect:/loginform";
     }
-
+    public String language(String text){
+        LanguageDetector detector = LanguageDetectorBuilder.fromAllSpokenLanguages().build();
+        Language language = detector.detectLanguageOf(text);
+        return language.toString();
+    }
 
 
 

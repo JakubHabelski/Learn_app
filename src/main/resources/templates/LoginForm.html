@@ -18,6 +18,8 @@
     <input type="submit" value="Login" class="btn btn-primary">
     <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
 </form>
+<button onclick="detectLanguage('dupa')">test</button>
+<span th:text="${language}"></span>
 <div id="alertPlaceholder"></div>
 
 <!--
@@ -28,11 +30,13 @@
 -->
 
 </body>
-<script src="langdetect.js"></script>
-<script src="franc.js"></script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/franc-min@3.0.2"></script>
+<script src="langdetect.js"></script>
 <script th:inline="javascript">
     const voices = speechSynthesis.getVoices();
+    const franc = require('franc');
     function speak() {
         // Create a SpeechSynthesisUtterance
 
@@ -53,6 +57,13 @@
     const detectedLanguage = franc('Your text to detect language.');
     console.log('Detected language:', detectedLanguage);
     const detectedLanguageName = franc.all('Your text to detect language.');
+
+
+  function detectLanguage(inputText) {
+    var detectedLanguage = franc(inputText);
+    var outputLang = "Detected Language: " + detectedLanguage;
+    document.getElementById("languageSpan").innerHTML = outputLang;
+}
 </script>
 
 </html>

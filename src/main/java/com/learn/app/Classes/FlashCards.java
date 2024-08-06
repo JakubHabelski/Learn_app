@@ -39,6 +39,9 @@ public class FlashCards {
     @Column(columnDefinition = "tinyint default 0")
     private byte last_user_grade;
 
+    private String def_lang;
+    private String des_lang;
+
     public FlashCards(Long flashCardId, Long setID, String definition, String description, boolean learned) {
         FlashCardId = flashCardId;
         SetID = setID;
@@ -140,6 +143,23 @@ public class FlashCards {
     public void setLast_user_grade(byte q) {
         this.last_user_grade = q;
     }
+
+    public String getDef_lang() {
+        return def_lang;
+    }
+
+    public void setDef_lang(String def_lang) {
+        this.def_lang = def_lang;
+    }
+
+    public String getDes_lang() {
+        return des_lang;
+    }
+
+    public void setDes_lang(String des_lang) {
+        this.des_lang = des_lang;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

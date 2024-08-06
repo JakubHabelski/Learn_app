@@ -1,6 +1,8 @@
 package com.learn.app.Controllers;
 
 
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
 import com.learn.app.Classes.FlashCardSet;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,7 +43,14 @@ public class EditSetController {
 
     UserData user = new UserData();
 
-
+    @PostConstruct
+    public void init() {
+        try {
+            DetectorFactory.loadProfile("lang_profiles");
+        } catch (LangDetectException e) {
+            e.printStackTrace();
+        }
+    }
 
     @GetMapping (value = "/EditFlashCardSet/{SetID}")
     public String EditFlashCardSet_GET(@PathVariable Long SetID,
@@ -148,6 +158,8 @@ public class EditSetController {
             flashCard.setRep_Num(0);
             flashCard.setEF(2.5F);
             flashCard.setNext_rep(LocalDate.now());
+            flashCard.setDef_lang(language(Definition.get(i)));
+            flashCard.setDes_lang(language(Description.get(i)));
             addFlashCardInterface.save(flashCard);
             // Log the number of received files
             System.out.println("Received " + files.size() + " files.");
@@ -184,6 +196,8 @@ public class EditSetController {
         String image_obj_path = "test";
         flashCard.setDefinition(Definition);
         flashCard.setDescription(Description);
+        flashCard.setDef_lang(language(Definition));
+        flashCard.setDes_lang(language(Description));
        // Long old_img_id = upload_Image_Interface.findIdByFlashCardId(flashCard.getFlashCardId());
         Upload_image upload_image = new Upload_image();
         image uploadedImage = upload_image.upload_image(file);
@@ -232,6 +246,16 @@ public class EditSetController {
         addFlashCardSetInterface.save(flashCardSet);
         return "redirect:/EditFlashCardSet/" + SetID;
     }
-
+    public String language(String text){
+        try {
+            com.cybozu.labs.langdetect.Detector detector = DetectorFactory.create();
+            detector.append(text);
+            String language = detector.detect();
+            return language;
+        } catch (LangDetectException e) {
+            e.printStackTrace();
+            return "error";
+        }
+    }
 
 }
