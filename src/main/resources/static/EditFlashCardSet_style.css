@@ -109,3 +109,24 @@ textarea {
 .input_image {
     display: none; /* Ukryj standardowy input */
 }
+.language-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    max-height: 150px;
+    overflow-y: auto;
+
+    background-color: white;
+    position: relative;
+}
+
+.language-list li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.language-list li:hover {
+    background-color: #f0f0f0;
+}
+

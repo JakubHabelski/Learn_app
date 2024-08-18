@@ -61,18 +61,34 @@
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
                 <!--------------------------------------------------------------------------------------->
                 <!--Edit exist card---------------------------------------------------------------------->
-                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data" id="edit-form">
                     <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
                     <input type="hidden" th:value="${card.SetID}" name="SetID">
                 <div class="input_def_box">
                     <textarea wrap="hard" class="input_def"  th:text="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}"  disabled></textarea>
 
                     <div style="font-size: 16px">Pojęcie</div>
+                    <p th:text="'Definition Lang: '+ ${card.def_lang}" th:id="'P-DEF'+${card.def_lang}"></p>
+                    <input type="text" th:id="'def-lang_show'+ ${card.FlashCardId}" name="def_lang_show" placeholder="Enter default language">
+                    <input type="hidden" th:id="'def-lang'+ ${card.FlashCardId}" name="def_lang">
+                    <ul th:id="'def-lang-list'+ ${card.FlashCardId}" class="language-list"></ul>
+                    <button th:data-name="${card.FlashCardId}" th:data-definition-text="${card.Definition}" th:data-definition-lang="${card.def_lang}" onclick="speakDefinition(event, this)" style="background: none; border: none; float: right">
+                        <i class="fa-solid fa-triangle-exclamation"  th:id="'I-DEF'+${card.def_lang}"></i>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </button>
                 </div>
                 <div class="input_des_box">
                     <textarea wrap="hard" class="input_def"  th:text="${card.Description}" name="Description" th:id="'DescriptionInput_' + ${card.FlashCardId}"  disabled></textarea>
 
                     <div style="font-size: 16px">Defnicja</div>
+                    <p th:text="'Description Lang:'+ ${card.des_lang}" th:id="'P-DES'+${card.des_lang}"></p>
+                    <input type="text" th:id="'des-lang_show'+ ${card.FlashCardId}" name="des_lang_show" placeholder="Enter description language">
+                    <input type="hidden" th:id="'des-lang'+ ${card.FlashCardId}" name="des_lang">
+                    <ul th:id="'des-lang-list'+ ${card.FlashCardId}" class="language-list"></ul>
+                    <button th:data-name="${card.FlashCardId}" th:data-definition-text="${card.Description}" th:data-definition-lang="${card.des_lang}" onclick="speakDefinition(event, this)" style="background: none; border: none; float: right">
+                        <i class="fa-solid fa-triangle-exclamation"  th:id="'I-DES'+${card.des_lang}"></i>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </button>
                 </div>
 
                 <div>
@@ -81,7 +97,7 @@
                     </label>
                     <input th:id="'file-upload-edit' + ${card.FlashCardId}" type="file" class="input_image" th:name="file">
                 </div>
-                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
+                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none" th:data-name="${card.FlashCardId}" onclick="swap_lang_codes(event, this.getAttribute('data-name'))">
                 </form>
                 <!-- Element docelowy -->
                 <img th:id="targetImage" alt="Obraz" style="max-width: 200px;">
@@ -135,33 +151,413 @@
            
 
 <script th:inline="javascript">
+    /*<![CDATA[*/
+    const supportedLanguages = [
+        { name: 'Polish (Poland)', lang: 'pl-PL', short: 'pl' },
+        { name: 'German', lang: 'de-DE', short: 'de' },
+        { name: 'US English', lang: 'en-US', short: 'en' },
+        { name: 'Spanish', lang: 'es-ES', short: 'es' },
+        { name: 'French', lang: 'fr-FR', short: 'fr' },
+        { name: 'Hindi', lang: 'hi-IN', short: 'hi' },
+        { name: 'Indonesian', lang: 'id-ID', short: 'id' },
+        { name: 'Italian', lang: 'it-IT', short: 'it' },
+        { name: 'Japanese', lang: 'ja-JP', short: 'ja' },
+        { name: 'Korean', lang: 'ko-KR', short: 'ko' },
+        { name: 'Dutch', lang: 'nl-NL', short: 'nl' },
+        { name: 'Brazilian Portuguese', lang: 'pt-BR', short: 'pt' },
+        { name: 'Russian', lang: 'ru-RU', short: 'ru' },
+        { name: 'Chinese (Hong Kong)', lang: 'zh-HK', short: 'zh' }
+    ];
+    const I_DEF = document.querySelectorAll('i[id^="I-DEF"]');
+    const I_DES = document.querySelectorAll('i[id^="I-DES"]');
+    console.log(I_DEF[0].id.includes(supportedLanguages[6].short));
+    window.addEventListener("load", (event) => {
 
+        for (let i = 0; i < I_DEF.length; i++) {
+            for (let j = 0; j < supportedLanguages.length; j++) {
+                if (I_DEF[i].id.includes(supportedLanguages[j].short)) {
+                    I_DEF[i].style.display = 'none';
+
+                }
+            for (let j = 0; j < supportedLanguages.length; j++) {
+                if (I_DES[i].id.includes(supportedLanguages[j].short)) {
+                    I_DES[i].style.display = 'none';
+
+                }}
+        }
+    }
+    });
+
+    function speak(text, lang) {
+        if(!(supportedLanguages.find(l => l.short === lang))) {
+            console.log('Language not supported');
+            lang ='en-US';
+        } else{
+            lang = supportedLanguages.find(l => l.short === lang).lang;
+        }
+        if ('speechSynthesis' in window) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            synth.speak(utterance);
+            console.log('Speaking...'+ lang);
+        } else {
+            console.error("Web Speech API is not supported in this browser.");
+        }
+    }
+    function speakDefinition(event, element) {
+        event.preventDefault();
+        const text = element.getAttribute('data-definition-text');
+        const lang = element.getAttribute('data-definition-lang');
+        speak(text, lang);
+    }
     // funkcja pokazująca pole edycji fiszki po kliknięciu przycisku
-   function showEditField(event, cardId) {
-       event.preventDefault(); // Zapobiega domyślnemu zachowaniu przycisku
-       var definitionInput = document.getElementById('DefinitionInput_' + cardId);
+    function showEditField(event, cardId) {
+        event.preventDefault(); // Zapobiega domyślnemu zachowaniu przycisku
+
+        var definitionInput = document.getElementById('DefinitionInput_' + cardId);
         var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
+        let definitionInput_Lang = document.getElementById('def-lang' + cardId);
+        let descriptionInput_Lang = document.getElementById('des-lang' + cardId);
+        console.log("Definition Input: ", definitionInput);
+        console.log("Description Input: ", descriptionInput);
+
         let Confirm_button = document.getElementById('Confirm_' + cardId);
-        Confirm_button.style.display="block";
-        let Inputs=[definitionInput, descriptionInput];
+        Confirm_button.style.display = "block";
+        definitionInput.disabled = false;
+        descriptionInput.disabled = false;
+        descriptionInput_Lang.style.display = "block";
+        definitionInput_Lang.style.display = "block";
+        let Inputs = [definitionInput, descriptionInput];
         Inputs.forEach(input => {
-            input.disabled= false;
-            autoResize.call(input);
+            if (input) { // Sprawdź, czy input istnieje
+                autoResize.call(input);
+            } else {
+                console.log("Input not found: ", input); // Debugowanie
+            }
         });
     }
 
 
-    
-   
-    /*<![CDATA[*/
+
+
+
+
 
     let arr = /*[[${slidecard}]]*/ "";
-    console.log(arr);
+    const languages = [
+        { name: 'Afar', lang: 'aa' },
+        { name: 'Abkhazian', lang: 'ab' },
+        { name: 'Afrikaans', lang: 'af' },
+        { name: 'Akan', lang: 'ak' },
+        { name: 'Amharic', lang: 'am' },
+        { name: 'Arabic', lang: 'ar' },
+        { name: 'Assamese', lang: 'as' },
+        { name: 'Aymara', lang: 'ay' },
+        { name: 'Azerbaijani', lang: 'az' },
+        { name: 'Bashkir', lang: 'ba' },
+        { name: 'Belarusian', lang: 'be' },
+        { name: 'Bulgarian', lang: 'bg' },
+        { name: 'Bihari', lang: 'bh' },
+        { name: 'Bislama', lang: 'bi' },
+        { name: 'Bengali', lang: 'bn' },
+        { name: 'Tibetan', lang: 'bo' },
+        { name: 'Breton', lang: 'br' },
+        { name: 'Bosnian', lang: 'bs' },
+        { name: 'Buginese', lang: 'bug' },
+        { name: 'Catalan', lang: 'ca' },
+        { name: 'Cebuano', lang: 'ceb' },
+        { name: 'Cherokee', lang: 'chr' },
+        { name: 'Corsican', lang: 'co' },
+        { name: 'Seselwa', lang: 'crs' },
+        { name: 'Czech', lang: 'cs' },
+        { name: 'Welsh', lang: 'cy' },
+        { name: 'Danish', lang: 'da' },
+        { name: 'German', lang: 'de' },
+        { name: 'Dhivehi', lang: 'dv' },
+        { name: 'Dzongkha', lang: 'dz' },
+        { name: 'Egyptian', lang: 'egy' },
+        { name: 'Greek', lang: 'el' },
+        { name: 'English', lang: 'en' },
+        { name: 'Esperanto', lang: 'eo' },
+        { name: 'Spanish', lang: 'es' },
+        { name: 'Estonian', lang: 'et' },
+        { name: 'Basque', lang: 'eu' },
+        { name: 'Persian', lang: 'fa' },
+        { name: 'Finnish', lang: 'fi' },
+        { name: 'Fijian', lang: 'fj' },
+        { name: 'Faroese', lang: 'fo' },
+        { name: 'French', lang: 'fr' },
+        { name: 'Frisian', lang: 'fy' },
+        { name: 'Irish', lang: 'ga' },
+        { name: 'Scots Gaelic', lang: 'gd' },
+        { name: 'Galician', lang: 'gl' },
+        { name: 'Guarani', lang: 'gn' },
+        { name: 'Gothic', lang: 'got' },
+        { name: 'Gujarati', lang: 'gu' },
+        { name: 'Manx', lang: 'gv' },
+        { name: 'Hausa', lang: 'ha' },
+        { name: 'Hawaiian', lang: 'haw' },
+        { name: 'Hindi', lang: 'hi' },
+        { name: 'Hmong', lang: 'hmn' },
+        { name: 'Croatian', lang: 'hr' },
+        { name: 'Haitian Creole', lang: 'ht' },
+        { name: 'Hungarian', lang: 'hu' },
+        { name: 'Armenian', lang: 'hy' },
+        { name: 'Interlingua', lang: 'ia' },
+        { name: 'Indonesian', lang: 'id' },
+        { name: 'Interlingue', lang: 'ie' },
+        { name: 'Igbo', lang: 'ig' },
+        { name: 'Inupiak', lang: 'ik' },
+        { name: 'Icelandic', lang: 'is' },
+        { name: 'Italian', lang: 'it' },
+        { name: 'Inuktitut', lang: 'iu' },
+        { name: 'Hebrew', lang: 'iw' },
+        { name: 'Japanese', lang: 'ja' },
+        { name: 'Javanese', lang: 'jw' },
+        { name: 'Georgian', lang: 'ka' },
+        { name: 'Khasi', lang: 'kha' },
+        { name: 'Kazakh', lang: 'kk' },
+        { name: 'Greenlandic', lang: 'kl' },
+        { name: 'Khmer', lang: 'km' },
+        { name: 'Kannada', lang: 'kn' },
+        { name: 'Korean', lang: 'ko' },
+        { name: 'Kashmiri', lang: 'ks' },
+        { name: 'Kurdish', lang: 'ku' },
+        { name: 'Kyrgyz', lang: 'ky' },
+        { name: 'Latin', lang: 'la' },
+        { name: 'Luxembourgish', lang: 'lb' },
+        { name: 'Ganda', lang: 'lg' },
+        { name: 'Limbu', lang: 'lif' },
+        { name: 'Lingala', lang: 'ln' },
+        { name: 'Laothian', lang: 'lo' },
+        { name: 'Lithuanian', lang: 'lt' },
+        { name: 'Latvian', lang: 'lv' },
+        { name: 'Mauritian Creole', lang: 'mfe' },
+        { name: 'Malagasy', lang: 'mg' },
+        { name: 'Maori', lang: 'mi' },
+        { name: 'Macedonian', lang: 'mk' },
+        { name: 'Malayalam', lang: 'ml' },
+        { name: 'Mongolian', lang: 'mn' },
+        { name: 'Marathi', lang: 'mr' },
+        { name: 'Malay', lang: 'ms' },
+        { name: 'Maltese', lang: 'mt' },
+        { name: 'Burmese', lang: 'my' },
+        { name: 'Nauru', lang: 'na' },
+        { name: 'Nepali', lang: 'ne' },
+        { name: 'Dutch', lang: 'nl' },
+        { name: 'Norwegian', lang: 'no' },
+        { name: 'Ndebele', lang: 'nr' },
+        { name: 'Pedi', lang: 'nso' },
+        { name: 'Nyanja', lang: 'ny' },
+        { name: 'Occitan', lang: 'oc' },
+        { name: 'Oromo', lang: 'om' },
+        { name: 'Oriya', lang: 'or' },
+        { name: 'Punjabi', lang: 'pa' },
+        { name: 'Polish', lang: 'pl' },
+        { name: 'Pashto', lang: 'ps' },
+        { name: 'Portuguese', lang: 'pt' },
+        { name: 'Quechua', lang: 'qu' },
+        { name: 'Rhaeto Romance', lang: 'rm' },
+        { name: 'Rundi', lang: 'rn' },
+        { name: 'Romanian', lang: 'ro' },
+        { name: 'Russian', lang: 'ru' },
+        { name: 'Kinyarwanda', lang: 'rw' },
+        { name: 'Sanskrit', lang: 'sa' },
+        { name: 'Scots', lang: 'sco' },
+        { name: 'Sindhi', lang: 'sd' },
+        { name: 'Sango', lang: 'sg' },
+        { name: 'Sinhalese', lang: 'si' },
+        { name: 'Slovak', lang: 'sk' },
+        { name: 'Slovenian', lang: 'sl' },
+        { name: 'Samoan', lang: 'sm' },
+        { name: 'Shona', lang: 'sn' },
+        { name: 'Somali', lang: 'so' },
+        { name: 'Albanian', lang: 'sq' },
+        { name: 'Serbian', lang: 'sr' },
+        { name: 'Siswant', lang: 'ss' },
+        { name: 'Sesotho', lang: 'st' },
+        { name: 'Sundanese', lang: 'su' },
+        { name: 'Swedish', lang: 'sv' },
+        { name: 'Swahili', lang: 'sw' },
+        { name: 'Syriac', lang: 'syr' },
+        { name: 'Tamil', lang: 'ta' },
+        { name: 'Telugu', lang: 'te' },
+        { name: 'Tajik', lang: 'tg' },
+        { name: 'Thai', lang: 'th' },
+        { name: 'Tigrinya', lang: 'ti' },
+        { name: 'Turkmen', lang: 'tk' },
+        { name: 'Tagalog', lang: 'tl' },
+        { name: 'Klingon', lang: 'tlh' },
+        { name: 'Tswana', lang: 'tn' },
+        { name: 'Tonga', lang: 'to' },
+        { name: 'Turkish', lang: 'tr' },
+        { name: 'Tsonga', lang: 'ts' },
+        { name: 'Tatar', lang: 'tt' },
+        { name: 'Uighur', lang: 'ug' },
+        { name: 'Ukrainian', lang: 'uk' },
+        { name: 'Urdu', lang: 'ur' },
+        { name: 'Uzbek', lang: 'uz' },
+        { name: 'Venda', lang: 've' },
+        { name: 'Vietnamese', lang: 'vi' },
+        { name: 'Volapuk', lang: 'vo' },
+        { name: 'Waray Philippines', lang: 'war' },
+        { name: 'Wolof', lang: 'wo' },
+        { name: 'Xhosa', lang: 'xh' },
+        { name: 'Yiddish', lang: 'yi' },
+        { name: 'Yoruba', lang: 'yo' },
+        { name: 'Zhuang', lang: 'za' },
+        { name: 'Chinese Simplified', lang: 'zh' },
+        { name: 'Chinese Traditional', lang: 'zh-Hant' },
+        { name: 'Zulu', lang: 'zu' }
+    ];
+    const selected_def_langs_to_change = document.querySelectorAll('p[id^="P-DEF"]');
+    const selected_des_langs_to_change = document.querySelectorAll('p[id^="P-DES"]');
+
+    console.log(selected_def_langs_to_change);
+    console.log(selected_des_langs_to_change);
+    console.log("dupa");
+    for(i=0; i<selected_def_langs_to_change.length; i++){
+        for(j=0; j<languages.length; j++){
+            if(selected_def_langs_to_change[i].id.includes(languages[j].lang)){
+                selected_def_langs_to_change[i].innerHTML = 'Definition Lang: ' +languages[j].name;
+            }
+        }
+    }
+    for(i=0; i<selected_des_langs_to_change.length; i++){
+        for(j=0; j<languages.length; j++){
+            if(selected_des_langs_to_change[i].id.includes(languages[j].lang)){
+                selected_des_langs_to_change[i].innerHTML = 'Description Lang: ' +languages[j].name;
+            }
+        }
+    }
+
+
+    // Funkcja do filtrowania i wyświetlania wyników dla konkretnego pola
+    function filterLanguages(inputElement, listElement) {
+        const input = inputElement.value.toLowerCase();
+        listElement.innerHTML = ''; // Czyszczenie listy
+
+        if (input === '') return;
+
+        const filteredLanguages = languages.filter(language =>
+            language.name.toLowerCase().includes(input)
+        );
+
+        filteredLanguages.forEach(language => {
+            const li = document.createElement('li');
+            li.textContent = language.name;
+            li.dataset.lang = language.lang; // Przechowywanie kodu języka w atrybucie dataset
+            li.addEventListener('click', () => selectLanguage(inputElement, listElement, language.name, language.lang));
+            listElement.appendChild(li);
+        });
+    }
+
+    // Funkcja do obsługi wybranego języka
+    function selectLanguage(inputElement, listElement, name, lang) {
+
+        inputElement.value = name;
+        listElement.innerHTML = ''; // Ukrycie listy po wyborze
+        console.log('Wybrano język:', name, 'Kod języka:', lang); // Można dostosować do swoich potrzeb
+        listElement.addEventListener('click', function (event) {
+            if (event.target.tagName === 'LI') {
+                const selectedLang = event.target.getAttribute('data-lang'); // Pobieranie kodu języka
+                inputElement.value = event.target.textContent; // Ustawianie nazwy języka w widocznym polu
+                hiddenInputElement.value = selectedLang; // Ustawianie kodu języka w ukrytym polu
+                listElement.style.display = 'none'; // Ukrywanie listy po wyborze
+            }
+        });
+    }
+    function swap_lang_codes(event, card_id){
+        event.preventDefault();
+        let def_lang = document.getElementById('def-lang_show'+card_id).value;
+        let des_lang = document.getElementById('des-lang_show'+card_id).value;
+        let def_lang_temp = def_lang;
+        let des_lang_temp = des_lang;
+        def_lang_temp = languages.find(l => l.name === def_lang).lang;
+        des_lang_temp = languages.find(l => l.name === des_lang).lang;
+        console.log("def_lang_temp: ", def_lang_temp);
+        console.log("des_lang_temp: ",    des_lang_temp);
+        def_lang = def_lang_temp;
+        des_lang = des_lang_temp;
+        console.log("def_lang HTML: ", document.getElementById('def-lang'+card_id));
+        console.log("des_lang HTML: ", document.getElementById('des-lang'+card_id));
+        document.getElementById('def-lang'+card_id).innerHTML.valueOf(def_lang_temp);
+        document.getElementById('des-lang'+card_id).innerHTML.valueOf(des_lang_temp);
+        console.log("def_lang HTML: ", document.getElementById('def-lang'+card_id));
+        console.log("des_lang HTML: ", document.getElementById('des-lang'+card_id));
+        console.log(def_lang);
+        console.log(des_lang);
+      //  def_lang.value = languages.find(l => l.name === def_lang).lang;
+      //  des_lang.value = languages.find(l => l.name === des_lang).lang;
+        
+       // document.getElementById('edit-form').submit();
+
+    }
+    // Podpinanie funkcji do wszystkich dynamicznych pól input
+    document.querySelectorAll('input[id^="def-lang"]').forEach(input => {
+        const id = input.id.match(/\d+/)[0]; // Wyciągamy numer ID z inputu
+        const listElement = document.getElementById(`def-lang-list${id}`);
+        input.addEventListener('input', function() {
+            filterLanguages(this, listElement);
+        });
+    });
+
+    document.querySelectorAll('input[id^="des-lang"]').forEach(input => {
+        const id = input.id.match(/\d+/)[0]; // Wyciągamy numer ID z inputu
+        const listElement = document.getElementById(`des-lang-list${id}`);
+        input.addEventListener('input', function() {
+            filterLanguages(this, listElement);
+        });
+    });
+
+
+        const selected_def_langs = document.querySelectorAll('select[id^="def_lang"]');
+        const selected_des_langs = document.querySelectorAll('select[id^="des_lang"]');
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        for(i=0; i<selected_def_langs.length; i++){
+            let def_lang = arr[i].def_lang.split(',');
+            def_lang.forEach(function(item){
+                let option = document.createElement('option');
+                option.value = item;
+                option.text = item;
+                selected_def_langs[i].appendChild(option);
+            });
+            let des_lang = arr[i].des_lang.split(',');
+            des_lang.forEach(function(item){
+                let option = document.createElement('option');
+                option.value = item;
+                option.text = item;
+                selected_des_langs[i].appendChild(option);
+            });
+
+            let otherLangOptionDef = document.createElement('option');
+            otherLangOptionDef.innerHTML=`
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#def_lang_modal">
+                    Add new language
+                </button>
+            `
+            selected_def_langs[i].appendChild(otherLangOptionDef);
+
+            let otherLangOptionDes = document.createElement('option');
+            otherLangOptionDes.innerHTML=`
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#des_lang">
+                    Add new language
+                </button>
+            `
+            selected_des_langs[i].appendChild(otherLangOptionDes);
+
+        }
+    });
 
     
    //ukrywanie obrazków przesłanych bezposrednio z serwera. Potem są one wyświetlane w odpowiednich miejscach
         let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
-        console.log(hiddenImages);
+       // console.log(hiddenImages);
         let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');        
         for(let i=0; i<hiddenImages.length; i++){
             if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
@@ -237,6 +633,9 @@
                });
                mainForm.submit(); // Przesłanie formularza
            });
+
+
+
     //----------------------------------------------------------
   /*]]>*/
 

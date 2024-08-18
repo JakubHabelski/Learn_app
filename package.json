@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "assemblyai": "^4.6.1",
     "franc": "^6.2.0",
     "langdetect": "^0.2.1"
   }

@@ -7,6 +7,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <!--<link rel="stylesheet" type="text/css" th:href="@{/login_style.css}" /> -->
     <link rel="stylesheet" type="text/css" href="/static/login_style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/franc@5.0.0/dist/franc.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mespeak.js@1.2.0/mespeak.min.js"></script>
+
     <title>Title</title>
 </head>
 <body>
@@ -18,52 +21,15 @@
     <input type="submit" value="Login" class="btn btn-primary">
     <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
 </form>
-<button onclick="detectLanguage('dupa')">test</button>
-<span th:text="${language}"></span>
-<div id="alertPlaceholder"></div>
 
-<!--
-<h1>Text To Speech</h1>
-<p>Click the button to hear a greeting.</p>
-<textarea id="text" rows="4" cols="50">Welcome to this tutorial!</textarea>
-<button onclick="speak()">Speak</button>
--->
 
 </body>
 
-
-<script src="https://cdn.jsdelivr.net/npm/franc-min@3.0.2"></script>
-<script src="langdetect.js"></script>
 <script th:inline="javascript">
-    const voices = speechSynthesis.getVoices();
-    const franc = require('franc');
-    function speak() {
-        // Create a SpeechSynthesisUtterance
-
-        const text = document.getElementById("text").value;
-        const utterance = new SpeechSynthesisUtterance(text);
-        // Select a voice
-
-        utterance.voice = voices[0]; // Choose a specific voice
-
-        console.log(utterance.voice);
-
-        // Speak the text
-        speechSynthesis.speak(utterance);
-        body= document.getElementsByTagName("body")[0];
-        body.style.backgroundColor = "red";
-    }
-
-    const detectedLanguage = franc('Your text to detect language.');
-    console.log('Detected language:', detectedLanguage);
-    const detectedLanguageName = franc.all('Your text to detect language.');
 
 
-  function detectLanguage(inputText) {
-    var detectedLanguage = franc(inputText);
-    var outputLang = "Detected Language: " + detectedLanguage;
-    document.getElementById("languageSpan").innerHTML = outputLang;
-}
+
 </script>
+
 
 </html>
