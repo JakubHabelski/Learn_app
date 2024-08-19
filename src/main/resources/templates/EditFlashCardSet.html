@@ -50,6 +50,7 @@
         <section id="cardSection">
             <div id="formContainer">
             <div class="input_def_des_box" th:each="card :${flashCard}" >
+
                 <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
                     <i class="fa-solid fa-x" ></i>
 
@@ -61,7 +62,7 @@
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
                 <!--------------------------------------------------------------------------------------->
                 <!--Edit exist card---------------------------------------------------------------------->
-                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data" id="edit-form">
+                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data" th:id="'edit-form-' + ${card.FlashCardId}">
                     <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
                     <input type="hidden" th:value="${card.SetID}" name="SetID">
                 <div class="input_def_box">
@@ -69,12 +70,13 @@
 
                     <div style="font-size: 16px">Pojęcie</div>
                     <p th:text="'Definition Lang: '+ ${card.def_lang}" th:id="'P-DEF'+${card.def_lang}"></p>
-                    <input type="text" th:id="'def-lang_show'+ ${card.FlashCardId}" name="def_lang_show" placeholder="Enter default language">
+                    <input type="text" th:id="'def-lang_show'+ ${card.FlashCardId}" name="def_lang_show" placeholder="Enter language" style="width: 100%; display: none" >
                     <input type="hidden" th:id="'def-lang'+ ${card.FlashCardId}" name="def_lang">
                     <ul th:id="'def-lang-list'+ ${card.FlashCardId}" class="language-list"></ul>
-                    <button th:data-name="${card.FlashCardId}" th:data-definition-text="${card.Definition}" th:data-definition-lang="${card.def_lang}" onclick="speakDefinition(event, this)" style="background: none; border: none; float: right">
+                    <button class="hover_test_btn" th:data-name="${card.FlashCardId}" th:data-definition-text="${card.Definition}" th:data-definition-lang="${card.def_lang}" onclick="speakDefinition(event, this)" style="background: none; border: none; float: right">
                         <i class="fa-solid fa-triangle-exclamation"  th:id="'I-DEF'+${card.def_lang}"></i>
                         <i class="fa-solid fa-circle-play"></i>
+                        <span class="hover_test" th:id="'S-DEF'+${card.des_lang}">Language not supported, English voice will be used</span>
                     </button>
                 </div>
                 <div class="input_des_box">
@@ -82,12 +84,13 @@
 
                     <div style="font-size: 16px">Defnicja</div>
                     <p th:text="'Description Lang:'+ ${card.des_lang}" th:id="'P-DES'+${card.des_lang}"></p>
-                    <input type="text" th:id="'des-lang_show'+ ${card.FlashCardId}" name="des_lang_show" placeholder="Enter description language">
+                    <input type="text" th:id="'des-lang_show'+ ${card.FlashCardId}" name="des_lang_show" placeholder="Enter language" style="width: 100%; display: none">
                     <input type="hidden" th:id="'des-lang'+ ${card.FlashCardId}" name="des_lang">
                     <ul th:id="'des-lang-list'+ ${card.FlashCardId}" class="language-list"></ul>
-                    <button th:data-name="${card.FlashCardId}" th:data-definition-text="${card.Description}" th:data-definition-lang="${card.des_lang}" onclick="speakDefinition(event, this)" style="background: none; border: none; float: right">
-                        <i class="fa-solid fa-triangle-exclamation"  th:id="'I-DES'+${card.des_lang}"></i>
+                    <button class="hover_test_btn" th:data-name="${card.FlashCardId}" th:data-definition-text="${card.Description}" th:data-definition-lang="${card.des_lang}" onclick="speakDefinition(event, this)" style="background: none; border: none; float: right">
+                        <i class="fa-solid fa-triangle-exclamation" th:id="'I-DES'+${card.des_lang}"></i>
                         <i class="fa-solid fa-circle-play"></i>
+                        <span class="hover_test" th:id="'S-DES'+${card.des_lang}">Language not supported, English voice will be used</span>
                     </button>
                 </div>
 
@@ -170,22 +173,34 @@
     ];
     const I_DEF = document.querySelectorAll('i[id^="I-DEF"]');
     const I_DES = document.querySelectorAll('i[id^="I-DES"]');
-    console.log(I_DEF[0].id.includes(supportedLanguages[6].short));
-    window.addEventListener("load", (event) => {
+    const hoverTests_def = document.querySelectorAll('span[id^="S-DEF"]');
+    const hoverTests_des = document.querySelectorAll('span[id^="S-DES"]');
 
+    window.addEventListener("load", (event) => {
         for (let i = 0; i < I_DEF.length; i++) {
+            let defLangSupported = false;
+            let desLangSupported = false;
+
             for (let j = 0; j < supportedLanguages.length; j++) {
                 if (I_DEF[i].id.includes(supportedLanguages[j].short)) {
                     I_DEF[i].style.display = 'none';
-
+                    defLangSupported = true;
                 }
-            for (let j = 0; j < supportedLanguages.length; j++) {
                 if (I_DES[i].id.includes(supportedLanguages[j].short)) {
                     I_DES[i].style.display = 'none';
+                    desLangSupported = true;
+                }
+            }
 
-                }}
+            if (defLangSupported) {
+                hoverTests_def[i].innerHTML = '';
+                hoverTests_def[i].classList.remove('hover_test');
+            }
+            if (desLangSupported) {
+                hoverTests_des[i].innerHTML = '';
+                hoverTests_des[i].classList.remove('hover_test');
+            }
         }
-    }
     });
 
     function speak(text, lang) {
@@ -217,11 +232,8 @@
 
         var definitionInput = document.getElementById('DefinitionInput_' + cardId);
         var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
-        let definitionInput_Lang = document.getElementById('def-lang' + cardId);
-        let descriptionInput_Lang = document.getElementById('des-lang' + cardId);
-        console.log("Definition Input: ", definitionInput);
-        console.log("Description Input: ", descriptionInput);
-
+        let definitionInput_Lang = document.getElementById('def-lang_show' + cardId);
+        let descriptionInput_Lang = document.getElementById('des-lang_show' + cardId);
         let Confirm_button = document.getElementById('Confirm_' + cardId);
         Confirm_button.style.display = "block";
         definitionInput.disabled = false;
@@ -413,10 +425,6 @@
     ];
     const selected_def_langs_to_change = document.querySelectorAll('p[id^="P-DEF"]');
     const selected_des_langs_to_change = document.querySelectorAll('p[id^="P-DES"]');
-
-    console.log(selected_def_langs_to_change);
-    console.log(selected_des_langs_to_change);
-    console.log("dupa");
     for(i=0; i<selected_def_langs_to_change.length; i++){
         for(j=0; j<languages.length; j++){
             if(selected_def_langs_to_change[i].id.includes(languages[j].lang)){
@@ -455,10 +463,12 @@
 
     // Funkcja do obsługi wybranego języka
     function selectLanguage(inputElement, listElement, name, lang) {
-
         inputElement.value = name;
         listElement.innerHTML = ''; // Ukrycie listy po wyborze
         console.log('Wybrano język:', name, 'Kod języka:', lang); // Można dostosować do swoich potrzeb
+        const hiddenInputElement = document.querySelector(`input[name="${inputElement.name.replace('_show', '')}"]`);
+        hiddenInputElement.value = lang; // Ustawianie kodu języka w ukrytym polu
+
         listElement.addEventListener('click', function (event) {
             if (event.target.tagName === 'LI') {
                 const selectedLang = event.target.getAttribute('data-lang'); // Pobieranie kodu języka
@@ -471,27 +481,26 @@
     function swap_lang_codes(event, card_id){
         event.preventDefault();
         let def_lang = document.getElementById('def-lang_show'+card_id).value;
+        let def_lang_hidden = document.getElementById('def-lang'+card_id);
         let des_lang = document.getElementById('des-lang_show'+card_id).value;
+        let des_lang_hidden = document.getElementById('des-lang'+card_id);
         let def_lang_temp = def_lang;
         let des_lang_temp = des_lang;
         def_lang_temp = languages.find(l => l.name === def_lang).lang;
         des_lang_temp = languages.find(l => l.name === des_lang).lang;
-        console.log("def_lang_temp: ", def_lang_temp);
-        console.log("des_lang_temp: ",    des_lang_temp);
         def_lang = def_lang_temp;
         des_lang = des_lang_temp;
-        console.log("def_lang HTML: ", document.getElementById('def-lang'+card_id));
-        console.log("des_lang HTML: ", document.getElementById('des-lang'+card_id));
         document.getElementById('def-lang'+card_id).innerHTML.valueOf(def_lang_temp);
         document.getElementById('des-lang'+card_id).innerHTML.valueOf(des_lang_temp);
-        console.log("def_lang HTML: ", document.getElementById('def-lang'+card_id));
-        console.log("des_lang HTML: ", document.getElementById('des-lang'+card_id));
-        console.log(def_lang);
-        console.log(des_lang);
-      //  def_lang.value = languages.find(l => l.name === def_lang).lang;
-      //  des_lang.value = languages.find(l => l.name === des_lang).lang;
-        
-       // document.getElementById('edit-form').submit();
+        def_lang_hidden.value = def_lang_temp;
+        des_lang_hidden.value = des_lang_temp;
+        // Ensure the form is correctly referenced
+        const editForm = document.getElementById('edit-form-' + card_id);
+        if (editForm) {
+            editForm.submit();
+        } else {
+            console.error("Form with ID 'edit-form-' + card_id + ' not found.");
+        }
 
     }
     // Podpinanie funkcji do wszystkich dynamicznych pól input
@@ -557,7 +566,6 @@
     
    //ukrywanie obrazków przesłanych bezposrednio z serwera. Potem są one wyświetlane w odpowiednich miejscach
         let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
-       // console.log(hiddenImages);
         let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');        
         for(let i=0; i<hiddenImages.length; i++){
             if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){

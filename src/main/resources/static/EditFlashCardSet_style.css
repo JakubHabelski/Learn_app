@@ -126,7 +126,40 @@ textarea {
     cursor: pointer;
 }
 
-.language-list li:hover {
-    background-color: #f0f0f0;
+.hover_test {
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 1s ease;
+    border: #901576 1px dotted;
+}
+
+.hover_test_btn {
+    position: relative; /* Ensure the button is the reference point for the absolute positioning */
+}
+
+.hover_test_btn:hover .hover_test {
+    display: inline;
+    opacity: 1;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
