@@ -43,7 +43,7 @@
             </div>
 
             <!-- Element docelowy -->
-            <img th:id="targetImage" alt="Obraz" style="max-height: 100px;" class="target_image">
+            <img th:id="targetImage" alt="Obraz" style="max-width: 200px;" class="target_image">
             <br>
             <div style="width: 100%; float: left">
                 <button type="button" data-toggle="collapse" th:data-target="'#SetSelectCollapsible' +${card.FlashCardId}" class="btn btn-primary">Clone Card to your set:</button>
@@ -70,7 +70,7 @@
     console.log(hiddenImages);
     let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');
     for(let i=0; i<hiddenImages.length; i++){
-        if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
+        if(!hiddenImages[i].src.includes("http://localhost:8080/search")){
             targetImageArr[i].src = hiddenImages[i].src;
             targetImageArr[i].alt = 'Obraz fiszki';
             targetImageArr[i].style.display = 'inline';
@@ -78,7 +78,21 @@
             targetImageArr[i].style.display = 'none';
         }
     }
+    // automatyczne dostosowanie wysokości textarea do zawartości
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
 
+    function addAutoResizeToTextarea(textarea) {
+        textarea.addEventListener('input', function() { autoResize(textarea); }, false);
+        autoResize(textarea);
+    }
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const textareas = document.querySelectorAll('.input_def');
+        textareas.forEach(addAutoResizeToTextarea);
+    });
     //----------------------------------------------------------
     /*]]>*/
 </script>

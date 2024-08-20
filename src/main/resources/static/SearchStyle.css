@@ -54,7 +54,7 @@ article {
 .input_def_box, .input_des_box {
     float: left;
     padding: 10px;
-    width: 33%;
+    width: 40%;
 }
 
 textarea {

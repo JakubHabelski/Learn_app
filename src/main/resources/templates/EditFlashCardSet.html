@@ -46,23 +46,30 @@
                 <p th:text="${leared.Description}"></p>
             </div> -->
         </aside>
-    <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
+
         <section id="cardSection">
             <div id="formContainer">
             <div class="input_def_des_box" th:each="card :${flashCard}" >
+                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data" th:id="'edit-form-' + ${card.FlashCardId}">
+                    <div style="gap:10px">
 
-                <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
-                    <i class="fa-solid fa-x" ></i>
+                        <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
+                            <i class="fa-solid fa-x" ></i>
 
-                </a>
-                <button th:data-name="${card.FlashCardId}" onclick="showEditField(event, this.getAttribute('data-name'))" style="background: none; border: none; float: right">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
+                        </a>
+                        <button type="button" th:data-name="${card.FlashCardId}" class="showEditField" onclick="showEditField(event, this.getAttribute('data-name'))" style="background: none; border: none; float: right">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none; background: none; border: none; float: right" th:data-name="${card.FlashCardId}" onclick="swap_lang_codes(event, this.getAttribute('data-name'))">
+                            <i class="fa-duotone fa-solid fa-check"></i>
+                        </button>
+                    </div>
+
 
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
                 <!--------------------------------------------------------------------------------------->
                 <!--Edit exist card---------------------------------------------------------------------->
-                <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data" th:id="'edit-form-' + ${card.FlashCardId}">
+
                     <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
                     <input type="hidden" th:value="${card.SetID}" name="SetID">
                 <div class="input_def_box">
@@ -70,6 +77,7 @@
 
                     <div style="font-size: 16px">Pojęcie</div>
                     <p th:text="'Definition Lang: '+ ${card.def_lang}" th:id="'P-DEF'+${card.def_lang}"></p>
+                    <input type="hidden" th:value="${card.def_lang}" th:id="'INPUT_DEF_LANG_ID'+${card.FlashCardId}">
                     <input type="text" th:id="'def-lang_show'+ ${card.FlashCardId}" name="def_lang_show" placeholder="Enter language" style="width: 100%; display: none" >
                     <input type="hidden" th:id="'def-lang'+ ${card.FlashCardId}" name="def_lang">
                     <ul th:id="'def-lang-list'+ ${card.FlashCardId}" class="language-list"></ul>
@@ -84,6 +92,7 @@
 
                     <div style="font-size: 16px">Defnicja</div>
                     <p th:text="'Description Lang:'+ ${card.des_lang}" th:id="'P-DES'+${card.des_lang}"></p>
+                    <input type="hidden" th:value="${card.des_lang}" th:id="'INPUT_DES_LANG_ID'+${card.FlashCardId}">
                     <input type="text" th:id="'des-lang_show'+ ${card.FlashCardId}" name="des_lang_show" placeholder="Enter language" style="width: 100%; display: none">
                     <input type="hidden" th:id="'des-lang'+ ${card.FlashCardId}" name="des_lang">
                     <ul th:id="'des-lang-list'+ ${card.FlashCardId}" class="language-list"></ul>
@@ -100,7 +109,6 @@
                     </label>
                     <input th:id="'file-upload-edit' + ${card.FlashCardId}" type="file" class="input_image" th:name="file">
                 </div>
-                    <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none" th:data-name="${card.FlashCardId}" onclick="swap_lang_codes(event, this.getAttribute('data-name'))">
                 </form>
                 <!-- Element docelowy -->
                 <img th:id="targetImage" alt="Obraz" style="max-width: 200px;">
@@ -110,6 +118,7 @@
             </div>
             <!--------------------------------------------------------------------------------------->
             <!--Input a new card--------------------------------------------------------------------->
+                <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
             <div class="input_def_des_box">
                 <p style="float: left; margin: 0; margin-left: 10px;" >Create new card</p>
                 <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
@@ -175,8 +184,10 @@
     const I_DES = document.querySelectorAll('i[id^="I-DES"]');
     const hoverTests_def = document.querySelectorAll('span[id^="S-DEF"]');
     const hoverTests_des = document.querySelectorAll('span[id^="S-DES"]');
-
+    const showEditField_btn_arr = document.querySelectorAll('showEditField');
+    console.log(showEditField_btn_arr);
     window.addEventListener("load", (event) => {
+
         for (let i = 0; i < I_DEF.length; i++) {
             let defLangSupported = false;
             let desLangSupported = false;
@@ -228,14 +239,13 @@
     }
     // funkcja pokazująca pole edycji fiszki po kliknięciu przycisku
     function showEditField(event, cardId) {
-        event.preventDefault(); // Zapobiega domyślnemu zachowaniu przycisku
 
         var definitionInput = document.getElementById('DefinitionInput_' + cardId);
         var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
         let definitionInput_Lang = document.getElementById('def-lang_show' + cardId);
         let descriptionInput_Lang = document.getElementById('des-lang_show' + cardId);
         let Confirm_button = document.getElementById('Confirm_' + cardId);
-        Confirm_button.style.display = "block";
+        Confirm_button.style.display = "";
         definitionInput.disabled = false;
         descriptionInput.disabled = false;
         descriptionInput_Lang.style.display = "block";
@@ -480,16 +490,27 @@
     }
     function swap_lang_codes(event, card_id){
         event.preventDefault();
+        let INPUT_DEF_LANG_ID = document.getElementById('INPUT_DEF_LANG_ID'+card_id).value;
+        let INPUT_DES_LANG_ID = document.getElementById('INPUT_DES_LANG_ID'+card_id).value;
         let def_lang = document.getElementById('def-lang_show'+card_id).value;
         let def_lang_hidden = document.getElementById('def-lang'+card_id);
         let des_lang = document.getElementById('des-lang_show'+card_id).value;
         let des_lang_hidden = document.getElementById('des-lang'+card_id);
         let def_lang_temp = def_lang;
         let des_lang_temp = des_lang;
-        def_lang_temp = languages.find(l => l.name === def_lang).lang;
-        des_lang_temp = languages.find(l => l.name === des_lang).lang;
+
         def_lang = def_lang_temp;
         des_lang = des_lang_temp;
+        if(def_lang === ''){
+            def_lang_temp = INPUT_DEF_LANG_ID;
+        }else{
+            def_lang_temp = languages.find(l => l.name === def_lang).lang;
+        }
+        if(des_lang === ''){
+            des_lang_temp = INPUT_DES_LANG_ID;
+        }else{
+            des_lang_temp = languages.find(l => l.name === des_lang).lang;
+        }
         document.getElementById('def-lang'+card_id).innerHTML.valueOf(def_lang_temp);
         document.getElementById('des-lang'+card_id).innerHTML.valueOf(des_lang_temp);
         def_lang_hidden.value = def_lang_temp;
