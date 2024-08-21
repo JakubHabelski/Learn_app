@@ -18,7 +18,7 @@
 <div th:insert="fragments/navbar"></div>
     <form method="post" th:action="@{/EditUserProfile}" id="container" enctype="multipart/form-data">
 <div class="user-profile">
-   <img th:src="${image}" alt="Obraz fiszki" />
+   <img th:src="${image}" alt="Obraz fiszki" id="user_image"/>
     <table>
         <tr>
             <td><strong>First Name:</strong></td>
@@ -62,6 +62,13 @@
             input.disabled = true;
         }
     }
+    document.addEventListener('DOMContentLoaded', function(){
+       image= document.getElementById('user_image');
+       console.log(image.src);
+       if(image.src.includes("http://localhost:8080/UserProfile")){
+           image.style.display = "none";
+       }
+    })
 
 
         $(function() {

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/login_style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/franc@5.0.0/dist/franc.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mespeak.js@1.2.0/mespeak.min.js"></script>
+
+    <title>Title</title>
+</head>
+<body>
+<form action="#" th:action="@{/ChangePass}" method="post" class="form-group">
+    Enter your new password: <input type="password" name="UserPass" id="UserPass1"  class="form-control" required>
+    Enter new password again: <input type="password" id="UserPass2"   class="form-control" required>
+    <input type="hidden" name="UserLogin" th:value="${user.userLogin}">
+    <input type="submit" id="submit_form" value="Change password" class="btn btn-primary">
+</form>
+</body>
+    <script>
+        document.getElementById("submit_form").addEventListener("click", function (event) {
+            const pass1 = document.getElementById("UserPass1").value;
+            const pass2 = document.getElementById("UserPass2").value;
+            if (pass1 !== pass2) {
+                event.preventDefault();
+                alert("Passwords are not the same");
+            }
+        });
+    </script>
+</html>

@@ -19,7 +19,8 @@
     <input name="UserLogin"  class="form-control" placeholder="Username" required>
     <input name="UserPass" class="form-control" placeholder="Password" type="password" required>
     <input type="submit" value="Login" class="btn btn-primary">
-    <span><a th:href="@{/GetRegister}">Don't have account? Click to register</a></span>
+    <a class="badge badge-primary" style="width: 100%" th:href="@{/GetRegister}">Don't have account? Click to register</a><br>
+    <a class="badge badge-primary" style="width: 100%" th:href="@{/ForgotPass}">Forgot password? Click to reset</a>
 </form>
 
 

@@ -28,19 +28,15 @@ public class EditUserProfileController {
     @GetMapping("/UserProfile")
     public String UserProfile(Model model, HttpSession session) throws Exception{
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
-
-
-        Upload_image upload_image = new Upload_image();
-        if(!LoggedUser.getPath().isEmpty()) {
-            String displayUrl =  TestImageUpload.getImageUrl2( LoggedUser.getPath());
-            File file = new File(displayUrl);
-            model.addAttribute("image", file);
-        }else {
-            // Jeśli ścieżka pliku jest "", dodaj pustą ścieżkę do listy
-            model.addAttribute("image", "");
-
-        }
-        if(LoggedUser != null){
+        if (LoggedUser != null) {
+            Upload_image upload_image = new Upload_image();
+            if (LoggedUser.getPath() != null && !LoggedUser.getPath().isEmpty()) {
+                String displayUrl = TestImageUpload.getImageUrl2(LoggedUser.getPath());
+                File file = new File(displayUrl);
+                model.addAttribute("image", file);
+            } else {
+                model.addAttribute("image", "");
+            }
             model.addAttribute("user", LoggedUser);
             return "UserProfile";
         }

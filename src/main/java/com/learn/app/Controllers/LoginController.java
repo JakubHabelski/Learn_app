@@ -14,8 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -131,9 +130,53 @@ public class LoginController {
         }
         System.out.println("Language: " + lang_string);
     }
+    @GetMapping("/ForgotPass")
+    public String ForgotPass(){
+        return "ForgotPass";
+    }
+    @PostMapping("/ResetPass")
+    public String ResetPass(@RequestParam ("UserLogin_or_Mail") String UserLogin_or_Mail){
+        UserData user = userInterface.findByUserLogin(UserLogin_or_Mail);
+        if(user == null){
+            user = userInterface.findByUserMail(UserLogin_or_Mail);
+        }
+        if(user != null){
+            //localhost:8080/
+            myMailSenderService.sendEmail(user.getUserMail(), "Reset Password", "Click this link to reset your password: http://localhost:8080/reset_pass/" + user.getUserLogin());
+            //https://project-jh-425111.ew.r.appspot.com/
+            //myMailSenderService.sendEmail(user.getUserMail(), "Reset Password", "Click this link to reset your password: https://project-jh-425111.ew.r.appspot.com/reset_pass/" + user.getUserLogin());
+            System.out.println("Email sent");
+        }
+        if (user == null){
+            System.out.println("User not found");
+        }else {
+            System.out.println("User found");
+        }
+        return "redirect:/loginform";
+    }
+    @RequestMapping("/reset_pass/{UserLogin}")
+    public String reset_pass(@PathVariable ("UserLogin") String UserLogin, Model model){
+        System.out.println("UserLogin parameter: " + UserLogin);
+        UserData user = userInterface.findByUserLogin(UserLogin);
+        System.out.println(userInterface.findByUserLogin(UserLogin));
+        if (user != null) {
+            model.addAttribute("user", user);
+        } else {
+            model.addAttribute("user", new UserData()); // Add an empty user object to avoid null reference
+        }
+        return "ResetPass";
+    }
+    @PostMapping("/ChangePass")
+    public String ChangePass(@RequestParam ("UserPass") String UserPass, @RequestParam ("UserLogin") String UserLogin){
+        if(UserPass==null || UserLogin==null){
+            return "PError";
+        }
 
-
-
+        UserData user = userInterface.findByUserLogin(UserLogin);
+        user.setUserPass(passwordEncoder.encode(UserPass));
+        userInterface.save(user);
+        return "redirect:/loginform";
+    }
 
 
 }

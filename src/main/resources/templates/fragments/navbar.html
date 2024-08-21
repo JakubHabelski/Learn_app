@@ -1,3 +1,13 @@
+<style>
+    .search_result_link{
+        margin: 0;
+        height: 100%;
+        display: block;
+        width: 100%;
+    }
+
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed; top: 0; width: 100%; z-index: 1000">
     <a class="navbar-brand" th:href="@{/userpanel}">My Learn App</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,11 +57,11 @@
         <form class="form-inline my-2 my-lg-0" method="get" th:action="@{/search}" style="position: relative">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="term" id="search_input">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            <table id="search_results" style="position: absolute; background-color: white; width: 100%; z-index: 1000; top:50px; display: none">
+            <table class="table table-hover" id="search_results" style="position: absolute; background-color: white; width: 100%; z-index: 1000; top:40px; display: none">
                 <thead>
                 <tr>
-                    <th>Definition</th>
-                    <th>Description</th>
+                    <th scope="col" style="width: 50%; border-top:0">Definition</th>
+                    <th scope="col" style="width: 50%; border-top:0">Description</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -91,13 +101,16 @@
                             console.log(`Definition: ${definition}`);
                             console.log(`Description: ${description}`);
                             const tr = document.createElement('tr');
+                            tr.scope = 'row';
                             const tdDefinition = document.createElement('td');
                             const tdDescription = document.createElement('td');
                             const link_def = document.createElement('a');
+                            link_def.className = 'search_result_link';
                             link_def.href = `/search_one_card/${flashCardId}`;
                             link_def.textContent = definition;
                             tdDefinition.appendChild(link_def);
                             const link_des = document.createElement('a');
+                            link_des.className = 'search_result_link';
                             link_des.href = `/search_one_card/${flashCardId}`;
                             link_des.textContent = description;
                             tdDescription.appendChild(link_des);
