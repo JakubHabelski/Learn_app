@@ -6,6 +6,7 @@ import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Interfaces.UserInterface;
 import com.learn.app.Services.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,29 +64,10 @@ public class RegisterController {
             path = "";
             user.setPath(path);
         } else {
-
-            // uploadedImage.setUserID(null);
-            // uploadedImage.setPath(path);
-            // uploadedImage.setFlashCardId(flashCard.getFlashCardId());
             imageUploadService.uploadImage(file, image_obj_path);
-            // path = imageUploadService.uploadImage(file, image_obj_path).toString();
             path = "UserPhoto/" + file.getOriginalFilename();
-            // image_obj.setPath(imageUploadService.uploadImage(file, image_obj_path));
-            //  image_obj.setFlashCardId(flashCard.getFlashCardId());
-            // image_obj.setId_of_flashCard(Long.valueOf(32));
-            // upload_Image_Interface.save(image_obj);
             user.setPath(path);
         }
-        //saving user image file to da
-     //   Upload_image upload_image = new Upload_image();
-      //  image uploadedImage = upload_image.upload_image(file);
-     //   String path = uploadedImage.getPath();
-       // image image_obj = new image();
-     //   uploadedImage.setUserID(user.getUserID());
-     //   uploadedImage.setPath(path);
-       // uploadedImage.setFlashCardId(null);
-     //   System.out.println(uploadedImage.getPath());
-     //   upload_Image_Interface.save(uploadedImage);
         return "redirect:/loginform";
     }
     @RequestMapping("/register_success/{UserToken}")
@@ -102,11 +84,21 @@ public class RegisterController {
         System.out.println("-------------------------------------------------");
         UserData user = userInterface.findByUserToken("20857c76-304c-41b1-a100-df1dbb97bd2e");
         System.out.println(user.getUserActive());
-       user.setUserActive(true);
+        user.setUserActive(true);
         System.out.println(user.getUserActive());
         userInterface.save(user);
         System.out.println("-------------------------------------------------");
         return user;
+    }
+    @GetMapping("/checkLogin")
+    public ResponseEntity<Boolean> checkLogin(@RequestParam String UserLogin){
+        boolean isTaken = userInterface.findByUserLogin(UserLogin) != null;
+        return ResponseEntity.ok(isTaken);
+    }
+    @GetMapping("/checkMail")
+    public ResponseEntity<Boolean> checkMail(@RequestParam String UserMail){
+        boolean isTaken = userInterface.findByUserMail(UserMail) != null;
+        return ResponseEntity.ok(isTaken);
     }
 
 }

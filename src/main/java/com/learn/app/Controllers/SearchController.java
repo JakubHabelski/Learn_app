@@ -7,6 +7,7 @@ import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -51,10 +52,6 @@ public class SearchController {
                     String displayUrl =  TestImageUpload.getImageUrl2( flashCard.getPath());
                     File file = new File(displayUrl);
                     flashCard_Images.add(file);
-                   // ResponseEntity<byte[]> imageResponse = upload_image.showImage(flashCard.getPath());
-                   // String imageBase64 = Base64.getEncoder().encodeToString(imageResponse.getBody());
-                   // String imageUrl = "data:" + imageResponse.getHeaders().getContentType().toString() + ";base64," + imageBase64;
-                  //  imagePaths.add(imageUrl);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -70,6 +67,25 @@ public class SearchController {
         return "Search";
 
     }
+    @GetMapping("/search_one_card/{FlashCardId}")
+    public String search_one_card(Model model, HttpSession session, @PathVariable String FlashCardId) throws Exception {
+        UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        model.addAttribute("user", LoggedUser);
+        FlashCards flashCard = addFlashCardInterface.customFindByID(Long.valueOf(FlashCardId));
+        model.addAttribute("flashCards", flashCard);
+        if (!flashCard.getPath().equals("")) {
+            String displayUrl = TestImageUpload.getImageUrl2(flashCard.getPath());
+            File file = new File(displayUrl);
+            model.addAttribute("imagePaths", file);
+            System.out.println(file);
+        } else {
+            model.addAttribute("imagePaths", "");
+        }
+        model.addAttribute("Sets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
+        return "Search";
+
+    }
+
     @RequestMapping(value = "/CloneCard", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void test3(@RequestParam ("SetSelect") String SetSelect,
@@ -86,5 +102,9 @@ public class SearchController {
         flashCardClone.setTime_out(0);
         flashCardClone.setRep_Num(0);
         addFlashCardInterface.save(flashCardClone);
+    }
+    @GetMapping("/search2")
+    public ResponseEntity<List<FlashCards>> getSearchSuggestions2(@RequestParam String term) {
+        return new ResponseEntity<>(addFlashCardInterface.getSearchSuggestions(term), HttpStatus.OK);
     }
 }

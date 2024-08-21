@@ -18,31 +18,56 @@
         UserName: <input th:name="UserName" class="form-control" required><br>
         UserSurname: <input th:name="UserSurname" class="form-control" required><br>
         <span id="login_error"  class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk">User login is taken</span>
-        UserLogin: <input th:name="UserLogin" class="form-control" required><br>
+        UserLogin: <input th:name="UserLogin" id="UserLogin" class="form-control" required><br>
         UserPass: <input th:name="UserPass" class="form-control" type="password" required><br>
-        <span th:if="${email_error == 'email_error'}" class="form-control" style="margin-bottom: 16px; background-color: cornsilk">User e-mail is taken</span>
-        UserMail: <input th:name="UserMail" class="form-control" type="email" required><br>
+        <span id="mail_error" class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk">User e-mail is taken</span>
+        UserMail: <input th:name="UserMail" id="UserMail" class="form-control" type="email" required><br>
         UserPhoto: <input type="file" th:name="file" />
-        <input type="submit" value="Register" class="btn btn-primary">
-        <label for="test"></label><input id="test">
+        <input type="submit" value="Register" id="form_submit" class="btn btn-primary">
+        <span id="invalid_user_data" class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk">Invalid user data</span>
     </form>
 
 
 <script>
-    //fetch(`/testRestAPI?test_var=aa`).then(response => response.json()).then(data => console.log(data));
-    document.getElementById("test").addEventListener("input", function() {
-        const test_var = document.getElementById("test").value;
-        fetch(`/testRestAPI?test_var=${test_var}`).then(response => response.json())
-                                                  .then(data => {
-                                                      console.log(data);
-                                                      if (data === true) {
-                                                            document.getElementById("login_error").style.display = "block";
-                                                          document.getElementById("test").style.backgroundColor = "red";
-                                                      } else {
-                                                          document.getElementById("test").style.backgroundColor = "green";
-                                                            document.getElementById("login_error").style.display = "none";
-                                                      }
-                                                  } );
+    Login_Taken = false;
+    Mail_Taken = false;
+    document.getElementById("UserLogin").addEventListener("input", function() {
+        const test_var = document.getElementById("UserLogin").value;
+        document.getElementById("invalid_user_data").style.display = "none";
+        fetch(`/checkLogin?UserLogin=${test_var}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data === true) {
+                    document.getElementById("login_error").style.display = "block";
+                    Login_Taken = true;
+                } else {
+                    document.getElementById("login_error").style.display = "none";
+                    Login_Taken = false;
+                }
+            } );
+    });
+    document.getElementById("UserMail").addEventListener("input", function() {
+        const test_var = document.getElementById("UserMail").value;
+        document.getElementById("invalid_user_data").style.display = "none";
+        fetch(`/checkMail?UserMail=${test_var}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data === true) {
+                    document.getElementById("mail_error").style.display = "block";
+                    Mail_Taken = true;
+                } else {
+                    document.getElementById("mail_error").style.display = "none";
+                    Mail_Taken = false;
+                }
+            } );
+    });
+    document.getElementById("form_submit").addEventListener("click", function(event) {
+        if (Login_Taken || Mail_Taken) {
+            event.preventDefault();
+            document.getElementById("invalid_user_data").style.display = "block";
+        }
     });
 </script>
 </body>
