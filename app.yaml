@@ -20,3 +20,9 @@ env_variables:
 
 beta_settings:
   cloud_sql_instances: project-jh-425111:europe-west1:project-jh=tcp:3306
+
+spring:
+  ai:
+    openai:
+      model: gpt-3.5-turbo # Model do generowania tekstu
+      apiKey: "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"  # Twój klucz API od OpenAI

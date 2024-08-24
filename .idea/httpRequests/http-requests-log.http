@@ -1,0 +1,10 @@
+GET http://localhost:8080/userpanel
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.10)
+Cookie: JSESSIONID=8485121EBFA3FD9A771EBA1223BCFE65
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-08-24T161855.200.html
+
+###
+

@@ -267,6 +267,35 @@
 
 
     let arr = /*[[${slidecard}]]*/ "";
+   // let userID = /*[[${userID}]]*/ "";
+ //   console.log("userID= "+userID);
+    let FromEdit = /*[[${fromEdit}]]*/ "";
+    console.log("fromEdit= "+FromEdit);
+
+    window.addEventListener("load", (event) => {
+        if (performance.navigation.type !== 1 && FromEdit===false) { // Check if the page was not reloaded
+            const setID = arr[0].setID; // Ensure `arr` is correctly populated
+            const userID = /*[[${userID}]]*/ ""; // Ensure `user` is correctly populated
+            const activity = 'view'; // Ensure `activity` is correctly defined
+
+            // Check if any of the variables are undefined
+            if (setID && userID && activity) {
+                fetch(`/addUserActivity/${setID}/${userID}/${activity}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                console.error('One or more required variables are undefined:', { setID, userID, activity });
+            }
+        } else {
+            console.log('Page was reloaded, skipping fetch request.');
+        }
+    });
+
     const languages = [
         { name: 'Afar', lang: 'aa' },
         { name: 'Abkhazian', lang: 'ab' },

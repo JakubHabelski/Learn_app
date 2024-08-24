@@ -8,7 +8,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name="FlashCards")
+@Table(name = "FlashCards")
 public class FlashCards {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,12 +23,12 @@ public class FlashCards {
 
 
     @ManyToOne
-    @JoinColumn(name = "SetID", insertable=false, updatable=false)
+    @JoinColumn(name = "SetID", insertable = false, updatable = false)
     private FlashCardSet flashCardSet;
 
     @OneToOne(mappedBy = "flashCard", cascade = CascadeType.ALL)
     private image image;
-    @Column(columnDefinition = "int default 0" )
+    @Column(columnDefinition = "int default 0")
     private Integer rep_Num; // Repetition number
     private Date next_rep; // Next repetition
 
