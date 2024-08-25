@@ -8,10 +8,7 @@ import com.learn.app.Classes.FlashCardSet;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserActivity;
 import com.learn.app.Classes.UserData;
-import com.learn.app.Interfaces.AddFlashCardInterface;
-import com.learn.app.Interfaces.AddFlashCardSetInterface;
-import com.learn.app.Interfaces.UserActivityInterface;
-import com.learn.app.Interfaces.upload_Image_Interface;
+import com.learn.app.Interfaces.*;
 import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.hibernate.Session;
@@ -26,6 +23,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,12 +38,16 @@ public class EditSetController {
     private final AddFlashCardInterface addFlashCardInterface;
     private final AddFlashCardSetInterface addFlashCardSetInterface;
     private final UserActivityInterface userActivityInterface;
+    private final FlashCardTagsInterface flashCardTagsInterface;
+    private final TagsInterface tagsInterface;
   //  private final upload_Image_Interface upload_Image_Interface;
-    public EditSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, UserActivityInterface userActivityInterface) {
+    public EditSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, UserActivityInterface userActivityInterface, FlashCardTagsInterface flashCardTagsInterface, TagsInterface tagsInterface) {
         this.addFlashCardInterface = addFlashCardInterface;
         this.addFlashCardSetInterface = addFlashCardSetInterface;
        // this.upload_Image_Interface = upload_Image_Interface;
         this.userActivityInterface = userActivityInterface;
+        this.flashCardTagsInterface = flashCardTagsInterface;
+        this.tagsInterface = tagsInterface;
 
     }
 
@@ -63,11 +65,6 @@ public class EditSetController {
         Upload_image upload_image = new Upload_image();
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
         session.setAttribute("SetID", SetID);
-      //  user.setUserLogin(LoggedUser.getUserLogin());
-      //  user.setUserPass(LoggedUser.getUserPass());
-      //  user.setUserID(LoggedUser.getUserID());
-      //  user.setUserName(LoggedUser.getUserName());
-      //  user.setUserSurname(LoggedUser.getUserSurname());
         flashCards.setSetID(SetID);
         model.addAttribute("user", user);
         model.addAttribute("userID", LoggedUser.getUserID());
@@ -115,7 +112,11 @@ public class EditSetController {
         } else {
             model.addAttribute("fromEdit", false);
         }
-
+        VertexAI vertexAI = new VertexAI();
+        System.out.println(Arrays.toString(tagsInterface.findAll().stream().toArray());
+       // System.out.println("vertexAI: " + vertexAI.textInput("Basing on the flashcardsets ."+ flashCardSet.getSetName() + flashCardSet.getSetDescription()+ "generate maximum 10 single word tags for this set which suit the best"));
+       // System.out.println(vertexAI.textInput("Generate 200 single word tags for flashcard sets which i will paste to mysql database INSERT INTO Tag (name) VALUES"));
+       // System.out.println(vertexAI.textInput("Basing on:"+ tagsInterface.findAll()+ "generate maximum 10 single word tags for this set which suit the best"+ flashCardSet.getSetName() + flashCardSet.getSetDescription()));
         model.addAttribute("learncard", learncard);
 
         model.addAttribute("imagePaths", flashCard_Images);
