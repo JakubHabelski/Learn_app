@@ -3,6 +3,8 @@ package com.learn.app.Controllers;
 import com.detectlanguage.DetectLanguage;
 import com.detectlanguage.Result;
 import com.detectlanguage.errors.APIError;
+import com.learn.app.Classes.FlashCardSet;
+import com.learn.app.Classes.Tags;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
@@ -26,6 +28,7 @@ public class LoginController {
     private final AddFlashCardSetInterface addFlashCardSetInterface;
     private final PasswordEncoder passwordEncoder;
     private final upload_Image_Interface Upload_Image_Interface;
+
 
     @Autowired
     private UserInterface userInterface; // Dodaj adnotację @Autowired
@@ -57,6 +60,7 @@ public class LoginController {
 
     @GetMapping(value = "/loginform")
     public String loginform(Model model, HttpSession session) throws APIError {
+        
         user.setUserLogin("");
         user.setUserPass("");
         model.addAttribute("user", user);
@@ -105,9 +109,15 @@ public class LoginController {
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
                 return "UserPanel";
             }
-        } else if (LoggedUser != null) {
+        } else if (LoggedUser != null) {            
             model.addAttribute("user", LoggedUser);
             model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
+            List<FlashCardSet> flashCardSets = addFlashCardSetInterface.findByUserID(LoggedUser.getUserID());
+            List<Object[]> Tags = null;
+            for (FlashCardSet flashCardSet : flashCardSets) {
+                Tags = addFlashCardSetInterface.getTagsBySetID(flashCardSet.getSetID());                
+            }
+            model.addAttribute("Tags", Tags);
             return "UserPanel";
 
         }

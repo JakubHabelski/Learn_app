@@ -1,11 +1,11 @@
 package com.learn.app.Controllers;
 
 
-import com.learn.app.Classes.FlashCardSet;
-import com.learn.app.Classes.FlashCards;
+import com.learn.app.Classes.*;
 import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
-import com.learn.app.Classes.UserData;
+import com.learn.app.Interfaces.FlashCardTagsInterface;
+import com.learn.app.Interfaces.TagsInterface;
 import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,14 @@ public class FlashCardSetController {
     @Autowired
     private final AddFlashCardInterface addFlashCardInterface;
     private final AddFlashCardSetInterface addFlashCardSetInterface;
-    public FlashCardSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface) {
+    private final TagsInterface tagsInterface;
+    private final FlashCardTagsInterface flashCardTagsInterface;
+    public FlashCardSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, TagsInterface tagsInterface, FlashCardTagsInterface flashCardTagsInterface) {
         this.addFlashCardInterface = addFlashCardInterface;
         this.addFlashCardSetInterface = addFlashCardSetInterface;
-    }
+        this.tagsInterface = tagsInterface;
+        this.flashCardTagsInterface = flashCardTagsInterface;
+            }
 
     UserData user = new UserData();
 
@@ -54,8 +58,33 @@ public class FlashCardSetController {
         flashCardSet1.setSetName(SetName);
         flashCardSet1.setSetDescription(Description);
         flashCardSet1.setUserID(LoggedUser.getUserID());
-
         addFlashCardSetInterface.save(flashCardSet1);
+
+        //pobiez id z flashCardSet
+        Long flashCardSetId = flashCardSet1.getSetID();
+
+        String tags;
+        VertexAI vertexAI = new VertexAI();
+        tags = vertexAI.textInput("Based on the following set name and description, generate a list of single-word tags, but maximum 5 tags. Provide only the tags, each separated by a newline:\n\n" +
+                "Set Name: " + SetName + "\n" +
+                "Description: " + Description);
+        String[] tagsArray = tags.split("\\n");
+        // Przypisz tagi do bazy danych i powiąż z zestawem fiszek
+        for (String tag : tagsArray) {
+            Tags tag1 = tagsInterface.findByTag(tag); // Pobierz istniejący tag lub stwórz nowy, jeśli nie istnieje
+            if (tag1 == null) {
+                tag1 = new Tags();
+                tag1.setTag(tag);
+                tagsInterface.save(tag1);
+            }
+
+            // Tworzenie i zapisywanie obiektów FlashCardTags
+            FlashCardTags flashCardTags = new FlashCardTags();
+            flashCardTags.setFlashCardSet(flashCardSet1);
+            flashCardTags.setTags(tag1);
+            flashCardTagsInterface.save(flashCardTags); // Zakładam, że masz repozytorium do zapisywania FlashCardTags
+        }
+
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());

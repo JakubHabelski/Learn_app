@@ -103,6 +103,8 @@ public class EditSetController {
                 flashCard_Images.add(null);
             }
         }
+
+
         ArrayList learncard = new ArrayList<FlashCards>();
         learncard.addAll(addFlashCardInterface.find_learnedFlashCards(SetID, true)); // pokazywanie tylko nauczonych fiszek
         System.out.println(learncard) ;
@@ -113,7 +115,7 @@ public class EditSetController {
             model.addAttribute("fromEdit", false);
         }
         VertexAI vertexAI = new VertexAI();
-        System.out.println(Arrays.toString(tagsInterface.findAll().stream().toArray());
+        System.out.println(tagsInterface.getAllTags());
        // System.out.println("vertexAI: " + vertexAI.textInput("Basing on the flashcardsets ."+ flashCardSet.getSetName() + flashCardSet.getSetDescription()+ "generate maximum 10 single word tags for this set which suit the best"));
        // System.out.println(vertexAI.textInput("Generate 200 single word tags for flashcard sets which i will paste to mysql database INSERT INTO Tag (name) VALUES"));
        // System.out.println(vertexAI.textInput("Basing on:"+ tagsInterface.findAll()+ "generate maximum 10 single word tags for this set which suit the best"+ flashCardSet.getSetName() + flashCardSet.getSetDescription()));

@@ -31,6 +31,8 @@ public interface AddFlashCardInterface extends JpaRepository<FlashCards, Long> {
 
     @Query("select f from FlashCards f where f.Definition like %:term% or f.Description like %:term%")
     List<FlashCards> getSearchSuggestions(String term);
+
+
 }
 
 

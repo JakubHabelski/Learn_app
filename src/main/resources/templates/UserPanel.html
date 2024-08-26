@@ -18,22 +18,27 @@
 
 
 
+<div style="display: -webkit-box; position: relative;top: 100px;overflow-x: scroll">
+    <div  th:each="flashCardSet : ${flashCardSets}" style="width: 200px; height: 200px; border: 1px solid red; margin: 50px">
+        <h5  th:text="${flashCardSet.SetName}"></h5>
+        <p  th:text="${flashCardSet.SetDescription}"></p>
+        <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
+    </div>
+    <div  th:each="flashCardSet : ${flashCardSets}" style="width: 200px; height: 200px; border: 1px solid red; margin: 50px">
+        <h5  th:text="${flashCardSet.SetName}"></h5>
+        <p  th:text="${flashCardSet.SetDescription}"></p>
+        <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
+    </div>
+    <div  th:each="flashCardSet : ${flashCardSets}" style="width: 200px; height: 200px; border: 1px solid red; margin: 50px">
+        <h5  th:text="${flashCardSet.SetName}"></h5>
+        <p  th:text="${flashCardSet.SetDescription}"></p>
+        <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
 
-  <table class="table table-striped">
-      <tr>
-          <td>Set Name</td>
-          <td>Set Descripiton</td>
-          <td></td>
-          <td></td>
-      </tr>
-    <tr th:each="flashCardSet : ${flashCardSets}" >
-        <td th:text="${flashCardSet.SetName}" ></td>
-        <td th:text="${flashCardSet.SetDescription}" ></td>
-        <td><a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" >Edit FlashCardSet</a></td>
-        <td><a href="#" th:href="@{/DeletFlashCardSet(SetID=${flashCardSet.SetID})}" >Delete FlashCardSet</a></td>
-    
-    </tr>
-  </table>
 <script>
     document.getElementById("customLink").addEventListener("click", function(e) {
         e.preventDefault(); // Prevent default link behavior

@@ -13,4 +13,25 @@ public class Tags {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long TagID;
     private String tag;
+
+    public Tags() {
+    }
+
+    public Long getTagID() {
+        return TagID;
+    }
+
+    public void setTagID(Long tagID) {
+        TagID = tagID;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }
+
+

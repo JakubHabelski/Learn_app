@@ -17,4 +17,31 @@ public class FlashCardTags {
     @ManyToOne
     @JoinColumn(name = "TagID")
     private Tags tags;
+
+    public FlashCardTags() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public FlashCardSet getFlashCardSet() {
+        return flashCardSet;
+    }
+
+    public void setFlashCardSet(FlashCardSet flashCardSet) {
+        this.flashCardSet = flashCardSet;
+    }
+
+    public Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(Tags tags) {
+        this.tags = tags;
+    }
 }
