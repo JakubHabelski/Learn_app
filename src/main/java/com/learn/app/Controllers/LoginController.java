@@ -104,6 +104,12 @@ public class LoginController {
                 System.out.println("-------------------------------------------");
                 System.out.println(user.getUserLogin() +" "+ user.getUserPass());
                 System.out.println("-------------------------------------------");
+                System.out.println("suggestedSets: "+addFlashCardSetInterface.getRecommendedSets(user.getUserID()));
+                List<FlashCardSet> suggestedSets = addFlashCardSetInterface.getRecommendedSets(user.getUserID());
+                for (FlashCardSet flashCardSet : suggestedSets) {
+                    System.out.println("getSetName: "+flashCardSet.getSetName());
+                }
+                model.addAttribute("suggestedSets", suggestedSets);
                 session.setAttribute("LoggedUser", user);
                 model.addAttribute("user", user);
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
@@ -117,6 +123,7 @@ public class LoginController {
             for (FlashCardSet flashCardSet : flashCardSets) {
                 Tags = addFlashCardSetInterface.getTagsBySetID(flashCardSet.getSetID());                
             }
+
             model.addAttribute("Tags", Tags);
             return "UserPanel";
 

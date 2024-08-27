@@ -20,4 +20,19 @@ public interface AddFlashCardSetInterface extends JpaRepository<FlashCardSet,Lon
             "WHERE fcs.SetID = :setID")
     List<Object[]> getTagsBySetID(@Param("setID") Long setID);
 
+    @Query("SELECT fcs2, COUNT(fct2.tags.TagID) AS tagCount " +
+            "FROM FlashCardSet fcs1 " +
+            "JOIN FlashCardTags fct1 ON fcs1.SetID = fct1.flashCardSet.SetID " +
+            "JOIN FlashCardTags fct2 ON fct1.tags.TagID = fct2.tags.TagID " +
+            "JOIN FlashCardSet fcs2 ON fct2.flashCardSet.SetID = fcs2.SetID " +
+            "WHERE fcs1.UserID = :userID " +
+            "AND fcs2.SetID NOT IN (" +
+            "    SELECT fcs3.SetID " +
+            "    FROM FlashCardSet fcs3 " +
+            "    WHERE fcs3.UserID = :userID" +
+            ") " +
+            "GROUP BY fcs2 " +
+            "ORDER BY tagCount DESC")
+    List<FlashCardSet> getRecommendedSets(@Param("userID") Long userID);
+
 }

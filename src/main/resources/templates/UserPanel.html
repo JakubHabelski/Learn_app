@@ -16,30 +16,60 @@
 
 <div th:insert="fragments/navbar"></div>
 
+    <fieldset style="top: 100px; position: relative; margin: 0 20px; display: block;
+        padding-block-start: 0.35em;
+        padding-inline-start: 0.75em;
+        padding-inline-end: 0.75em;
+        padding-block-end: 0.625em;
+        border-width: 2px;
+        border-style: groove;
+        border-color: rgb(192, 192, 192);
+        border-image: initial;
+        box-sizing: border-box;">
+        <legend style="width:auto">Your flashcard sets:</legend>
+        <div style="display: -webkit-box; position: relative; overflow-x: auto">
+            <div th:each="flashCardSet : ${flashCardSets}" class="card" style="width: 18rem; margin: 20px 50px" >
+                <div class="card-body">
+                    <h5 class="card-title"  th:text="${flashCardSet.SetName}"></h5>
+                    <p class="card-text"  th:text="${flashCardSet.SetDescription}"></p>
+                    <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
+                    <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset style="top: 100px; position: relative; margin: 0 20px; display: block;
+            padding-block-start: 0.35em;
+            padding-inline-start: 0.75em;
+            padding-inline-end: 0.75em;
+            padding-block-end: 0.625em;
+            border-width: 2px;
+            border-style: groove;
+            border-color: rgb(192, 192, 192);
+            border-image: initial;
+            box-sizing: border-box;">
+        <legend style="width:auto">Suggested flashcard sets:</legend>
+        <div style="display: -webkit-box; position: relative; overflow-x: auto">
+            <div th:each="suggestedSet : ${suggestedSets}" class="card" style="width: 18rem; margin: 20px 50px" >
+                <div class="card-body">
+                    <h5 class="card-title"  th:text="${suggestedSet.SetName}"></h5>
+                    <p class="card-text"  th:text="${suggestedSet.SetDescription}"></p>
+                </div>
+            </div>
+        </div>
+    </fieldset>
 
 
-<div style="display: -webkit-box; position: relative;top: 100px;overflow-x: scroll">
-    <div  th:each="flashCardSet : ${flashCardSets}" style="width: 200px; height: 200px; border: 1px solid red; margin: 50px">
-        <h5  th:text="${flashCardSet.SetName}"></h5>
-        <p  th:text="${flashCardSet.SetDescription}"></p>
-        <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
-        <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
-    </div>
-    <div  th:each="flashCardSet : ${flashCardSets}" style="width: 200px; height: 200px; border: 1px solid red; margin: 50px">
-        <h5  th:text="${flashCardSet.SetName}"></h5>
-        <p  th:text="${flashCardSet.SetDescription}"></p>
-        <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
-        <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
-    </div>
-    <div  th:each="flashCardSet : ${flashCardSets}" style="width: 200px; height: 200px; border: 1px solid red; margin: 50px">
-        <h5  th:text="${flashCardSet.SetName}"></h5>
-        <p  th:text="${flashCardSet.SetDescription}"></p>
-        <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
-        <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
-    </div>
-</div>
 
 <script>
+
+    /*<![CDATA[*/
+    let suggestedSets = /*[[${suggestedSets}]]*/ "";
+    //let arr = /*[[${slidecard}]]*/ "";
+    let Tags = /*[[${Tags}]]*/ "";
+    console.log(suggestedSets);
+    console.log(Tags);
+    /*]]>*/
     document.getElementById("customLink").addEventListener("click", function(e) {
         e.preventDefault(); // Prevent default link behavior
         document.getElementById("userForm").submit(); // Submit the form
