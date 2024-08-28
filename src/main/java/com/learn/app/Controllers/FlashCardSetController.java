@@ -2,10 +2,7 @@ package com.learn.app.Controllers;
 
 
 import com.learn.app.Classes.*;
-import com.learn.app.Interfaces.AddFlashCardInterface;
-import com.learn.app.Interfaces.AddFlashCardSetInterface;
-import com.learn.app.Interfaces.FlashCardTagsInterface;
-import com.learn.app.Interfaces.TagsInterface;
+import com.learn.app.Interfaces.*;
 import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +20,13 @@ public class FlashCardSetController {
     private final AddFlashCardSetInterface addFlashCardSetInterface;
     private final TagsInterface tagsInterface;
     private final FlashCardTagsInterface flashCardTagsInterface;
+   // private final UserandSetInterface userandSetInterface;
     public FlashCardSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, TagsInterface tagsInterface, FlashCardTagsInterface flashCardTagsInterface) {
         this.addFlashCardInterface = addFlashCardInterface;
         this.addFlashCardSetInterface = addFlashCardSetInterface;
         this.tagsInterface = tagsInterface;
         this.flashCardTagsInterface = flashCardTagsInterface;
+      //  this.userandSetInterface = userandSetInterface;
             }
 
     UserData user = new UserData();
@@ -97,11 +96,12 @@ public class FlashCardSetController {
 
     }
 
-    @RequestMapping(value="/DeletFlashCardSet", method = { RequestMethod.GET, RequestMethod.POST } )
+    @RequestMapping(value="/DeleteFlashCardSet", method = { RequestMethod.GET, RequestMethod.POST } )
     public String deleteFlashCardSet(Model model, 
                                      HttpSession session,
                                      @RequestParam("SetID") Long SetID) {
         UserData loggedUser = (UserData) session.getAttribute("LoggedUser");
+        flashCardTagsInterface.deleteBySetID(SetID);
         ArrayList FlashCardList = new ArrayList<FlashCards>();
         FlashCardList.addAll(addFlashCardInterface.customFindBySetID(SetID));
         ImageUploadService imageUploadService = new ImageUploadService();
@@ -122,6 +122,8 @@ public class FlashCardSetController {
             return "redirect:/userpanel";
          
     }
+
+
     
     
 

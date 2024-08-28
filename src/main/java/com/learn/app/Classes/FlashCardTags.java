@@ -11,11 +11,11 @@ public class FlashCardTags {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "SetID")
+    @JoinColumn(name = "SetID", referencedColumnName = "setid")
     private FlashCardSet flashCardSet;
 
     @ManyToOne
-    @JoinColumn(name = "TagID")
+    @JoinColumn(name = "TagID", referencedColumnName = "tagid")
     private Tags tags;
 
     public FlashCardTags() {

@@ -4,7 +4,6 @@ import com.detectlanguage.DetectLanguage;
 import com.detectlanguage.Result;
 import com.detectlanguage.errors.APIError;
 import com.learn.app.Classes.FlashCardSet;
-import com.learn.app.Classes.Tags;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Config.MyMailSenderService;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
@@ -30,6 +29,7 @@ public class LoginController {
     private final upload_Image_Interface Upload_Image_Interface;
 
 
+
     @Autowired
     private UserInterface userInterface; // Dodaj adnotację @Autowired
     @Autowired
@@ -40,6 +40,7 @@ public class LoginController {
         this.passwordEncoder = passwordEncoder;
         this.myMailSenderService = myMailSenderService;
         this.Upload_Image_Interface = Upload_Image_Interface;
+
     }
 
 
@@ -113,6 +114,12 @@ public class LoginController {
                 session.setAttribute("LoggedUser", user);
                 model.addAttribute("user", user);
                 model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(user.getUserID()));
+                //model.addAttribute("flashCardSets", addFlashCardSetInterface.getSetsByUserID(user.getUserID()));
+                /*List<FlashCardSet> flashCardSets = addFlashCardSetInterface.getSetsByUserID(user.getUserID());
+                for (FlashCardSet flashCardSet : flashCardSets) {
+                    System.out.println("getSetsByUserID: "+flashCardSet.getSetName());
+                }
+                 */
                 return "UserPanel";
             }
         } else if (LoggedUser != null) {            
