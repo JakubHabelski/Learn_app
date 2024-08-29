@@ -31,7 +31,8 @@ public class FlashCardGames {
 
     @GetMapping("/FlashCardGame")
     public String FlashCardGame_GET(HttpSession session,
-                                        Model model) {
+                                        Model model,
+                                    @RequestParam("Preview") boolean Preview) {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
         FlashCards flashCard = new FlashCards();
         Long SetID = (Long) session.getAttribute("SetID");
@@ -56,7 +57,9 @@ public class FlashCardGames {
                 iterator.remove();
             }
         }
-
+        if (Preview) {
+            System.out.println("Preview");
+        }
         model.addAttribute("slidecard", slidecard);
         model.addAttribute("user", user);
         model.addAttribute("slidecard", slidecard);

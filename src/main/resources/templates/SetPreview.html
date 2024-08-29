@@ -1,55 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" type="text/css" th:href="@{/style.css}" /> -->
     <link rel="stylesheet" type="text/css" href="/static/EditFlashCardSet_style.css" />
-    <main>
-        <aside>
-            <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
-            <a href="#" th:href="@{/QuizGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
-            <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
-            <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
 
-            <!--<p>You last vist:</p>
-            <p th:text="${flashcard_set_lastvisit}"></p> -->
-            <p th:text="'Your set learning progress is: ' + ${flashcard_set_progress}+'%'"></p>
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" th:aria-valuenow="${flashcard_set_progress}" aria-valuemin="0" aria-valuemax="100" th:style="'width:' + ${flashcard_set_progress} + '%'"></div>
-            </div>
-            <!--<p>Count learned:</p>
-            <p th:text="${count_learned}"></p>
-            <p>set_size:</p>
-            <p th:text="${set_size}"></p>
-            You know these cards:
-            <div th:each="leared :${learncard}">
-                <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
-                <p th:text="${leared.Definition}"></p>
-                <p th:text="${leared.Description}"></p>
-            </div> -->
-        </aside>
+    <script src="https://kit.fontawesome.com/50d738d854.js" crossorigin="anonymous"></script>
 
-        <section id="cardSection">
+    <title>Title</title>
+</head>
+<body>
+<div th:insert="fragments/navbar"></div>
+
+
+<th:block th:each="image, stat : ${imagePaths}">
+    <img th:src="${image}" alt="Obraz fiszki" style="display: none" th:id="'source_image' + ${stat.index}"/>
+</th:block>
+
+
+
+
+<main>
+    <aside>
+        <a href="#" th:href="@{/FlashCardGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
+        <a href="#" th:href="@{/QuizGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
+        <a href="#" th:href="@{/MatchingGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
+        <!-- Przycisk z funkcją onclick, poprawnie wstawiający nazwę zestawu -->
+        <button th:onclick="clone([[${flashCard[0].SetID}]])" id="CloneBTN">Clone this set to your set repository</button>
+
+    </aside>
+            <section id="cardSection">
             <div id="formContainer">
                 <div class="input_def_des_box" th:each="card :${flashCard}" >
                     <form th:action="@{/EditCard}" method="post" enctype="multipart/form-data" th:id="'edit-form-' + ${card.FlashCardId}">
-                        <div style="gap:10px">
+                        <div style="gap:10px; height: 25px">
 
-                            <a href="#" th:href="@{/deleteCard(FlashCardId=${card.FlashCardId}, SetID=${card.SetID})}" style="float: right; margin-right: 10px;">
-                                <i class="fa-solid fa-x" ></i>
 
-                            </a>
-                            <button type="button" th:data-name="${card.FlashCardId}" class="showEditField" onclick="showEditField(event, this.getAttribute('data-name'))" style="background: none; border: none; float: right">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none; background: none; border: none; float: right" th:data-name="${card.FlashCardId}" onclick="swap_lang_codes(event, this.getAttribute('data-name'))">
-                                <i class="fa-duotone fa-solid fa-check"></i>
-                            </button>
                         </div>
 
 
@@ -90,65 +78,53 @@
                             </button>
                         </div>
 
-                        <div>
-                            <label th:for="'file-upload-edit' + ${card.FlashCardId}" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
-                                <i class="fas fa-upload"></i> Obraz
-                            </label>
-                            <input th:id="'file-upload-edit' + ${card.FlashCardId}" type="file" class="input_image" th:name="file">
-                        </div>
+
                     </form>
                     <!-- Element docelowy -->
-                    <img th:id="targetImage" alt="Obraz" style="max-width: 200px;">
-                    <!-- <p th:text="'Time out: '+ ${card.time_out}"></p>-->
-                    <!-- <p th:text="'next_rep: '+ ${card.next_rep}"></p>-->
+                    <img th:id="targetImage" alt="Obraz" style="max-width: 200px; padding-top: 10px">
 
                 </div>
-                <!--------------------------------------------------------------------------------------->
-                <!--Input a new card--------------------------------------------------------------------->
-                <form th:action="@{/AddCard}" method="post" enctype="multipart/form-data">
-                    <div class="input_def_des_box">
-                        <p style="float: left; margin: 0; margin-left: 10px;" >Create new card</p>
-                        <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
 
-                        <input type="hidden" id="setID" th:value="${flashCards.SetID}"   th:field="${flashCards.SetID}" name="SetID">
-                        <div class="input_def_box">
-                            <textarea wrap="hard" class="input_def" name="Definition[]"></textarea>
 
-                            <div style="font-size: 16px">Pojęcie</div>
-                        </div>
-                        <div>
-                            <label for="file-upload2" class="custom-file-upload" style=" text-align: center; font-size: 13px; ">
-                                <i class="fas fa-upload"></i> Obraz
-                            </label>
-                            <input id="file-upload2" type="file" class="input_image" th:name="file[]" multiple>
-                        </div>
-                        <div class="input_des_box">
-                            <textarea wrap="hard" class="input_def"   name="Description[]"></textarea>
-
-                            <div style="font-size: 16px">Defnicja</div>
-                        </div>
-
-                    </div>
             </div>
-            <div style="margin-bottom: 25px">
-                <button id="addCardButton" type="button">Dodaj kartę</button>
-                <input type="submit" value="Add Card">
-            </div>
+
 
         </section>
-        </form>
-    </main>
+    </form>
+</main>
 
 
 
-    <title>Title</title>
-</head>
-<body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
 <script th:inline="javascript">
     /*<![CDATA[*/
+
+    // funkcja klonująca fiszki do repozytorium użytkownika
+    function clone(SetID) {
+        const setID = SetID;
+        const userID = /*[[${userID}]]*/ "";
+        console.log('Cloning set with ID: ' + SetID);
+        console.log('User ID: ' + userID);
+
+        fetch(`/CloneSet/${setID}/${userID}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
+
+    }
+
+
     const supportedLanguages = [
         { name: 'Polish (Poland)', lang: 'pl-PL', short: 'pl' },
         { name: 'German', lang: 'de-DE', short: 'de' },
@@ -223,27 +199,7 @@
         speak(text, lang);
     }
     // funkcja pokazująca pole edycji fiszki po kliknięciu przycisku
-    function showEditField(event, cardId) {
 
-        var definitionInput = document.getElementById('DefinitionInput_' + cardId);
-        var descriptionInput = document.getElementById('DescriptionInput_' + cardId);
-        let definitionInput_Lang = document.getElementById('def-lang_show' + cardId);
-        let descriptionInput_Lang = document.getElementById('des-lang_show' + cardId);
-        let Confirm_button = document.getElementById('Confirm_' + cardId);
-        Confirm_button.style.display = "";
-        definitionInput.disabled = false;
-        descriptionInput.disabled = false;
-        descriptionInput_Lang.style.display = "block";
-        definitionInput_Lang.style.display = "block";
-        let Inputs = [definitionInput, descriptionInput];
-        Inputs.forEach(input => {
-            if (input) { // Sprawdź, czy input istnieje
-                autoResize.call(input);
-            } else {
-                console.log("Input not found: ", input); // Debugowanie
-            }
-        });
-    }
 
 
 
@@ -252,34 +208,7 @@
 
 
     let arr = /*[[${slidecard}]]*/ "";
-    // let userID = /*[[${userID}]]*/ "";
-    //   console.log("userID= "+userID);
-    let FromEdit = /*[[${fromEdit}]]*/ "";
-    console.log("fromEdit= "+FromEdit);
 
-    window.addEventListener("load", (event) => {
-        if (performance.navigation.type !== 1 && FromEdit===false) { // Check if the page was not reloaded
-            const setID = arr[0].setID; // Ensure `arr` is correctly populated
-            const userID = /*[[${userID}]]*/ ""; // Ensure `user` is correctly populated
-            const activity = 'view'; // Ensure `activity` is correctly defined
-
-            // Check if any of the variables are undefined
-            if (setID && userID && activity) {
-                fetch(`/addUserActivity/${setID}/${userID}/${activity}`, {
-                    method: 'POST'
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                    })
-                    .catch(error => console.error('Error:', error));
-            } else {
-                console.error('One or more required variables are undefined:', { setID, userID, activity });
-            }
-        } else {
-            console.log('Page was reloaded, skipping fetch request.');
-        }
-    });
 
     const languages = [
         { name: 'Afar', lang: 'aa' },
@@ -485,125 +414,16 @@
         });
     }
 
-    // Funkcja do obsługi wybranego języka
-    function selectLanguage(inputElement, listElement, name, lang) {
-        inputElement.value = name;
-        listElement.innerHTML = ''; // Ukrycie listy po wyborze
-        console.log('Wybrano język:', name, 'Kod języka:', lang); // Można dostosować do swoich potrzeb
-        const hiddenInputElement = document.querySelector(`input[name="${inputElement.name.replace('_show', '')}"]`);
-        hiddenInputElement.value = lang; // Ustawianie kodu języka w ukrytym polu
-
-        listElement.addEventListener('click', function (event) {
-            if (event.target.tagName === 'LI') {
-                const selectedLang = event.target.getAttribute('data-lang'); // Pobieranie kodu języka
-                inputElement.value = event.target.textContent; // Ustawianie nazwy języka w widocznym polu
-                hiddenInputElement.value = selectedLang; // Ustawianie kodu języka w ukrytym polu
-                listElement.style.display = 'none'; // Ukrywanie listy po wyborze
-            }
-        });
-    }
-    function swap_lang_codes(event, card_id){
-        event.preventDefault();
-        let INPUT_DEF_LANG_ID = document.getElementById('INPUT_DEF_LANG_ID'+card_id).value;
-        let INPUT_DES_LANG_ID = document.getElementById('INPUT_DES_LANG_ID'+card_id).value;
-        let def_lang = document.getElementById('def-lang_show'+card_id).value;
-        let def_lang_hidden = document.getElementById('def-lang'+card_id);
-        let des_lang = document.getElementById('des-lang_show'+card_id).value;
-        let des_lang_hidden = document.getElementById('des-lang'+card_id);
-        let def_lang_temp = def_lang;
-        let des_lang_temp = des_lang;
-
-        def_lang = def_lang_temp;
-        des_lang = des_lang_temp;
-        if(def_lang === ''){
-            def_lang_temp = INPUT_DEF_LANG_ID;
-        }else{
-            def_lang_temp = languages.find(l => l.name === def_lang).lang;
-        }
-        if(des_lang === ''){
-            des_lang_temp = INPUT_DES_LANG_ID;
-        }else{
-            des_lang_temp = languages.find(l => l.name === des_lang).lang;
-        }
-        document.getElementById('def-lang'+card_id).innerHTML.valueOf(def_lang_temp);
-        document.getElementById('des-lang'+card_id).innerHTML.valueOf(des_lang_temp);
-        def_lang_hidden.value = def_lang_temp;
-        des_lang_hidden.value = des_lang_temp;
-        // Ensure the form is correctly referenced
-        const editForm = document.getElementById('edit-form-' + card_id);
-        if (editForm) {
-            editForm.submit();
-        } else {
-            console.error("Form with ID 'edit-form-' + card_id + ' not found.");
-        }
-
-    }
-    // Podpinanie funkcji do wszystkich dynamicznych pól input
-    document.querySelectorAll('input[id^="def-lang"]').forEach(input => {
-        const id = input.id.match(/\d+/)[0]; // Wyciągamy numer ID z inputu
-        const listElement = document.getElementById(`def-lang-list${id}`);
-        input.addEventListener('input', function() {
-            filterLanguages(this, listElement);
-        });
-    });
-
-    document.querySelectorAll('input[id^="des-lang"]').forEach(input => {
-        const id = input.id.match(/\d+/)[0]; // Wyciągamy numer ID z inputu
-        const listElement = document.getElementById(`des-lang-list${id}`);
-        input.addEventListener('input', function() {
-            filterLanguages(this, listElement);
-        });
-    });
-
-
-    const selected_def_langs = document.querySelectorAll('select[id^="def_lang"]');
-    const selected_des_langs = document.querySelectorAll('select[id^="des_lang"]');
 
 
 
-
-    document.addEventListener('DOMContentLoaded', function() {
-        for(i=0; i<selected_def_langs.length; i++){
-            let def_lang = arr[i].def_lang.split(',');
-            def_lang.forEach(function(item){
-                let option = document.createElement('option');
-                option.value = item;
-                option.text = item;
-                selected_def_langs[i].appendChild(option);
-            });
-            let des_lang = arr[i].des_lang.split(',');
-            des_lang.forEach(function(item){
-                let option = document.createElement('option');
-                option.value = item;
-                option.text = item;
-                selected_des_langs[i].appendChild(option);
-            });
-
-            let otherLangOptionDef = document.createElement('option');
-            otherLangOptionDef.innerHTML=`
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#def_lang_modal">
-                    Add new language
-                </button>
-            `
-            selected_def_langs[i].appendChild(otherLangOptionDef);
-
-            let otherLangOptionDes = document.createElement('option');
-            otherLangOptionDes.innerHTML=`
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#des_lang">
-                    Add new language
-                </button>
-            `
-            selected_des_langs[i].appendChild(otherLangOptionDes);
-
-        }
-    });
 
 
     //ukrywanie obrazków przesłanych bezposrednio z serwera. Potem są one wyświetlane w odpowiednich miejscach
     let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
     let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');
     for(let i=0; i<hiddenImages.length; i++){
-        if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
+        if(!hiddenImages[i].src.includes("http://localhost:8080/SetPreview/")){
             targetImageArr[i].src = hiddenImages[i].src;
             targetImageArr[i].alt = 'Obraz fiszki';
             targetImageArr[i].style.display = 'inline';
@@ -630,58 +450,15 @@
 
 
     //dodawanie nowych formularzy po kliknięciu przycisku
-    let formCount = 0;
-    document.getElementById('addCardButton').addEventListener('click', function() {
-        const formContainer = document.getElementById('formContainer');
-        const setID = document.getElementById('setID').value;
-
-        const newCardForm = document.createElement('div');
-        newCardForm.innerHTML = `
-                    <div class="input_def_des_box">
-                        <p style="float: left; margin: 0; margin-left: 10px;">Create new card</p>
-                        <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
-                        <input type="hidden" value="${setID}" name="SetID">
-                        <div class="input_def_box">
-                            <textarea wrap="hard" class="input_def" name="Definition[]"></textarea>
-                            <div style="font-size: 16px">Pojęcie</div>
-                        </div>
-                        <div>
-                            <label for="file-upload${formCount}" class="custom-file-upload" style="text-align: center; font-size: 13px;">
-                                <i class="fas fa-upload"></i> Obraz
-                            </label>
-                            <input id="file-upload${formCount}" type="file" class="input_image" name="file[]" multiple>
-                        </div>
-                        <div class="input_des_box">
-                            <textarea wrap="hard" class="input_def" name="Description[]"></textarea>
-                            <div style="font-size: 16px">Definicja</div>
-                        </div>
-                    </div>
-                `;
-
-        formContainer.appendChild(newCardForm);
-        formCount++;
-        const newTextareas = newCardForm.querySelectorAll('.input_def');
-        newTextareas.forEach(addAutoResizeToTextarea);
-    });
-
-    // wysłanie wszystkich formularzy po kliknięciu przycisku
-    document.getElementById('submitButton').addEventListener('click', function(event) {
-        event.preventDefault(); // Zapobiega domyślnemu przesyłaniu formularza
-        // Dodanie wszystkich formularzy do jednego
-        const mainForm = document.getElementById('mainForm');
-        const formContainer = document.getElementById('formContainer');
-        const forms = formContainer.querySelectorAll('div.input_def_des_box');
-        forms.forEach(function(form) {
-            mainForm.appendChild(form.cloneNode(true));
-        });
-        mainForm.submit(); // Przesłanie formularza
-    });
-
 
     //----------------------------------------------------------
     /*]]>*/
 
 
 </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>
