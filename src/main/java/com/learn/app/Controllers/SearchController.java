@@ -1,11 +1,13 @@
 package com.learn.app.Controllers;
 
 
+import com.learn.app.Classes.FlashCardSet;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import jakarta.servlet.http.HttpSession;
+import org.hibernate.Session;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class SearchController {
@@ -105,6 +104,72 @@ public class SearchController {
     }
     @GetMapping("/search2")
     public ResponseEntity<List<FlashCards>> getSearchSuggestions2(@RequestParam String term) {
+        if (term.length() < 2) { // Minimalna długość wyszukiwania, np. 2 znaki
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
+        }
         return new ResponseEntity<>(addFlashCardInterface.getSearchSuggestions(term), HttpStatus.OK);
+    }
+    @GetMapping("/search3")
+    public ResponseEntity<List<FlashCardSet>> getSearchSuggestions3(@RequestParam String term, HttpSession session) {
+        UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (term.length() < 2) { // Minimalna długość wyszukiwania, np. 2 znaki
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
+        }
+
+        List <FlashCardSet> flashCardSet = addFlashCardSetInterface.getFlashCardSetSuggestions(term);
+        Iterator<FlashCardSet> iterator = flashCardSet.iterator();
+        while (iterator.hasNext()) {
+            FlashCardSet suggestedSet = iterator.next();
+            if (addFlashCardInterface.customFindBySetID(suggestedSet.getSetID()).isEmpty()) {
+                iterator.remove();
+            }
+        }
+        iterator = flashCardSet.iterator();
+        List<FlashCardSet> UserSets = addFlashCardSetInterface.findByUserID(LoggedUser.getUserID());
+        while (iterator.hasNext()) {
+            FlashCardSet suggestedSet = iterator.next();
+            for (FlashCardSet UserSet : UserSets) {
+                if (suggestedSet.getUserID().equals(UserSet.getUserID())) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        return new ResponseEntity<>(flashCardSet, HttpStatus.OK);
+    }
+
+    @GetMapping("/search_one_set/{setID}")
+    public String search_one_set(Model model, HttpSession session, @PathVariable String setID) throws Exception {
+        UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        model.addAttribute("user", LoggedUser);
+
+        FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(Long.valueOf(setID));
+        if (flashCardSet == null) {
+            // Handle the case where the set is not found
+            model.addAttribute("error", "Set not found");
+            return "error"; // Return an error page or handle accordingly
+        }
+
+
+        model.addAttribute("Sets", flashCardSet);
+        return "Search";
+    }
+
+    @RequestMapping(value = "/CloneSet", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void CloneSet(@RequestParam ("SetSelect") String SetSelect,
+                      @RequestParam ("FlashCardId") Long FlashCardId){
+        System.out.println(FlashCardId + " " +SetSelect);
+        FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
+        FlashCards flashCardClone = new FlashCards();
+        flashCardClone.setSetID(Long.parseLong(SetSelect));
+        flashCardClone.setDefinition(flashCard.getDefinition());
+        flashCardClone.setDescription(flashCard.getDescription());
+        flashCardClone.setPath(flashCard.getPath());
+        flashCardClone.setLearned(false);
+        flashCardClone.setNext_rep(LocalDate.now());
+        flashCardClone.setTime_out(0);
+        flashCardClone.setRep_Num(0);
+        addFlashCardInterface.save(flashCardClone);
     }
 }

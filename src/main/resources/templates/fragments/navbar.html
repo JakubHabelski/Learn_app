@@ -31,8 +31,8 @@
                     <form th:action="@{/Add}"  th:object="${flashCardSet1}" method="post"  style="display: block">
                         <label for="SetName">Set Name</label>
                         <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">
-                        <label for="Description">Description</label>
-                        <input name="Description" id="Description" class="form-control" placeholder="Description" style="width: auto; margin-bottom: 0.5rem">
+                        <label for="SetDescription">SetDescription</label>
+                        <input name="SetDescription" id="SetDescription" class="form-control" placeholder="SetDescription" style="width: auto; margin-bottom: 0.5rem">
                         <input type="submit" value="Add new set" class="btn btn-primary">
                     </form>
                 </div>
@@ -60,8 +60,8 @@
             <table class="table table-hover" id="search_results" style="position: absolute; background-color: white; width: 100%; z-index: 1000; top:40px; display: none">
                 <thead>
                 <tr>
-                    <th scope="col" style="width: 50%; border-top:0">Definition</th>
-                    <th scope="col" style="width: 50%; border-top:0">Description</th>
+                    <th scope="col" style="width: 50%; border-top:0">Set Name</th>
+                    <th scope="col" style="width: 50%; border-top:0">Set Description</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,52 +76,57 @@
     const displayedResults = new Set();
     let searchTimeout;
 
-    document.getElementById("search_input").addEventListener("input", function() {
-        const test_var = document.getElementById("search_input").value;
-        console.clear();
+    function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
+document.getElementById("search_input").addEventListener("input", debounce(function() {
+    const searchTerm = document.getElementById("search_input").value.trim();
+    console.clear();
+
+    fetch(`/search3?term=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
             search_results.innerHTML = '';
             displayedResults.clear();
+            if (data.length === 0) {
+                search_table.style.display = 'none';
+            } else {
+                search_table.style.display = 'block';
+            }
+            data.forEach(flashCard => {
+                const { setName, setDescription, setID } = flashCard;
+                const resultText = `${setName} - ${setDescription}`;
+                if (!displayedResults.has(resultText)) {
+                    console.log(`setName: ${setName}`);
+                    console.log(`setDescription: ${setDescription}`);
+                    const tr = document.createElement('tr');
+                    tr.scope = 'row';
+                    const tdsetName = document.createElement('td');
+                    const tdsetDescription = document.createElement('td');
+                    const link_def = document.createElement('a');
+                    link_def.className = 'search_result_link';
+                    link_def.href = `/search_one_set/${setID}`;
+                    link_def.textContent = setName;
+                    tdsetName.appendChild(link_def);
+                    const link_des = document.createElement('a');
+                    link_des.className = 'search_result_link';
+                    link_des.href = `/search_one_set/${setID}`;
+                    link_des.textContent = setDescription;
+                    tdsetDescription.appendChild(link_des);
+                    tr.appendChild(tdsetName);
+                    tr.appendChild(tdsetDescription);
+                    search_results.appendChild(tr);
+                    displayedResults.add(resultText);
+                }
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}, 300));
 
-            fetch(`/search2?term=${test_var}`)
-                .then(response => response.json())
-                .then(data => {
-                    if(data.length === 0) {
-                        search_table.style.display = 'none';
-                    } else {
-                        search_table.style.display = 'block';
-                    }
-                    // Extract the required fields from the response
-                    data.forEach(flashCard => {
-                        const {definition, description, flashCardId} = flashCard;
-                        const resultText = `${definition} - ${description}`;
-                        if (!displayedResults.has(resultText)) {
-                            console.log(`Definition: ${definition}`);
-                            console.log(`Description: ${description}`);
-                            const tr = document.createElement('tr');
-                            tr.scope = 'row';
-                            const tdDefinition = document.createElement('td');
-                            const tdDescription = document.createElement('td');
-                            const link_def = document.createElement('a');
-                            link_def.className = 'search_result_link';
-                            link_def.href = `/search_one_card/${flashCardId}`;
-                            link_def.textContent = definition;
-                            tdDefinition.appendChild(link_def);
-                            const link_des = document.createElement('a');
-                            link_des.className = 'search_result_link';
-                            link_des.href = `/search_one_card/${flashCardId}`;
-                            link_des.textContent = description;
-                            tdDescription.appendChild(link_des);
-                            tr.appendChild(tdDefinition);
-                            tr.appendChild(tdDescription);
-                            search_results.appendChild(tr);
-                            displayedResults.add(resultText);
-                        }
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        }, 100); 
-    });
 </script>

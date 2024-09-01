@@ -14,7 +14,7 @@ automatic_scaling:
   max_instances: 5
 
 env_variables:
-  SPRING_DATASOURCE_URL: jdbc:mysql://google/project-jh-db?cloudSqlInstance=project-jh-425111:europe-west1:project-jh&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false
+  SPRING_DATASOURCE_URL: jdbc:mysql://35.189.243.166:3306/project-jh-db?useSSL=false
   SPRING_DATASOURCE_USERNAME: root
   SPRING_DATASOURCE_PASSWORD: root
 

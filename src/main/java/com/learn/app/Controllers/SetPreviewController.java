@@ -1,12 +1,10 @@
 package com.learn.app.Controllers;
 
 import com.learn.app.Classes.FlashCardSet;
+import com.learn.app.Classes.FlashCardSetRating;
 import com.learn.app.Classes.FlashCards;
 import com.learn.app.Classes.UserData;
-import com.learn.app.Interfaces.AddFlashCardInterface;
-import com.learn.app.Interfaces.AddFlashCardSetInterface;
-import com.learn.app.Interfaces.FlashCardTagsInterface;
-import com.learn.app.Interfaces.TagsInterface;
+import com.learn.app.Interfaces.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SetPreviewController {
@@ -31,13 +31,20 @@ public class SetPreviewController {
     private final AddFlashCardSetInterface addFlashCardSetInterface;
     private final TagsInterface tagsInterface;
     private final FlashCardTagsInterface flashCardTagsInterface;
-    // private final UserandSetInterface userandSetInterface;
-    public SetPreviewController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, TagsInterface tagsInterface, FlashCardTagsInterface flashCardTagsInterface) {
+    private final FlashCardSetRatingInterface flashCardSetRatingInterface;
+
+    public SetPreviewController(AddFlashCardInterface addFlashCardInterface,
+                                AddFlashCardSetInterface addFlashCardSetInterface,
+                                TagsInterface tagsInterface,
+                                FlashCardTagsInterface flashCardTagsInterface,
+                                FlashCardSetRatingInterface flashCardSetRatingInterface
+                                ) {
         this.addFlashCardInterface = addFlashCardInterface;
         this.addFlashCardSetInterface = addFlashCardSetInterface;
         this.tagsInterface = tagsInterface;
         this.flashCardTagsInterface = flashCardTagsInterface;
-        //  this.userandSetInterface = userandSetInterface;
+        this.flashCardSetRatingInterface = flashCardSetRatingInterface;
+
     }
 
     UserData user = new UserData();
@@ -90,7 +97,6 @@ public class SetPreviewController {
             }
         }
 
-
         ArrayList learncard = new ArrayList<FlashCards>();
         learncard.addAll(addFlashCardInterface.find_learnedFlashCards(SetID, true)); // pokazywanie tylko nauczonych fiszek
         System.out.println(learncard) ;
@@ -100,23 +106,46 @@ public class SetPreviewController {
         } else {
             model.addAttribute("fromEdit", false);
         }
+
+        Integer ratingCount1 = flashCardSetRatingInterface.getRatingCountByRating(1, SetID);
+        model.addAttribute("Rating1", ratingCount1);
+        Integer ratingCount2 = flashCardSetRatingInterface.getRatingCountByRating(2, SetID);
+        model.addAttribute("Rating2", ratingCount2);
+        Integer ratingCount3 = flashCardSetRatingInterface.getRatingCountByRating(3, SetID);
+        model.addAttribute("Rating3", ratingCount3);
+        Integer ratingCount4 = flashCardSetRatingInterface.getRatingCountByRating(4, SetID);
+        model.addAttribute("Rating4", ratingCount4);
+        Integer ratingCount5 = flashCardSetRatingInterface.getRatingCountByRating(5, SetID);
+        model.addAttribute("Rating5", ratingCount5);
+
+        Double averageRating = flashCardSetRatingInterface.getAverageRating(SetID);
+        model.addAttribute("averageRating", averageRating);
+        Integer ratingCount = flashCardSetRatingInterface.getRatingCount(SetID);
+        model.addAttribute("ratingCount", ratingCount);
+
+
+
         VertexAI vertexAI = new VertexAI();
 
         // System.out.println("vertexAI: " + vertexAI.textInput("Basing on the flashcardsets ."+ flashCardSet.getSetName() + flashCardSet.getSetDescription()+ "generate maximum 10 single word tags for this set which suit the best"));
         // System.out.println(vertexAI.textInput("Generate 200 single word tags for flashcard sets which i will paste to mysql database INSERT INTO Tag (name) VALUES"));
         // System.out.println(vertexAI.textInput("Basing on:"+ tagsInterface.findAll()+ "generate maximum 10 single word tags for this set which suit the best"+ flashCardSet.getSetName() + flashCardSet.getSetDescription()));
         model.addAttribute("learncard", learncard);
-
+        model.addAttribute("comments", flashCardSetRatingInterface.getComments(SetID));
         model.addAttribute("imagePaths", flashCard_Images);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
         model.addAttribute("file", new ArrayList<MultipartFile>());
         return "SetPreview";
     }
-    @PostMapping(value = "/CloneSet/{SetID}/${userID}")
-    public ResponseEntity<String> CloneSet(@PathVariable("SetID") Long SetID,@PathVariable("userID") Long userID, HttpSession session) {
+    @PostMapping(value = "/CloneSet/{SetID}")
+    public ResponseEntity<String> CloneSet(@PathVariable("SetID") Long SetID, HttpSession session) {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
         FlashCardSet flashCardSet_old = addFlashCardSetInterface.findBySetID(SetID);
         FlashCardSet flashCardSet_new = new FlashCardSet();
+        flashCardSet_new.setSetName(flashCardSet_old.getSetName());
+        flashCardSet_new.setSetDescription(flashCardSet_old.getSetDescription());
+        flashCardSet_new.setUserID(LoggedUser.getUserID());
+        addFlashCardSetInterface.save(flashCardSet_new);
        // FlashCardSetController flashCardSetController = new FlashCardSetController(addFlashCardInterface, addFlashCardSetInterface, tagsInterface, flashCardTagsInterface);
        // flashCardSetController.AddCard(flashCardSet_new, new Model(), session, flashCardSet_old.getSetName(), flashCardSet_old.getSetDescription());
         for(FlashCards flashCard : addFlashCardInterface.customFindBySetID(SetID)){
@@ -126,16 +155,76 @@ public class SetPreviewController {
             flashCard_new.setDescription(flashCard.getDescription());
             flashCard_new.setLearned(false);
             flashCard_new.setPath(flashCard.getPath());
-            flashCard_new.setRep_Num(0);
-            flashCard_new.setNext_rep(null);
-            flashCard_new.setTime_out(0);
-            flashCard_new.setEF(2.5f);
-            flashCard_new.setLast_user_grade((byte) 0);
+            flashCard_new.setNext_rep(LocalDate.now());
             flashCard_new.setDef_lang(flashCard.getDef_lang());
             flashCard_new.setDes_lang(flashCard.getDes_lang());
             addFlashCardInterface.save(flashCard_new);
         }
         return ResponseEntity.ok("Set cloned successfully");
+    }
+
+
+   @PostMapping(value = "/RateSet/{SetID}/{rating}")
+    public ResponseEntity<Map<String, Object>> RateSet(@PathVariable("SetID") Long SetID, @PathVariable("rating") int rating, HttpSession session, Model model) {
+        UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        System.out.println("SetID: " + SetID + " rating: " + rating);
+
+        FlashCardSetRating flashCardSetRating = flashCardSetRatingInterface.getRatingByUserAndSet(LoggedUser.getUserID(), SetID);
+        if(flashCardSetRating != null){
+            flashCardSetRating.setRating(rating);
+            flashCardSetRatingInterface.save(flashCardSetRating);
+        } else {
+            flashCardSetRating = new FlashCardSetRating();
+            flashCardSetRating.setUserData(LoggedUser);
+            flashCardSetRating.setFlashCardSet(addFlashCardSetInterface.findBySetID(SetID));
+            flashCardSetRating.setRating(rating);
+            flashCardSetRatingInterface.save(flashCardSetRating);
+        }
+           Integer ratingCount1 = flashCardSetRatingInterface.getRatingCountByRating(1, SetID);
+           model.addAttribute("Rating1", ratingCount1);
+           Integer ratingCount2 = flashCardSetRatingInterface.getRatingCountByRating(2, SetID);
+           model.addAttribute("Rating2", ratingCount2);
+           Integer ratingCount3 = flashCardSetRatingInterface.getRatingCountByRating(3, SetID);
+           model.addAttribute("Rating3", ratingCount3);
+           Integer ratingCount4 = flashCardSetRatingInterface.getRatingCountByRating(4, SetID);
+           model.addAttribute("Rating4", ratingCount4);
+           Integer ratingCount5 = flashCardSetRatingInterface.getRatingCountByRating(5, SetID);
+           model.addAttribute("Rating5", ratingCount5);
+
+           Double averageRating = flashCardSetRatingInterface.getAverageRating(SetID);
+           model.addAttribute("averageRating", averageRating);
+           Integer ratingCount = flashCardSetRatingInterface.getRatingCount(SetID);
+           model.addAttribute("ratingCount", ratingCount);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Set rated successfully");
+        response.put("Rating1", ratingCount1);
+        response.put("Rating2", ratingCount2);
+        response.put("Rating3", ratingCount3);
+        response.put("Rating4", ratingCount4);
+        response.put("Rating5", ratingCount5);
+        response.put("averageRating", averageRating);
+        response.put("ratingCount", ratingCount);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/setComment")
+    public String CommentSet(@RequestParam("SetID") Long SetID, @RequestParam("comment") String comment, HttpSession session, Model model) {
+        UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        System.out.println("SetID: " + SetID + " comment: " + comment);
+
+        FlashCardSetRating flashCardSetRating = flashCardSetRatingInterface.getRatingByUserAndSet(LoggedUser.getUserID(), SetID);
+        if(flashCardSetRating != null){
+            flashCardSetRating.setComment(comment);
+            flashCardSetRatingInterface.save(flashCardSetRating);
+        } else {
+            flashCardSetRating = new FlashCardSetRating();
+            flashCardSetRating.setUserData(LoggedUser);
+            flashCardSetRating.setFlashCardSet(addFlashCardSetInterface.findBySetID(SetID));
+            flashCardSetRating.setComment(comment);
+            flashCardSetRatingInterface.save(flashCardSetRating);
+        }
+        return "redirect:/SetPreview/" + SetID;
     }
 }
 

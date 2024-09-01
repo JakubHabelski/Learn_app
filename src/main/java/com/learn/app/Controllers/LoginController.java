@@ -6,9 +6,10 @@ import com.detectlanguage.errors.APIError;
 import com.learn.app.Classes.FlashCardSet;
 import com.learn.app.Classes.UserData;
 import com.learn.app.Config.MyMailSenderService;
+import com.learn.app.Interfaces.AddFlashCardInterface;
 import com.learn.app.Interfaces.AddFlashCardSetInterface;
 import com.learn.app.Interfaces.UserInterface;
-import com.learn.app.Interfaces.upload_Image_Interface;
+import com.learn.app.Services.TestDatabaseService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -25,9 +27,9 @@ public class LoginController {
 
     @Autowired
     private final AddFlashCardSetInterface addFlashCardSetInterface;
+    private final AddFlashCardInterface addFlashCardInterface;
     private final PasswordEncoder passwordEncoder;
-    private final upload_Image_Interface Upload_Image_Interface;
-
+    private final TestDatabaseService testDatabaseService;
 
 
     @Autowired
@@ -35,11 +37,12 @@ public class LoginController {
     @Autowired
     private MyMailSenderService myMailSenderService;
 
-    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder, MyMailSenderService myMailSenderService, upload_Image_Interface Upload_Image_Interface) {
+    public LoginController(AddFlashCardSetInterface addFlashCardSetInterface, PasswordEncoder passwordEncoder, MyMailSenderService myMailSenderService, AddFlashCardInterface addFlashCardInterface, TestDatabaseService testDatabaseService) {
         this.addFlashCardSetInterface = addFlashCardSetInterface;
         this.passwordEncoder = passwordEncoder;
         this.myMailSenderService = myMailSenderService;
-        this.Upload_Image_Interface = Upload_Image_Interface;
+        this.addFlashCardInterface = addFlashCardInterface;
+        this.testDatabaseService = testDatabaseService;
 
     }
 
@@ -61,7 +64,7 @@ public class LoginController {
 
     @GetMapping(value = "/loginform")
     public String loginform(Model model, HttpSession session) throws APIError {
-        
+        testDatabaseService.testConnection();
         user.setUserLogin("");
         user.setUserPass("");
         model.addAttribute("user", user);
@@ -99,7 +102,7 @@ public class LoginController {
             // Znajdź użytkownika w bazie danych
             UserData user = userInterface.findByUserLogin(username);
             if (user != null) {
-                if( user.getUserActive()==false){
+                if(!user.getUserActive()){
                     return "redirect:/loginform";
                 }
                 System.out.println("-------------------------------------------");
@@ -107,8 +110,29 @@ public class LoginController {
                 System.out.println("-------------------------------------------");
                 System.out.println("suggestedSets: "+addFlashCardSetInterface.getRecommendedSets(user.getUserID()));
                 List<FlashCardSet> suggestedSets = addFlashCardSetInterface.getRecommendedSets(user.getUserID());
+                List<FlashCardSet> flashCardSets = addFlashCardSetInterface.findByUserID(user.getUserID());
+
+                Iterator<FlashCardSet> iterator = suggestedSets.iterator();
+                    while (iterator.hasNext()) {
+                        FlashCardSet suggestedSet = iterator.next();
+                        for (FlashCardSet flashCardSet : flashCardSets) {
+                            if (suggestedSet.getSetName().equals(flashCardSet.getSetName()) &&
+                                suggestedSet.getSetDescription().equals(flashCardSet.getSetDescription())) {
+                                iterator.remove();
+                                break;
+                            }
+                        }
+                    }
+
+                    iterator = suggestedSets.iterator();
+                    while (iterator.hasNext()) {
+                        FlashCardSet suggestedSet = iterator.next();
+                        if (addFlashCardInterface.customFindBySetID(suggestedSet.getSetID()).isEmpty()) {
+                            iterator.remove();
+                        }
+}
                 for (FlashCardSet flashCardSet : suggestedSets) {
-                    System.out.println("getSetName: "+flashCardSet.getSetName());
+                    System.out.println("getSetName: "+flashCardSet.getSetName()+" getSetid: "+flashCardSet.getSetID());
                 }
                 model.addAttribute("suggestedSets", suggestedSets);
                 session.setAttribute("LoggedUser", user);
@@ -148,9 +172,9 @@ public class LoginController {
 
     public void Detect_Lang2(String Text) throws APIError {
         List<Result> results = DetectLanguage.detect(Text);
-        String lang_string = "";
-        for(int i = 0; i < results.size(); i++){
-            lang_string += results.get(i).language + ",";
+        StringBuilder lang_string = new StringBuilder();
+        for (Result result : results) {
+            lang_string.append(result.language).append(",");
         }
         System.out.println("Language: " + lang_string);
     }

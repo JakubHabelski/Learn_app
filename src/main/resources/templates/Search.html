@@ -7,9 +7,8 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-   <!-- <link rel="stylesheet" type="text/css" th:href="@{/SearchStyle.css}" /> -->
-    <link rel="stylesheet" type="text/css" href="/static/SearchStyle.css" />
+    <!-- <link rel="stylesheet" type="text/css" th:href="@{/style.css}" /> -->
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
 
     <title>Title</title>
 </head>
@@ -22,44 +21,25 @@
 
 
 <section style="margin-top: 76px">
-    <div class="input_def_des_box" th:each="card :${flashCards}" >
-
-
-        <div style="width: 100%; height: 2px; background-color: black; float: right;"></div>
-        <!--------------------------------------------------------------------------------------->
-        <!--Edit exist card---------------------------------------------------------------------->
-        <form action="/CloneCard" method="get" enctype="multipart/form-data">
-            <input type="hidden" th:value="${card.FlashCardId}" name="FlashCardId">
-            <input type="hidden" th:value="${card.SetID}" name="SetID">
-            <div class="input_def_box">
-                <textarea class="input_def"  th:text="${card.Definition}" name="Definition" th:id="'DefinitionInput_' + ${card.FlashCardId}"  disabled></textarea>
-
-                <div style="font-size: 16px">Pojęcie</div>
-            </div>
-            <div class="input_des_box">
-                <textarea class="input_def"  th:text="${card.Description}" name="Description" th:id="'DescriptionInput_' + ${card.FlashCardId}"  disabled></textarea>
-                <input type="submit" value="Confirm edit" th:id="'Confirm_' + ${card.FlashCardId}" style="display: none">
-                <div style="font-size: 16px">Defnicja</div>
-            </div>
-
-            <!-- Element docelowy -->
-            <img th:id="targetImage" alt="Obraz" style="max-width: 200px;" class="target_image">
-            <br>
-            <div style="width: 100%; float: left">
-                <button type="button" data-toggle="collapse" th:data-target="'#SetSelectCollapsible' +${card.FlashCardId}" class="btn btn-primary">Clone Card to your set:</button>
-                <div th:id="'SetSelectCollapsible' + ${card.FlashCardId}" class="collapse form-group" >
-                    <label for="SetSelect" class="label label-primary" style="margin: 0.375rem 0.375rem;">Select destinated set: </label>
-                    <select name="SetSelect" id="SetSelect" class="form-control">
-                        <option th:each="set : ${Sets}" th:value="${set.SetID}" th:text="${set.SetName}"></option>
-                    </select>
-                    <button type="submit" class="btn btn-success" style="margin-top: .375rem;">Move to set</button>
+    <fieldset style="top: 100px; position: relative; margin: 0 20px; display: block;
+        padding-block-start: 0.35em;
+        padding-inline-start: 0.75em;
+        padding-inline-end: 0.75em;
+        padding-block-end: 0.625em;
+        border-width: 2px;
+        border-style: groove;
+        border-color: rgb(192, 192, 192);
+        border-image: initial;
+        box-sizing: border-box;">
+        <legend style="width:auto">Your flashcard sets result:</legend>
+            <div  class="card" style="width: 18rem; margin: 20px 50px" th:each="flashCardSet : ${Sets}" >
+                <div class="card-body" >
+                    <h5 class="card-title"  th:text="${flashCardSet.SetName}"></h5>
+                    <p class="card-text"  th:text="${flashCardSet.SetDescription}"></p>
+                    <a th:href="@{/SetPreview/{SetID}(SetID=${flashCardSet.SetID})}">Preview</a>
                 </div>
             </div>
-
-
-        </form>
-
-    </div>
+    </fieldset>
 </section>
 
 </body>

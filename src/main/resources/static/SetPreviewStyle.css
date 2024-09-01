@@ -1,0 +1,315 @@
+* {
+    box-sizing: border-box;
+}
+:root{
+   /* -webkit-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1); */
+}
+
+body {
+    background-color: #e1e2e6;
+    margin: 0;
+}
+
+h2 {
+    margin: 0;
+}
+
+header {
+    background-color: rgb(78, 66, 66);
+    text-align: center;
+    padding: 25px;
+}
+
+aside {
+    width: 25%;
+    float: left;
+    position: sticky;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    padding: 10px;
+    top: 76px;
+}
+
+section {
+
+    margin-left: 25%;
+}
+
+article {
+    width: 25%;
+    float: left;
+}
+main{
+    margin-top: 76px;
+}
+.input_def_des_box {
+    border-radius: 25px;
+    padding: 10px 25px 25px 25px;
+    overflow: auto; /* Dodane */
+    margin: 25px;
+    background-color: #fde5ee;
+   /* background-image: linear-gradient(174deg, rgba(255, 192, 203, 1) 24%, rgba(182, 145, 210, 1) 60%); */
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+
+}
+
+.input_def_box, .input_des_box {
+    float: left;
+    padding: 10px;
+    width: 40%;
+}
+
+textarea {
+    padding-bottom: 5px;
+    background: none;
+    border: none;
+    border-style: hidden;
+    border-bottom: 1px solid black;
+    box-shadow: none;
+    float: left;
+    width: 100%;
+    height: 44px;
+    resize: none;
+    overflow: hidden;
+    font-size: 32px;
+
+}
+
+.input_def, .input_des:focus {
+    outline: none;
+}
+.input_image{
+    padding: 10px;
+    width: 20%;
+    float: left;
+}
+.custom-file-upload {
+    font-size: 16px;
+    padding: 10px;
+    width: 20%;
+    float: right;
+    display: inline-block;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    aspect-ratio: 1/1;
+    width: 50px;
+    margin-top: 10px;
+
+}
+
+.custom-file-upload:hover {
+    background: #0056b3;
+}
+
+.input_image {
+    display: none; /* Ukryj standardowy input */
+}
+.language-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    max-height: 150px;
+    overflow-y: auto;
+
+    background-color: white;
+    position: relative;
+}
+
+.language-list li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.hover_test {
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 1s ease;
+    border: #901576 1px dotted;
+}
+
+.hover_test_btn {
+    position: relative; /* Ensure the button is the reference point for the absolute positioning */
+}
+
+.hover_test_btn:hover .hover_test {
+    display: inline;
+    opacity: 1;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+.heading {
+    display: block;
+    width: 100%;
+    font-size: 25px;
+    margin-right: 25px;
+}
+
+.fa {
+    font-size: 25px;
+}
+
+.checked {
+    color: orange;
+}
+
+/* Three column layout */
+.side {
+    float: left;
+    width: 15%;
+    margin-top:10px;
+}
+
+.middle {
+    margin-top:10px;
+    float: left;
+    width: 70%;
+}
+
+/* Place text to the right */
+.right {
+    text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+/* The bar container */
+.bar-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 0; height: 18px; background-color: #04AA6D;}
+.bar-4 {width: 0; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 0; height: 18px; background-color: #00bcd4;}
+.bar-2 {width: 0; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 0; height: 18px; background-color: #f44336;}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+    .side, .middle {
+        width: 100%;
+    }
+    .right {
+        display: none;
+    }
+}
+
+.comment-form-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+
+
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#comment {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box; /* Zapewnia, że padding nie zmienia rozmiaru elementu */
+    resize: vertical; /* Umożliwia użytkownikowi zmianę wysokości */
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.btn {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comment-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 50% 50% */
+    grid-template-areas:
+        "username rating"
+        "comment comment";
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-container p {
+    margin: 0;
+    padding: 5px;
+}
+
+.username {
+    grid-area: username;
+    font-weight: bold;
+    color: #333;
+}
+
+.rating {
+    grid-area: rating;
+    font-weight: bold;
+    color: #555;
+}
+
+.comment {
+    grid-area: comment;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Optional: Add responsiveness */
+@media (max-width: 600px) {
+    .comment-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "username"
+            "rating"
+            "comment";
+    }
+}
+
+

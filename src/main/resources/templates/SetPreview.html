@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/static/EditFlashCardSet_style.css" />
+    <link rel="stylesheet" type="text/css" href="/static/SetPreviewStyle.css" />
 
     <script src="https://kit.fontawesome.com/50d738d854.js" crossorigin="anonymous"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome Icon Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Title</title>
 </head>
 <body>
@@ -28,8 +30,84 @@
         <a href="#" th:href="@{/QuizGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
         <a href="#" th:href="@{/MatchingGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
         <!-- Przycisk z funkcją onclick, poprawnie wstawiający nazwę zestawu -->
-        <button th:onclick="clone([[${flashCard[0].SetID}]])" id="CloneBTN">Clone this set to your set repository</button>
+        <button th:onclick="clone([[${flashCard[0].SetID}]])" id="CloneBTN" class="btn btn-primary">Clone this set to your set repository</button>
+        <div class="comment-form-container">
+            <span class="heading">Rate set from 1 to 5 stars:</span>
+            <span class="fa fa-star" id="1_star" onclick="send_rate(1)"></span>
+            <span class="fa fa-star" id="2_star" onclick="send_rate(2)"></span>
+            <span class="fa fa-star" id="3_star" onclick="send_rate(3)"></span>
+            <span class="fa fa-star" id="4_star" onclick="send_rate(4)"></span>
+            <span class="fa fa-star" id="5_star" onclick="send_rate(5)"></span>
+            <p th:text="${averageRating}+' average based on '+ ${ratingCount}+' reviews.'" id="avgRgct"></p>
+            <hr style="border:3px solid #f1f1f1">
 
+            <div class="row">
+                <div class="side">
+                    <div>5 star</div>
+                </div>
+                <div class="middle">
+                    <div class="bar-container">
+                        <div class="bar-5" id="bar-5"></div>
+                    </div>
+                </div>
+                <div class="side right">
+                    <div th:text="${Rating5}" id="Rating5"></div>
+                </div>
+                <div class="side">
+                    <div>4 star</div>
+                </div>
+                <div class="middle">
+                    <div class="bar-container">
+                        <div class="bar-4" id="bar-4"></div>
+                    </div>
+                </div>
+                <div class="side right">
+                    <div th:text="${Rating4}" id="Rating4"></div>
+                </div>
+                <div class="side">
+                    <div>3 star</div>
+                </div>
+                <div class="middle">
+                    <div class="bar-container">
+                        <div class="bar-3" id="bar-3"></div>
+                    </div>
+                </div>
+                <div class="side right">
+                    <div th:text="${Rating3}" id="Rating3"></div>
+                </div>
+                <div class="side">
+                    <div>2 star</div>
+                </div>
+                <div class="middle">
+                    <div class="bar-container">
+                        <div class="bar-2" id="bar-2"></div>
+                    </div>
+                </div>
+                <div class="side right">
+                    <div th:text="${Rating2}" id="Rating2"></div>
+                </div>
+                <div class="side">
+                    <div>1 star</div>
+                </div>
+                <div class="middle">
+                    <div class="bar-container">
+                        <div class="bar-1" id="bar-1"></div>
+                    </div>
+                </div>
+                <div class="side right">
+                    <div th:text="${Rating1}" id="Rating1"></div>
+                </div>
+            </div>
+        </div>
+        <div id="comment_form" class="comment-form-container">
+            <form th:action="@{/setComment}" method="post" class="comment-form">
+                <input type="hidden" th:value="${flashCard[0].SetID}" name="SetID">
+                <textarea class="input_def" id="comment" name="comment" placeholder="Enter your comment here" maxlength="255"></textarea>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+        <div id="comments-container"></div>
     </aside>
             <section id="cardSection">
             <div id="formContainer">
@@ -106,14 +184,16 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
+
+
     // funkcja klonująca fiszki do repozytorium użytkownika
     function clone(SetID) {
         const setID = SetID;
-        const userID = /*[[${userID}]]*/ "";
+        const UserID = /*[[${userID}]]*/ "";
         console.log('Cloning set with ID: ' + SetID);
-        console.log('User ID: ' + userID);
+        console.log('User ID: ' + UserID);
 
-        fetch(`/CloneSet/${setID}/${userID}`, {
+        fetch(`/CloneSet/${setID}`, {
             method: 'POST'
         })
             .then(response => response.json())
@@ -123,6 +203,108 @@
             .catch(error => console.error('Error:', error));
 
     }
+    // Przypuśćmy, że comments to tablica tablic w formie [comment, username, rating]
+    let comments = /*[[${comments}]]*/ [];
+
+    // Przekształć tablicę tablic na tablicę obiektów
+    let formattedComments = comments.map(commentArray => {
+        return {
+            comment: commentArray[0],
+            username: commentArray[1],
+            rating: commentArray[2],
+            id: commentArray[3]
+        };
+    });
+
+    // Wyświetl każdy obiekt z sformatowanej tablicy
+    formattedComments.forEach(({ comment, username, rating, id }) => {
+        console.log(`Comment: ${comment}`);
+        console.log(`Username: ${username}`);
+        console.log(`Rating: ${rating}`);
+        console.log(`id:' ${id}`);
+    });
+
+    // Jeśli chcesz umieścić dane w HTML
+    formattedComments.forEach(({ comment, username, rating, id }) => {
+        // Załóżmy, że masz kontener na komentarze
+        let commentsContainer = document.getElementById('comments-container');
+
+        // Tworzenie elementu HTML dla każdego komentarza
+        let commentElement = document.createElement('div');
+        commentElement.className = 'comment';
+
+        commentElement.innerHTML = `
+        <div class="comment-container">
+            <p class="username" th:id="'username'+ ${id}"><strong>Username:</strong> ${username}</p>
+            <p class="rating" th:id="'rating'+ ${id}"><strong>Rating:</strong> ${rating}</p>
+            <p class="comment" th:id="'comment'+ ${id}"><strong>Comment:</strong> ${comment}</p>
+        </div>
+
+
+
+    `;
+
+        commentsContainer.appendChild(commentElement);
+    });
+    let arr = /*[[${slidecard}]]*/ "";
+    let Rating1 = /*[[${Rating1}]]*/ "";
+    let Rating2 = /*[[${Rating2}]]*/ "";
+    let Rating3 = /*[[${Rating3}]]*/ "";
+    let Rating4 = /*[[${Rating4}]]*/ "";
+    let Rating5 = /*[[${Rating5}]]*/ "";
+    let Ratings = [Rating1, Rating2, Rating3, Rating4, Rating5];
+    console.log("Ratings: "+Ratings);
+    let averageRating = /*[[${averageRating}]]*/ "";
+    console.log("Average rating: "+averageRating);
+    let ratingCount = /*[[${ratingCount}]]*/ "";
+    console.log("Rating count: "+ratingCount);
+    let bar1 = document.getElementById('bar-1');
+    let bar2 = document.getElementById('bar-2');
+    let bar3 = document.getElementById('bar-3');
+    let bar4 = document.getElementById('bar-4');
+    let bar5 = document.getElementById('bar-5');
+    let bars = [bar1, bar2, bar3, bar4, bar5];
+    console.log(bars);
+    let Rating1Div = document.getElementById('Rating1');
+    let Rating2Div = document.getElementById('Rating2');
+    let Rating3Div = document.getElementById('Rating3');
+    let Rating4Div = document.getElementById('Rating4');
+    let Rating5Div = document.getElementById('Rating5');
+    let RatingDivs = [Rating1Div, Rating2Div, Rating3Div, Rating4Div, Rating5Div];
+    Ratings.forEach((rating, index) => {
+        let bar = bars[index];
+        let ratingPercentage = (rating / ratingCount) * 100;
+        bar.style.width = ratingPercentage + '%';
+    });
+    function send_rate(rate) {
+        const setID = /*[[${flashCard[0].SetID}]]*/ "";
+        const userID = /*[[${userID}]]*/ "";
+        console.log('Rating set with ID: ' + setID);
+        console.log('User ID: ' + userID);
+        console.log('Rating: ' + rate);
+
+        fetch(`/RateSet/${setID}/${rate}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(function (data) {
+                console.log(data.message);
+                let Ratings = [data.Rating1, data.Rating2, data.Rating3, data.Rating4, data.Rating5];
+                let ratingCount = data.ratingCount;
+
+                let avgRgct = document.getElementById('avgRgct');
+                avgRgct.innerHTML = parseFloat(data.averageRating) + ' average based on ' + ratingCount + ' reviews.';
+                Ratings.forEach((rating, index) => {
+                    let bar = bars[index];
+                    let ratingPercentage = (rating / ratingCount) * 100;
+                    bar.style.width = ratingPercentage + '%';
+                });
+                RatingDivs.forEach((ratingDiv, index) => {
+                    ratingDiv.innerHTML = Ratings[index];
+                });
+            })
+            .catch(error => console.error('Error:', error));
+}
 
 
     const supportedLanguages = [
@@ -207,7 +389,8 @@
 
 
 
-    let arr = /*[[${slidecard}]]*/ "";
+
+
 
 
     const languages = [
@@ -394,25 +577,7 @@
     }
 
 
-    // Funkcja do filtrowania i wyświetlania wyników dla konkretnego pola
-    function filterLanguages(inputElement, listElement) {
-        const input = inputElement.value.toLowerCase();
-        listElement.innerHTML = ''; // Czyszczenie listy
 
-        if (input === '') return;
-
-        const filteredLanguages = languages.filter(language =>
-            language.name.toLowerCase().includes(input)
-        );
-
-        filteredLanguages.forEach(language => {
-            const li = document.createElement('li');
-            li.textContent = language.name;
-            li.dataset.lang = language.lang; // Przechowywanie kodu języka w atrybucie dataset
-            li.addEventListener('click', () => selectLanguage(inputElement, listElement, language.name, language.lang));
-            listElement.appendChild(li);
-        });
-    }
 
 
 
@@ -449,7 +614,7 @@
     });
 
 
-    //dodawanie nowych formularzy po kliknięciu przycisku
+
 
     //----------------------------------------------------------
     /*]]>*/

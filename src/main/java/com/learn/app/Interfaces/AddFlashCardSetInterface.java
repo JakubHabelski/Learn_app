@@ -34,7 +34,8 @@ public interface AddFlashCardSetInterface extends JpaRepository<FlashCardSet,Lon
             "GROUP BY fcs2 " +
             "ORDER BY tagCount DESC")
     List<FlashCardSet> getRecommendedSets(@Param("userID") Long userID);
-
+    @Query("select s from FlashCardSet s where lower(s.SetName) like lower(concat('%', :term, '%')) or lower(s.SetDescription) like lower(concat('%', :term, '%'))")
+    List<FlashCardSet> getFlashCardSetSuggestions(String term);
 
     
 }
