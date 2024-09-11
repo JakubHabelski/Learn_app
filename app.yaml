@@ -1,4 +1,4 @@
-runtime: java
+runtime: java21
 env: standard
 
 handlers:
@@ -19,7 +19,7 @@ env_variables:
   SPRING_DATASOURCE_PASSWORD: root
 
 beta_settings:
-  cloud_sql_instances: project-jh-425111:europe-west1:project-jh=tcp:3306
+  cloud_sql_instances: project-jh-425111:europe-west1:project-jh
 
 spring:
   ai:

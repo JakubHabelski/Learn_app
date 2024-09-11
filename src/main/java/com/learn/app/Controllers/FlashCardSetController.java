@@ -47,13 +47,12 @@ public class FlashCardSetController {
         return("AddFlashCardSet");
    }
     @PostMapping(value ="/Add")
-    public String AddCard(@ModelAttribute FlashCards flashCards,
-                            Model model, HttpSession session,
+    public String AddCard(Model model,
+                          HttpSession session,
                           @RequestParam String SetName,
                           @RequestParam String Description) throws Exception {
-
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
-        FlashCardSet flashCardSet1= new FlashCardSet( );
+        FlashCardSet flashCardSet1= new FlashCardSet();
         flashCardSet1.setSetName(SetName);
         flashCardSet1.setSetDescription(Description);
         flashCardSet1.setUserID(LoggedUser.getUserID());

@@ -52,10 +52,10 @@ public class SearchController {
                     File file = new File(displayUrl);
                     flashCard_Images.add(file);
                 } catch (IOException e) {
+                    System.out.println("Error: " + e);
                     e.printStackTrace();
                 }
             } else {
-                // Jeśli ścieżka pliku jest "empty.jpg", dodaj pustą ścieżkę do listy
                 imagePaths.add("");
                 flashCard_Images.add(null);
             }

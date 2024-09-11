@@ -302,7 +302,7 @@ textarea {
 }
 
 /* Optional: Add responsiveness */
-@media (max-width: 600px) {
+@media (max-width: 991px) {
     .comment-container {
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -310,6 +310,34 @@ textarea {
             "rating"
             "comment";
     }
+    main{
+        display: grid;
+    }
+    aside{
+        width: 100%;
+        position: static;
+    }
+    section{
+        margin-left: 0;
+    }
+    .input_def_des_box{
+        display: grid;
+        grid-template-areas:
+        "input_def_box "
+        "input_des_box "
+        "targetImage"
+    }
+
+    .input_def_box, .input_des_box{
+        width: 100%;
+    }
+    .input_def_box{
+        grid-area: input_def_box;
+    }
+    .input_des_box{
+        grid-area: input_des_box;
+    }
+
 }
 
 

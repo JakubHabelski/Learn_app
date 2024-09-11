@@ -11,7 +11,7 @@ import java.util.List;
 public class FlashCardSet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long SetID;
     private Long UserID;
     private String SetName;

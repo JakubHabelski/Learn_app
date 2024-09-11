@@ -57,3 +57,14 @@ body {
 a.btn btn-outline-dark btn-block{
     width: 90%;
 }
+@media (max-width: 991px) {
+
+}
+@media (max-width: 730px) {
+    #button-container {
+        flex-direction: column;
+    }
+    .quiz-btn{
+        width: unset;
+    }
+}

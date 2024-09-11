@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class image {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private String path;
     

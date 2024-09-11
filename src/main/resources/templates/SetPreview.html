@@ -25,7 +25,7 @@
 
 
 <main>
-    <aside>
+    <aside  style="min-width: 350px">
         <a href="#" th:href="@{/FlashCardGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
         <a href="#" th:href="@{/QuizGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
         <a href="#" th:href="@{/MatchingGame(Preview=${true})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
@@ -588,7 +588,7 @@
     let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
     let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');
     for(let i=0; i<hiddenImages.length; i++){
-        if(!hiddenImages[i].src.includes("http://localhost:8080/SetPreview/")){
+        if((!hiddenImages[i].src.includes("http://localhost:8080/SetPreview/")) && (!hiddenImages[i].src.includes("http://project-jh-425111.ew.r.appspot.com/SetPreview/"))){
             targetImageArr[i].src = hiddenImages[i].src;
             targetImageArr[i].alt = 'Obraz fiszki';
             targetImageArr[i].style.display = 'inline';

@@ -4,7 +4,6 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.ReadChannel;
 import com.google.cloud.storage.*;
 import com.learn.app.Classes.image;
-import com.learn.app.Interfaces.upload_Image_Interface;
 import com.learn.app.Services.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class TestImageUpload {
 
     @Autowired
-    upload_Image_Interface Upload_Image_Interface;
+    com.learn.app.Interfaces.Upload_Image_Interface Upload_Image_Interface;
 
     public static String getImageUrl(String bucketName, String objectName) throws IOException {
         Storage storage = StorageOptions.newBuilder()

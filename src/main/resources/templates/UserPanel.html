@@ -27,16 +27,17 @@
         border-image: initial;
         box-sizing: border-box;">
         <legend style="width:auto">Your flashcard sets:</legend>
-        <div style="display: -webkit-box; position: relative; overflow-x: auto">
-            <div th:each="flashCardSet : ${flashCardSets}" class="card" style="width: 18rem; margin: 20px 50px" >
+        <div id="container1" style="display: -webkit-box; position: relative; overflow-x: auto">
+            <div th:each="flashCardSet : ${flashCardSets}" class="card" id="card1" style="width: 18rem; margin: 20px 50px" >
                 <div class="card-body">
                     <h5 class="card-title"  th:text="${flashCardSet.SetName}"></h5>
-                    <p class="card-text"  th:text="${flashCardSet.SetDescription}"></p>
+                    <p class="card-text"  th:text="${flashCardSet.SetDescription}" style="min-height: 100px"></p>
                     <a th:href="@{/EditFlashCardSet/{SetID}(SetID=${flashCardSet.SetID})}" class="btn btn-primary">Edit</a>
                     <a th:href="@{/DeleteFlashCardSet(SetID=${flashCardSet.SetID})}" class="btn btn-danger">Delete</a>
                 </div>
             </div>
         </div>
+        <p id="noFlashcardsMessage" style="display: none;">No flashcard sets available.</p>
     </fieldset>
     <fieldset style="top: 100px; position: relative; margin: 0 20px; display: block;
             padding-block-start: 0.35em;
@@ -49,8 +50,8 @@
             border-image: initial;
             box-sizing: border-box;">
         <legend style="width:auto">Suggested flashcard sets:</legend>
-        <div style="display: -webkit-box; position: relative; overflow-x: auto">
-            <div th:each="suggestedSet : ${suggestedSets}" class="card" style="width: 18rem; margin: 20px 50px" >
+        <div id="container2" style="display: -webkit-box; position: relative; overflow-x: auto">
+            <div th:each="suggestedSet : ${suggestedSets}" class="card" id="card2" style="width: 18rem; margin: 20px 50px" >
                 <div class="card-body">
                     <h5 class="card-title"  th:text="${suggestedSet.SetName}"></h5>
                     <p class="card-text"  th:text="${suggestedSet.SetDescription}"></p>
@@ -58,23 +59,33 @@
                 </div>
             </div>
         </div>
+        <p id="nosuggestedSets" style="display: none;">No flashcard sets available.</p>
     </fieldset>
 
 
 
-<script>
+<script th:inline="javascript">
 
     /*<![CDATA[*/
     let suggestedSets = /*[[${suggestedSets}]]*/ "";
     //let arr = /*[[${slidecard}]]*/ "";
     let Tags = /*[[${Tags}]]*/ "";
-    console.log(suggestedSets);
-    console.log(Tags);
+
+    let flashCardSets = /*[[${flashCardSets}]]*/ "";
+    console.log("flashCardSets.length: "+flashCardSets.length);
+    if (flashCardSets.length === 0) {
+        document.getElementById("noFlashcardsMessage").style.display = "block";
+    }
+    if (suggestedSets.length === 0) {
+        document.getElementById("nosuggestedSets").style.display = "block";
+    }
     /*]]>*/
     document.getElementById("customLink").addEventListener("click", function(e) {
         e.preventDefault(); // Prevent default link behavior
         document.getElementById("userForm").submit(); // Submit the form
     });
+
+
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

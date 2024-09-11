@@ -24,9 +24,9 @@
 
 <main>
         <aside>
-            <a href="#" th:href="@{/FlashCardGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
-            <a href="#" th:href="@{/QuizGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
-            <a href="#" th:href="@{/MatchingGame}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
+            <a href="#" th:href="@{/FlashCardGame(Preview=${false})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">FlashCards</a>
+            <a href="#" th:href="@{/QuizGame(Preview=${false})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">QuizGame</a>
+            <a href="#" th:href="@{/MatchingGame(Preview=${false})}" class="btn btn-primary" style="background-color: #fde5ee; border: none; color: black">MatchingGame</a>
             <a href="#" th:href="@{/reset_progress}" class="btn btn-primary" >reset_progress</a>
 
             <!--<p>You last vist:</p>
@@ -143,9 +143,9 @@
 
             </div>
             </div>
-            <div style="margin-bottom: 25px">
-                <button id="addCardButton" type="button">Dodaj kartę</button>
-                <input type="submit" value="Add Card">
+            <div style="padding: 25px; display: grid; gap: 10px; margin-bottom: 25px;">
+                <button class="btn btn-outline-dark" id="addCardButton" type="button">Add next card</button>
+                <input class="btn btn-outline-dark" type="submit" value="Submit form">
             </div>
 
         </section>
@@ -618,7 +618,7 @@
         let hiddenImages = document.querySelectorAll('img[id^="source_image"]');
         let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');
         for(let i=0; i<hiddenImages.length; i++){
-            if(!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")){
+            if((!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")) && (!hiddenImages[i].src.includes("http://project-jh-425111.ew.r.appspot.com/EditFlashCardSet/"))){
                 targetImageArr[i].src = hiddenImages[i].src;
                 targetImageArr[i].alt = 'Obraz fiszki';
                 targetImageArr[i].style.display = 'inline';

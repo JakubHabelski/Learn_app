@@ -127,12 +127,48 @@ body {
 #previous, #next{
     margin-top: 0;
 }
-@media (max-width: 991px){
-    #show_card_container{
-        width: 600px
+    @media (max-width: 992px) {
+        #show_card_container {
+            aspect-ratio: unset;
+            ;
+        }
+        #show_card{
+            aspect-ratio: 7/3;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #buttons {
+            display: flex;
+            flex-direction: column;
+            height: auto;
+        }
+
+        #buttons > * {
+            grid-area: unset;
+            margin: 5px 0;
+        }
+
+        #know_dont_know {
+            flex-direction: column;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        #know_dont_know > * {
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .a-links {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+            margin-top: 10px;
+        }
+
+        .a-links > * {
+            margin: 5px 0;
+        }
     }
-    body{
-        margin: 0;
-        padding: 0;
-    }
-}

@@ -19,7 +19,6 @@ import java.util.UUID;
 public class RegisterController {
 
     private final UserInterface userInterface;
-   // private final upload_Image_Interface upload_Image_Interface;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -31,7 +30,6 @@ public class RegisterController {
 
     public RegisterController(UserInterface userInterface, PasswordEncoder passwordEncoder) {
         this.userInterface = userInterface;
-      //  this.upload_Image_Interface = upload_Image_Interface;
         this.passwordEncoder = passwordEncoder;
     }
     @GetMapping("/GetRegister")

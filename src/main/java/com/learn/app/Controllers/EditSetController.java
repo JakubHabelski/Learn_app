@@ -40,11 +40,11 @@ public class EditSetController {
     private final UserActivityInterface userActivityInterface;
     private final FlashCardTagsInterface flashCardTagsInterface;
     private final TagsInterface tagsInterface;
-  //  private final upload_Image_Interface upload_Image_Interface;
+  //  private final Upload_Image_Interface Upload_Image_Interface;
     public EditSetController(AddFlashCardInterface addFlashCardInterface, AddFlashCardSetInterface addFlashCardSetInterface, UserActivityInterface userActivityInterface, FlashCardTagsInterface flashCardTagsInterface, TagsInterface tagsInterface) {
         this.addFlashCardInterface = addFlashCardInterface;
         this.addFlashCardSetInterface = addFlashCardSetInterface;
-       // this.upload_Image_Interface = upload_Image_Interface;
+       // this.Upload_Image_Interface = Upload_Image_Interface;
         this.userActivityInterface = userActivityInterface;
         this.flashCardTagsInterface = flashCardTagsInterface;
         this.tagsInterface = tagsInterface;
@@ -61,7 +61,10 @@ public class EditSetController {
                                        Model model,
                                        FlashCards flashCards,
                                        HttpSession session) throws Exception {
-        UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            return "redirect:/loginform";
+        }
         Upload_image upload_image = new Upload_image();
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
         session.setAttribute("SetID", SetID);
@@ -145,9 +148,6 @@ public class EditSetController {
 
         String image_obj_path = "test";
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
-      //  user.setUserLogin(LoggedUser.getUserLogin());
-      //  user.setUserPass(LoggedUser.getUserPass());
-      //  user.setUserID(LoggedUser.getUserID());
         model.addAttribute("user" , user);
         model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
 
@@ -191,7 +191,6 @@ public class EditSetController {
         ImageUploadService imageUploadService = new ImageUploadService();
         imageUploadService.deleteImage(flashCard.getPath());
         addFlashCardInterface.deleteById(Long.valueOf(FlashCardId));
-
         return "redirect:/EditFlashCardSet/"  + SetID;
     }
 

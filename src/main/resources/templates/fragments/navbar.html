@@ -17,12 +17,14 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+            <!--
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
             </li>
+            -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Create new set
@@ -32,14 +34,16 @@
                         <label for="SetName">Set Name</label>
                         <input name="SetName" class="form-control" id="SetName" placeholder="Set name" style="width: auto">
                         <label for="SetDescription">SetDescription</label>
-                        <input name="SetDescription" id="SetDescription" class="form-control" placeholder="SetDescription" style="width: auto; margin-bottom: 0.5rem">
+                        <input name="Description" id="SetDescription" class="form-control" placeholder="SetDescription" style="width: auto; margin-bottom: 0.5rem">
                         <input type="submit" value="Add new set" class="btn btn-primary">
                     </form>
                 </div>
             </li>
+            <!--
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
+            -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span th:text="${user.userName}"></span>
@@ -130,3 +134,13 @@ document.getElementById("search_input").addEventListener("input", debounce(funct
 }, 300));
 
 </script>
+
+        <!DOCTYPE html>
+        <html xmlns:th="http://www.thymeleaf.org">
+        <head>
+            <title>User Panel</title>
+        </head>
+        <body>
+        <h1>Welcome, <span th:text="${user.userName}"></span></h1>
+        </body>
+        </html>

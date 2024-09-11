@@ -48,7 +48,7 @@
         <div class="a-links">
             <a href="#" th:href="@{/userpanel}" class="btn btn-info">Return to Main Panel</a>
             <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-info" id="Return">Return to Flashcard Set</a>
-            <a href="#" th:href="@{/FlashCardGame}" class="btn btn-info" >Reset Flashcard game</a>
+            <a href="#" th:href="@{/FlashCardGame}" class="btn btn-info" id="FlashCardGame">Reset Flashcard game</a>
         </div>
 
     </div>
@@ -72,7 +72,7 @@
             <div class="modal-footer">
                 <a href="#" th:href="@{/userpanel}" class="btn btn-info">Return to Main Panel</a>
                 <a href="#" th:href="@{/redirect_EditFlashCardSet}" class="btn btn-info" id="Return2">Return to Flashcard Set</a>
-                <a href="#" th:href="@{/FlashCardGame}" class="btn btn-info" >Reset Flashcard game</a>
+                <a href="#" th:href="@{/FlashCardGame}" class="btn btn-info" id="FlashCardGame2">Reset Flashcard game</a>
             </div>
         </div>
     </div>
@@ -100,9 +100,9 @@
                 this.Is_viewed=Is_viewed;
             }
         }
-    
-        let arr = /*[[${slidecard}]]*/ "";
 
+        let arr = /*[[${slidecard}]]*/ "";
+        const setID = arr[0].setID;
         let test= "test";
         let card_arr=[];
         for(let i=0; i<arr.length; i++){
@@ -151,19 +151,44 @@
        
     
     }
-        document.getElementById("customLink").addEventListener("click", function(e) {
-            e.preventDefault(); // Prevent default link behavior
-            document.getElementById("userForm").submit(); // Submit the form
-        });
 
+
+        const url = window.location.href;
+        const queryParams = new URLSearchParams(window.location.search);
+
+        // Pobranie wartości parametru 'Preview'
+        const previewValue = queryParams.get('Preview');
+        console.log("url = " + url);
+        console.log("queryParams = " + queryParams);
+        console.log("queryParams.get('Preview') = " + previewValue);
+
+        let FlashCardGame = document.getElementById("FlashCardGame");
+        let FlashCardGame2 = document.getElementById("FlashCardGame2");
+        if(previewValue === "true") {
+            document.getElementById("know_dont_know").style.display = "none";
+            let Return = document.getElementById("Return");
+            let Return2 = document.getElementById("Return2");
+            Return.href = "/SetPreview/"+setID;
+            Return2.href = "/SetPreview/"+setID;
+            console.log("Return = " + Return);
+            console.log("Return2 = " + Return2);
+            FlashCardGame.href = "FlashCardGame?Preview=true";
+            FlashCardGame2.href = "FlashCardGame?Preview=true";
+        } else {
+            FlashCardGame.href = "FlashCardGame?Preview=false";
+            FlashCardGame2.href = "FlashCardGame?Preview=false";
+        }
         function user_grade(grade) {
-            // Ustawienie wartości dla pól formularza
-            document.getElementById("flashCardId2").value = card_arr[i].flashCardId;
+            if(previewValue === "false"){
+                document.getElementById("flashCardId2").value = card_arr[i].flashCardId;
 
-            document.getElementById("grade2").value = grade; // Ustawienie wartości oceny
+                document.getElementById("grade2").value = grade; // Ustawienie wartości oceny
 
-            // Wysłanie formularza
-            document.getElementById("knowForm2").submit();
+                // Wysłanie formularza
+                document.getElementById("knowForm2").submit();
+            }
+
+
             const knowSpan = document.getElementById("know");
             const dontKnowSpan = document.getElementById("dont_know");
 
@@ -185,7 +210,15 @@
             }
         }
 
-
+        document.addEventListener("DOMContentLoaded", function() {
+            const customLink = document.getElementById("customLink");
+            if (customLink) {
+                customLink.addEventListener("click", function(e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    document.getElementById("userForm").submit(); // Submit the form
+                });
+            }
+        });
 
 
         /*]]>*/

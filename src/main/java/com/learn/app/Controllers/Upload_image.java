@@ -5,7 +5,7 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.learn.app.Classes.image;
-import com.learn.app.Interfaces.upload_Image_Interface;
+import com.learn.app.Interfaces.Upload_Image_Interface;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,10 +27,10 @@ public class Upload_image {
     public Upload_image() {
     }
     
-    private upload_Image_Interface upload_Image_Interface;
+    private Upload_Image_Interface upload_Image_Interface;
 
     @Autowired
-    public Upload_image(upload_Image_Interface upload_Image_Interface) {
+    public Upload_image(Upload_Image_Interface upload_Image_Interface) {
         this.upload_Image_Interface = upload_Image_Interface;
     }
 
@@ -52,7 +52,7 @@ public class Upload_image {
             IOUtils.copy(inputStream, outputStream);
             image_obj.setPath(formFile.getPath());
 
-           // upload_Image_Interface.save(image_obj);
+           // Upload_Image_Interface.save(image_obj);
             outputStream.close();
             inputStream.close();
 
@@ -95,7 +95,7 @@ public class Upload_image {
         // Set the path of the image object to the GCS URI
         image_obj.setPath("gs://" + bucketName + "/" + objectName);
 
-        // upload_Image_Interface.save(image_obj);
+        // Upload_Image_Interface.save(image_obj);
 
     } catch (IOException e) {
         e.printStackTrace();

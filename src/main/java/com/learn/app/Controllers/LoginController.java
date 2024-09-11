@@ -75,9 +75,6 @@ public class LoginController {
         }
         // https://detectlanguage.com/
          DetectLanguage.apiKey = "a257d4911b341402d8a05ffc386dae17";
-        //String language = DetectLanguage.simpleDetect("chuj");
-       // System.out.println(language);
-        Detect_Lang2("dupa");
         return "LoginForm";
     }
     // LoginController.java
@@ -146,13 +143,13 @@ public class LoginController {
                  */
                 return "UserPanel";
             }
-        } else if (LoggedUser != null) {            
+        } else if (LoggedUser != null) {
             model.addAttribute("user", LoggedUser);
             model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
             List<FlashCardSet> flashCardSets = addFlashCardSetInterface.findByUserID(LoggedUser.getUserID());
             List<Object[]> Tags = null;
             for (FlashCardSet flashCardSet : flashCardSets) {
-                Tags = addFlashCardSetInterface.getTagsBySetID(flashCardSet.getSetID());                
+                Tags = addFlashCardSetInterface.getTagsBySetID(flashCardSet.getSetID());
             }
 
             model.addAttribute("Tags", Tags);
@@ -183,25 +180,28 @@ public class LoginController {
         return "ForgotPass";
     }
     @PostMapping("/ResetPass")
-    public String ResetPass(@RequestParam ("UserLogin_or_Mail") String UserLogin_or_Mail){
+    public String ResetPass(@RequestParam("UserLogin_or_Mail") String UserLogin_or_Mail) {
         UserData user = userInterface.findByUserLogin(UserLogin_or_Mail);
-        if(user == null){
+        if (user == null) {
             user = userInterface.findByUserMail(UserLogin_or_Mail);
         }
-        if(user != null){
-            //localhost:8080/
-            myMailSenderService.sendEmail(user.getUserMail(), "Reset Password", "Click this link to reset your password: http://localhost:8080/reset_pass/" + user.getUserLogin());
-            //https://project-jh-425111.ew.r.appspot.com/
-            //myMailSenderService.sendEmail(user.getUserMail(), "Reset Password", "Click this link to reset your password: https://project-jh-425111.ew.r.appspot.com/reset_pass/" + user.getUserLogin());
-            System.out.println("Email sent");
-        }
-        if (user == null){
+
+        if (user != null) {
+            // Debugowanie, aby upewnić się, że wartości nie są null
+            String userLogin = user.getUserLogin();
+            if (userLogin != null) {
+                String resetLink = "https://project-jh-425111.ew.r.appspot.com/reset_pass/" + userLogin;
+                myMailSenderService.sendEmail(user.getUserMail(), "Reset Password", "Click this link to reset your password: " + resetLink);
+                System.out.println("Email sent to " + user.getUserMail() + " with reset link: " + resetLink);
+            } else {
+                System.out.println("User login is null for user: " + user.getUserMail());
+            }
+        } else {
             System.out.println("User not found");
-        }else {
-            System.out.println("User found");
         }
         return "redirect:/loginform";
     }
+
     @RequestMapping("/reset_pass/{UserLogin}")
     public String reset_pass(@PathVariable ("UserLogin") String UserLogin, Model model){
         System.out.println("UserLogin parameter: " + UserLogin);
@@ -215,11 +215,11 @@ public class LoginController {
         return "ResetPass";
     }
     @PostMapping("/ChangePass")
-    public String ChangePass(@RequestParam ("UserPass") String UserPass, @RequestParam ("UserLogin") String UserLogin){
+    public String ChangePass(@RequestParam ("UserPass") String UserPass,
+                             @RequestParam ("UserLogin") String UserLogin){
         if(UserPass==null || UserLogin==null){
-            return "PError";
+            return "Error";
         }
-
         UserData user = userInterface.findByUserLogin(UserLogin);
         user.setUserPass(passwordEncoder.encode(UserPass));
         userInterface.save(user);

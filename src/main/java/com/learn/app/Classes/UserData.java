@@ -2,13 +2,18 @@ package com.learn.app.Classes;
 
 //import com.learn.app.Classes.FlashCardSet;
 
+import com.google.auto.value.AutoValue;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.util.List;
 
 
 @Entity
 @Table(name="user_data")
+@Builder
+@AllArgsConstructor
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +75,30 @@ public class UserData {
         UserMail = userMail;
         UserToken = userToken;
         UserActive = userActive;
+    }
+
+    public UserData(Long userID, String userName, String userSurname, String userLogin, String userPass, String userMail, String userToken, Boolean userActive, String path) {
+        UserID = userID;
+        UserName = userName;
+        UserSurname = userSurname;
+        UserLogin = userLogin;
+        UserPass = userPass;
+        UserMail = userMail;
+        UserToken = userToken;
+        UserActive = userActive;
+        this.path = path;
+    }
+
+    public UserData(String test, String test1, String test2, String test3, boolean b, String test4, String test5, String test6) {
+        this.UserName = test;
+        this.UserSurname = test1;
+        this.UserLogin = test2;
+        this.UserPass = test3;
+        this.UserActive = b;
+        this.UserMail = test4;
+        this.UserToken = test5;
+        this.path = test6;
+
     }
 
     @Override

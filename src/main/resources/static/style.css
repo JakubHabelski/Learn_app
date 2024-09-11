@@ -106,3 +106,12 @@ color:red;
     border: 2px solid black;
     border-radius: 5px;
 }
+
+@media (max-width: 991px) {
+    #container1, #container2{
+        display: unset;
+    }
+    #card1, #card2{
+        width: unset;
+    }
+}

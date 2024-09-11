@@ -1,8 +1,8 @@
 package com.learn.app.Controllers;
 
 import com.learn.app.Classes.UserData;
+import com.learn.app.Interfaces.Upload_Image_Interface;
 import com.learn.app.Interfaces.UserInterface;
-import com.learn.app.Interfaces.upload_Image_Interface;
 import com.learn.app.Services.ImageUploadService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.repository.query.Param;
@@ -19,11 +19,10 @@ import java.io.IOException;
 @Controller
 public class EditUserProfileController {
     private final UserInterface userInterface;
-    private final upload_Image_Interface upload_Image_Interface;
 
-    public EditUserProfileController(UserInterface userInterface, upload_Image_Interface upload_Image_Interface) {
+    public EditUserProfileController(UserInterface userInterface) {
         this.userInterface = userInterface;
-        this.upload_Image_Interface = upload_Image_Interface;
+
     }
     @GetMapping("/UserProfile")
     public String UserProfile(Model model, HttpSession session) throws Exception{
