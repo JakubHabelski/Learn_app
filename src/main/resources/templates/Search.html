@@ -32,11 +32,13 @@
         border-image: initial;
         box-sizing: border-box;">
         <legend style="width:auto">Your flashcard sets result:</legend>
-            <div  class="card" style="width: 18rem; margin: 20px 50px" th:each="flashCardSet : ${Sets}" >
-                <div class="card-body" >
-                    <h5 class="card-title"  th:text="${flashCardSet.SetName}"></h5>
-                    <p class="card-text"  th:text="${flashCardSet.SetDescription}"></p>
-                    <a th:href="@{/SetPreview/{SetID}(SetID=${flashCardSet.SetID})}">Preview</a>
+            <div id="container1" style="display: -webkit-box; position: relative; overflow-x: auto">
+                <div  class="card" style="width: 18rem; margin: 20px 50px" th:each="flashCardSet : ${Sets}" >
+                    <div class="card-body" >
+                        <h5 class="card-title"  th:text="${flashCardSet.SetName}"></h5>
+                        <p class="card-text"  th:text="${flashCardSet.SetDescription}"></p>
+                        <a th:href="@{/SetPreview/{SetID}(SetID=${flashCardSet.SetID})}">Preview</a>
+                    </div>
                 </div>
             </div>
     </fieldset>

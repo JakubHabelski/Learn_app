@@ -619,6 +619,10 @@
         let targetImageArr = document.querySelectorAll('img[id^="targetImage"]');
         for(let i=0; i<hiddenImages.length; i++){
             if((!hiddenImages[i].src.includes("http://localhost:8080/EditFlashCardSet/")) && (!hiddenImages[i].src.includes("http://project-jh-425111.ew.r.appspot.com/EditFlashCardSet/"))){
+                if(hiddenImages[i].src.includes("project-jh-425111.ew.r.appspot.com/")) {
+                    hiddenImages[i].src = hiddenImages[i].src.replace("project-jh-425111.ew.r.appspot.com/", "");
+                }
+
                 targetImageArr[i].src = hiddenImages[i].src;
                 targetImageArr[i].alt = 'Obraz fiszki';
                 targetImageArr[i].style.display = 'inline';

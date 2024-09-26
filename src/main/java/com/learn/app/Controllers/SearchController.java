@@ -34,34 +34,30 @@ public class SearchController {
 
     public String getSearchSuggestions(@RequestParam String term, Model model, HttpSession session)throws Exception  {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
-        model.addAttribute("user", LoggedUser);
-        List<FlashCards> flashCards = addFlashCardInterface.getSearchSuggestions(term);
-        Set<FlashCards> distinctFlashCards = new HashSet<>(flashCards);
-        List<FlashCards> uniqueFlashCardsList = new ArrayList<>(distinctFlashCards);
-        model.addAttribute("flashCards", uniqueFlashCardsList);
-        List<FlashCards> flashCards_list = addFlashCardInterface.getSearchSuggestions(term);
-        Set<FlashCards> distinctFlashCards_list = new HashSet<>(flashCards_list);
-        List<FlashCards> uniqueFlashCardsList_list = new ArrayList<>(distinctFlashCards_list);
-        List<String> imagePaths = new ArrayList<>();
-        Upload_image upload_image = new Upload_image();
-        List<File> flashCard_Images = new ArrayList<>();
-        for (FlashCards flashCard : uniqueFlashCardsList_list) {
-            if (!flashCard.getPath().equals("")) {
-                try {
-                    String displayUrl =  TestImageUpload.getImageUrl2( flashCard.getPath());
-                    File file = new File(displayUrl);
-                    flashCard_Images.add(file);
-                } catch (IOException e) {
-                    System.out.println("Error: " + e);
-                    e.printStackTrace();
-                }
-            } else {
-                imagePaths.add("");
-                flashCard_Images.add(null);
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
+        List <FlashCardSet> flashCardSet = addFlashCardSetInterface.getFlashCardSetSuggestions(term);
+        Iterator<FlashCardSet> iterator = flashCardSet.iterator();
+        while (iterator.hasNext()) {
+            FlashCardSet suggestedSet = iterator.next();
+            if (addFlashCardInterface.customFindBySetID(suggestedSet.getSetID()).isEmpty()) {
+                iterator.remove();
             }
         }
-        model.addAttribute("imagePaths", flashCard_Images);
-        model.addAttribute("Sets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
+        iterator = flashCardSet.iterator();
+        List<FlashCardSet> UserSets = addFlashCardSetInterface.findByUserID(LoggedUser.getUserID());
+        while (iterator.hasNext()) {
+            FlashCardSet suggestedSet = iterator.next();
+            for (FlashCardSet UserSet : UserSets) {
+                if (suggestedSet.getUserID().equals(UserSet.getUserID())) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        model.addAttribute("user", LoggedUser);
+        model.addAttribute("Sets",  flashCardSet);
       //  return  addFlashCardInterface.getSearchSuggestions(term);
         return "Search";
 

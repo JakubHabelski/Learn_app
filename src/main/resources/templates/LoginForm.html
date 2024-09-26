@@ -30,7 +30,17 @@
     document.addEventListener("input", function (){
         document.getElementById("error").style.display = "none";
     })
+    const url = window.location.href;
+    const queryParams = new URLSearchParams(window.location.search);
 
+    // Pobranie wartości parametru 'Preview'
+    const fromRegister = queryParams.get('fromRegister');
+    console.log("url = " + url);
+    console.log("queryParams = " + queryParams);
+    console.log("queryParams.get('fromRegister') = " + queryParams.get('fromRegister'));
+    if(queryParams.has("fromRegister") ){
+        alert("You have been registered successfully. Check your email to activate account");
+    }
 
 </script>
 

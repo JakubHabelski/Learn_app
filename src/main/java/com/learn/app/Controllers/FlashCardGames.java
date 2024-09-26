@@ -34,10 +34,13 @@ public class FlashCardGames {
                                         Model model,
                                     @RequestParam("Preview") boolean Preview) {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         FlashCards flashCard = new FlashCards();
         Long SetID = (Long) session.getAttribute("SetID");
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
-        model.addAttribute("user", user);
+        model.addAttribute("user", LoggedUser);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
@@ -64,7 +67,7 @@ public class FlashCardGames {
             System.out.println("Preview");
         }
         model.addAttribute("slidecard", slidecard);
-        model.addAttribute("user", user);
+        model.addAttribute("user", LoggedUser);
         model.addAttribute("slidecard", slidecard);
         model.addAttribute("Learned", Learned);
         model.addAttribute("NotLearned", NotLearned);
@@ -74,6 +77,9 @@ public class FlashCardGames {
     public String QuizGame(HttpSession session,
                             Model model){
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         FlashCards flashCard = new FlashCards();
         Long SetID = (Long) session.getAttribute("SetID");
 
@@ -86,7 +92,7 @@ public class FlashCardGames {
         slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
 
         model.addAttribute("slidecard", slidecard);
-        model.addAttribute("user", user);
+        model.addAttribute("user", LoggedUser);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
         return "QuizGame";
     }
@@ -106,7 +112,7 @@ public class FlashCardGames {
             ArrayList slidecard = new ArrayList<FlashCards>();
             slidecard.addAll(addFlashCardInterface.customFindBySetID(SetID));
             model.addAttribute("slidecard", slidecard);
-            model.addAttribute("user", user);
+            model.addAttribute("user", LoggedUser);
             model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
             return "MatchingGame";
      }

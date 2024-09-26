@@ -27,6 +27,9 @@ public class EditUserProfileController {
     @GetMapping("/UserProfile")
     public String UserProfile(Model model, HttpSession session) throws Exception{
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         if (LoggedUser != null) {
             Upload_image upload_image = new Upload_image();
             if (LoggedUser.getPath() != null && !LoggedUser.getPath().isEmpty()) {
@@ -51,6 +54,9 @@ public class EditUserProfileController {
                                   @Param("UserMail") String UserMail,
                                   @RequestPart("image") MultipartFile file) throws IOException {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         if (userName != null &&  !userName.isEmpty()) {
             LoggedUser.setUserName(userName);
         }else{

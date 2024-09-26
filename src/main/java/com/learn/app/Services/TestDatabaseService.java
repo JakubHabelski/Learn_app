@@ -13,7 +13,7 @@ public class TestDatabaseService {
     public void testConnection() {
         try {
             jdbcTemplate.execute("SELECT 1");
-            System.out.println("Connection successful");
+           // System.out.println("Connection successful");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Connection failed");

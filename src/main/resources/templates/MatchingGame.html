@@ -12,22 +12,25 @@
 <body>
 <div th:insert="fragments/navbar"></div>
 
-<a th:href="@{/userpanel}" class="dropdown-item">userpanel</a>
-    <div id="container">
-        <button id="field1" onclick="select_2_fields(1)"></button>
-        <button id="field2" onclick="select_2_fields(2)"></button>
-        <button id="field3" onclick="select_2_fields(3)"></button>
-        <button id="field4" onclick="select_2_fields(4)"></button>
-        <button id="field5" onclick="select_2_fields(5)"></button>
-        <button id="field6" onclick="select_2_fields(6)"></button>
-        <button id="field7" onclick="select_2_fields(7)"></button>
-        <button id="field8" onclick="select_2_fields(8)"></button>
-        <button id="field9" onclick="select_2_fields(9)"></button>
-        <button id="field10" onclick="select_2_fields(10)"></button>
-        <button id="field11" onclick="select_2_fields(11)"></button>
-        <button id="field12" onclick="select_2_fields(12)"></button>        
-    </div>
 
+        <div id="container">
+            <button id="field1" onclick="select_2_fields(1)"></button>
+            <button id="field2" onclick="select_2_fields(2)"></button>
+            <button id="field3" onclick="select_2_fields(3)"></button>
+            <button id="field4" onclick="select_2_fields(4)"></button>
+            <button id="field5" onclick="select_2_fields(5)"></button>
+            <button id="field6" onclick="select_2_fields(6)"></button>
+            <button id="field7" onclick="select_2_fields(7)"></button>
+            <button id="field8" onclick="select_2_fields(8)"></button>
+            <button id="field9" onclick="select_2_fields(9)"></button>
+            <button id="field10" onclick="select_2_fields(10)"></button>
+            <button id="field11" onclick="select_2_fields(11)"></button>
+            <button id="field12" onclick="select_2_fields(12)"></button>
+        </div>
+    <div id="bottom-links">
+        <a th:href="@{/userpanel}" class="btn btn-outline-dark btn-block" href="#" role="button">Return to userpanel</a>
+        <a h th:href="@{/redirect_EditFlashCardSet}" class="btn btn-outline-dark btn-block" href="#" role="button">Return to EditFlashCardSet</a>
+    </div>
     <script th:inline="javascript">
         /*<![CDATA[*/
         let arr = /*[[${slidecard}]]*/ "";

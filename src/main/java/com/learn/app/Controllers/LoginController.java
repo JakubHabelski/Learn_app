@@ -68,7 +68,7 @@ public class LoginController {
         user.setUserLogin("");
         user.setUserPass("");
         model.addAttribute("user", user);
-        System.out.println("Login Form");
+        //System.out.println("Login Form");
         if(session.getAttribute("login_error")== "login_error"){
             model.addAttribute("login_error", "login_error");
 
@@ -93,6 +93,9 @@ public class LoginController {
     public String userpanel(Model model, Authentication authentication, HttpSession session){
         System.out.println("User Panel");
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+         if (LoggedUser == null) {
+             System.out.println("User not logged in");
+         }
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
 
@@ -102,10 +105,6 @@ public class LoginController {
                 if(!user.getUserActive()){
                     return "redirect:/loginform";
                 }
-                System.out.println("-------------------------------------------");
-                System.out.println(user.getUserLogin() +" "+ user.getUserPass());
-                System.out.println("-------------------------------------------");
-                System.out.println("suggestedSets: "+addFlashCardSetInterface.getRecommendedSets(user.getUserID()));
                 List<FlashCardSet> suggestedSets = addFlashCardSetInterface.getRecommendedSets(user.getUserID());
                 List<FlashCardSet> flashCardSets = addFlashCardSetInterface.findByUserID(user.getUserID());
 
@@ -128,9 +127,7 @@ public class LoginController {
                             iterator.remove();
                         }
 }
-                for (FlashCardSet flashCardSet : suggestedSets) {
-                    System.out.println("getSetName: "+flashCardSet.getSetName()+" getSetid: "+flashCardSet.getSetID());
-                }
+
                 model.addAttribute("suggestedSets", suggestedSets);
                 session.setAttribute("LoggedUser", user);
                 model.addAttribute("user", user);

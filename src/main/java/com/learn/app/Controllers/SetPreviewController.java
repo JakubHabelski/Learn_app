@@ -55,11 +55,14 @@ public class SetPreviewController {
                                        FlashCards flashCards,
                                        HttpSession session) throws Exception {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         Upload_image upload_image = new Upload_image();
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
         session.setAttribute("SetID", SetID);
         flashCards.setSetID(SetID);
-        model.addAttribute("user", user);
+        model.addAttribute("user", LoggedUser);
         model.addAttribute("userID", LoggedUser.getUserID());
         Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
         Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
@@ -140,6 +143,9 @@ public class SetPreviewController {
     @PostMapping(value = "/CloneSet/{SetID}")
     public ResponseEntity<String> CloneSet(@PathVariable("SetID") Long SetID, HttpSession session) {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         FlashCardSet flashCardSet_old = addFlashCardSetInterface.findBySetID(SetID);
         FlashCardSet flashCardSet_new = new FlashCardSet();
         flashCardSet_new.setSetName(flashCardSet_old.getSetName());
@@ -167,6 +173,9 @@ public class SetPreviewController {
    @PostMapping(value = "/RateSet/{SetID}/{rating}")
     public ResponseEntity<Map<String, Object>> RateSet(@PathVariable("SetID") Long SetID, @PathVariable("rating") int rating, HttpSession session, Model model) {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+       if (LoggedUser == null) {
+           System.out.println("User not logged in");
+       }
         System.out.println("SetID: " + SetID + " rating: " + rating);
 
         FlashCardSetRating flashCardSetRating = flashCardSetRatingInterface.getRatingByUserAndSet(LoggedUser.getUserID(), SetID);
@@ -211,6 +220,9 @@ public class SetPreviewController {
     @PostMapping(value = "/setComment")
     public String CommentSet(@RequestParam("SetID") Long SetID, @RequestParam("comment") String comment, HttpSession session, Model model) {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         System.out.println("SetID: " + SetID + " comment: " + comment);
 
         FlashCardSetRating flashCardSetRating = flashCardSetRatingInterface.getRatingByUserAndSet(LoggedUser.getUserID(), SetID);

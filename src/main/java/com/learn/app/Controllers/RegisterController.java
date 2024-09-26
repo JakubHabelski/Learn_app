@@ -23,9 +23,9 @@ public class RegisterController {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private MyMailSenderService myMailSenderService;
+    public MyMailSenderService myMailSenderService;
     @Autowired
-    private ImageUploadService imageUploadService;
+    public ImageUploadService imageUploadService;
 
 
     public RegisterController(UserInterface userInterface, PasswordEncoder passwordEncoder) {
@@ -66,7 +66,7 @@ public class RegisterController {
             path = "UserPhoto/" + file.getOriginalFilename();
             user.setPath(path);
         }
-        return "redirect:/loginform";
+        return "redirect:/loginform?fromRegister";
     }
     @RequestMapping("/register_success/{UserToken}")
 
@@ -97,6 +97,17 @@ public class RegisterController {
     public ResponseEntity<Boolean> checkMail(@RequestParam String UserMail){
         boolean isTaken = userInterface.findByUserMail(UserMail) != null;
         return ResponseEntity.ok(isTaken);
+    }
+    @GetMapping("/checkPassword")
+    public ResponseEntity<Boolean> checkPassword(@RequestParam String UserPass){
+        String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+        boolean validPass=  UserPass.matches(passwordPattern);
+        if(validPass) {
+            System.out.println("Password is valid");
+        } else {
+            System.out.println("Password is invalid");
+        }
+        return ResponseEntity.ok(validPass);
     }
 
 }

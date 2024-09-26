@@ -109,6 +109,8 @@ public void EditFlashCardSet_GET_FromEditFalse() throws Exception {
 @Test
 public void EditFlashCardSet_GET_HandlesNullLoggedUser() throws Exception {
     Long setID = 1L;
+    UserData loggedUser = new UserData();
+    loggedUser.setUserID(123L);
     when(session.getAttribute("LoggedUser")).thenReturn(null);
     when(addFlashCardSetInterface.findBySetID(setID)).thenReturn(new FlashCardSet());
     when(addFlashCardInterface.find_learnedFlashCards(setID, true)).thenReturn(new ArrayList<>());

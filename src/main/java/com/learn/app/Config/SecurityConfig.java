@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 .frameOptions(frameOptions -> frameOptions.disable())
                 )
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers( "/getResponse","/ForgotPass","/ResetPass","/reset_pass/{UserLogin}",
+                        .requestMatchers( "/getResponse","/checkPassword","/ForgotPass","/ResetPass","/reset_pass/{UserLogin}",
                                 "/ChangePass", "/checkMail","/checkLogin","show_image","/login_style.css",
                                 "/loginform","/PostRegister", "/login_logic" , "/GetRegister", "/login" ,
                                 "/static/**", "/login_style.css" ,"/stylesheet.css" ,

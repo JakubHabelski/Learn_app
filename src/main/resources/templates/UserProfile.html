@@ -68,6 +68,12 @@
        if(image.src.includes("http://localhost:8080/UserProfile")){
            image.style.display = "none";
        }
+        if(image.src.includes("project-jh-425111.ew.r.appspot.com/")) {
+            image.src = image.src.replace("project-jh-425111.ew.r.appspot.com/", "");
+        }
+        if(image.src.includes("https:/storage.googleapis.com/project-jh-storager/UserPhoto/")) {
+            image.src = image.src.replace("https:/storage.googleapis.com/project-jh-storager/UserPhoto/", "https:\\storage.googleapis.com\\project-jh-storager\\UserPhoto\\");
+        }
     })
 
 

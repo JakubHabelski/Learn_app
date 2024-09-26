@@ -37,12 +37,15 @@ public class FlashCardSetController {
     public String AddPage( HttpSession session, @PathVariable Long userID, Model model)
         throws Exception{
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());
         user.setUserName(LoggedUser.getUserName());
         user.setUserSurname(LoggedUser.getUserSurname());
-        model.addAttribute("user" , user);
+        model.addAttribute("user" , LoggedUser);
 
         return("AddFlashCardSet");
    }
@@ -52,6 +55,9 @@ public class FlashCardSetController {
                           @RequestParam String SetName,
                           @RequestParam String Description) throws Exception {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (LoggedUser == null) {
+            System.out.println("User not logged in");
+        }
         FlashCardSet flashCardSet1= new FlashCardSet();
         flashCardSet1.setSetName(SetName);
         flashCardSet1.setSetDescription(Description);
@@ -86,7 +92,7 @@ public class FlashCardSetController {
         user.setUserLogin(LoggedUser.getUserLogin());
         user.setUserPass(LoggedUser.getUserPass());
         user.setUserID(LoggedUser.getUserID());
-        model.addAttribute("user" , user);
+        model.addAttribute("user" , LoggedUser);
         model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
         // return "AddFlashCard";
 
@@ -100,6 +106,9 @@ public class FlashCardSetController {
                                      HttpSession session,
                                      @RequestParam("SetID") Long SetID) {
         UserData loggedUser = (UserData) session.getAttribute("LoggedUser");
+        if (loggedUser == null) {
+            System.out.println("User not logged in");
+        }
         flashCardTagsInterface.deleteBySetID(SetID);
         ArrayList FlashCardList = new ArrayList<FlashCards>();
         FlashCardList.addAll(addFlashCardInterface.customFindBySetID(SetID));

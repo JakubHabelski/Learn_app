@@ -63,13 +63,14 @@ public class EditSetController {
                                        HttpSession session) throws Exception {
         UserData LoggedUser = (UserData) session.getAttribute("LoggedUser");
         if (LoggedUser == null) {
+            System.out.println("User not logged in");
             return "redirect:/loginform";
         }
         Upload_image upload_image = new Upload_image();
         FlashCardSet flashCardSet = addFlashCardSetInterface.findBySetID(SetID);
         session.setAttribute("SetID", SetID);
         flashCards.setSetID(SetID);
-        model.addAttribute("user", user);
+        model.addAttribute("user", LoggedUser);
         model.addAttribute("userID", LoggedUser.getUserID());
         Integer count_learned = Math.toIntExact(addFlashCardInterface.find_learnedFlashCards(SetID, true).stream().count());
         Integer count_set_size = Math.toIntExact(addFlashCardInterface.customFindBySetID(SetID).stream().count());
@@ -110,19 +111,15 @@ public class EditSetController {
 
         ArrayList learncard = new ArrayList<FlashCards>();
         learncard.addAll(addFlashCardInterface.find_learnedFlashCards(SetID, true)); // pokazywanie tylko nauczonych fiszek
-        System.out.println(learncard) ;
-        System.out.println("FromEdit: " + fromEdit);
+
         if(fromEdit){
             model.addAttribute("fromEdit", true);
         } else {
             model.addAttribute("fromEdit", false);
         }
         VertexAI vertexAI = new VertexAI();
-        System.out.println(tagsInterface.getAllTags());
-       // System.out.println("vertexAI: " + vertexAI.textInput("Basing on the flashcardsets ."+ flashCardSet.getSetName() + flashCardSet.getSetDescription()+ "generate maximum 10 single word tags for this set which suit the best"));
-       // System.out.println(vertexAI.textInput("Generate 200 single word tags for flashcard sets which i will paste to mysql database INSERT INTO Tag (name) VALUES"));
-       // System.out.println(vertexAI.textInput("Basing on:"+ tagsInterface.findAll()+ "generate maximum 10 single word tags for this set which suit the best"+ flashCardSet.getSetName() + flashCardSet.getSetDescription()));
-        model.addAttribute("learncard", learncard);
+
+         model.addAttribute("learncard", learncard);
 
         model.addAttribute("imagePaths", flashCard_Images);
         model.addAttribute("flashCard", addFlashCardInterface.customFindBySetID(SetID));
@@ -137,6 +134,7 @@ public class EditSetController {
                                         @RequestParam (name="file[]", required = false) List<MultipartFile> files,
                                         HttpSession session,
                                         Model model) throws Exception {
+
         // Log the number of received files
         System.out.println("Received " + files.size() + " files.");
 
@@ -148,7 +146,8 @@ public class EditSetController {
 
         String image_obj_path = "test";
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
-        model.addAttribute("user" , user);
+        
+        model.addAttribute("user" , LoggedUser);
         model.addAttribute("flashCardSets", addFlashCardSetInterface.findByUserID(LoggedUser.getUserID()));
 
         for (int i = 0; i < Definition.size(); i++) {
@@ -206,6 +205,7 @@ public class EditSetController {
 
     )throws Exception {
         UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        
         ImageUploadService imageUploadService = new ImageUploadService();
         FlashCards flashCard = addFlashCardInterface.customFindByID(FlashCardId);
         String image_obj_path = "test";
@@ -259,7 +259,9 @@ public class EditSetController {
     public String Return_UserPanel( HttpSession session,
                                     Model model
                                     ){
-        model.addAttribute("user" , user);
+        UserData  LoggedUser = (UserData) session.getAttribute("LoggedUser");
+        
+        model.addAttribute("user" , LoggedUser);
         return "redirect:/userpanel";
     }
     @RequestMapping("/reset_progress")

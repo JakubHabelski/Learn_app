@@ -15,14 +15,15 @@
 <body>
     <form th:action="@{/PostRegister}" method="post" class="form-group" enctype="multipart/form-data">
 
-        UserName: <input th:name="UserName" class="form-control" required><br>
-        UserSurname: <input th:name="UserSurname" class="form-control" required><br>
+        Name: <input th:name="UserName" class="form-control" required><br>
+        Surname: <input th:name="UserSurname" class="form-control" required><br>
         <span id="login_error"  class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk">User login is taken</span>
-        UserLogin: <input th:name="UserLogin" id="UserLogin" class="form-control" required><br>
-        UserPass: <input th:name="UserPass" class="form-control" type="password" required><br>
+        Login: <input th:name="UserLogin" id="UserLogin" class="form-control" required><br>
+        <span id="password_error"  class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk; height: auto">Password must have at least one big letter and number</span>
+        Password: <input th:name="UserPass" id="UserPass" class="form-control" type="password" required><br>
         <span id="mail_error" class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk">User e-mail is taken</span>
-        UserMail: <input th:name="UserMail" id="UserMail" class="form-control" type="email" required><br>
-        UserPhoto: <input type="file" th:name="file" />
+        E-Mail: <input th:name="UserMail" id="UserMail" class="form-control" type="email" required><br>
+        Profile photo: <input type="file" th:name="file" />
         <input type="submit" value="Register" id="form_submit" class="btn btn-primary">
         <span id="invalid_user_data" class="form-control" style="display: none; margin-bottom: 16px; background-color: cornsilk">Invalid user data</span>
     </form>
@@ -31,6 +32,7 @@
 <script>
     Login_Taken = false;
     Mail_Taken = false;
+    ValidPassword = true;
     document.getElementById("UserLogin").addEventListener("input", function() {
         const test_var = document.getElementById("UserLogin").value;
         document.getElementById("invalid_user_data").style.display = "none";
@@ -47,6 +49,23 @@
                 }
             } );
     });
+    document.getElementById("UserPass").addEventListener("blur", function() {  // Używamy 'blur' zamiast 'input'
+        const test_var = encodeURIComponent(document.getElementById("UserPass").value);
+        document.getElementById("password_error").style.display = "none";
+        fetch(`/checkPassword?UserPass=${test_var}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data === true) {
+                    document.getElementById("password_error").style.display = "none";
+                    ValidPassword = true;
+                } else {
+                    document.getElementById("password_error").style.display = "block";
+                    ValidPassword = false;
+                }
+            });
+    });
+
     document.getElementById("UserMail").addEventListener("input", function() {
         const test_var = document.getElementById("UserMail").value;
         document.getElementById("invalid_user_data").style.display = "none";
